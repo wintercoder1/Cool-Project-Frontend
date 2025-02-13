@@ -1,16 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const OrganizationDetail = () => {
 
+  // Try both to see how the org info was passed in.
   const location = useLocation();
-  const organizationData = location.state; 
+  const organizationDataLocation = location.state; 
 
-  // console.log("OrganizationDetail   topic ", info['topic'] );
-  // console.log("OrganizationDetail   lean ", info['lean'] );
-  // console.log("OrganizationDetail   rating ", info['rating']);
-  // console.log("OrganizationDetail   context ", info.context );
-  // console.log("OrganizationDetail   citation ", info.citation );
+  const [organizationDataLocalStorage, _] = useState(JSON.parse(localStorage.getItem("organizationData")));
+
 
   // Default data if none provided
   const defaultData = {
@@ -29,7 +28,7 @@ const OrganizationDetail = () => {
     rating,
     context,
     citation
-  } = organizationData || defaultData;
+  } = organizationDataLocation || organizationDataLocalStorage || defaultData;
 
   return (
     <Card className="w-screen  mx-auto content-around px-20 py-10 bg-white">

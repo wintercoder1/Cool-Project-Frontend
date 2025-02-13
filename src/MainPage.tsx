@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus } from 'lucide-react';
 import { useNavigate} from 'react-router-dom';
@@ -41,12 +41,19 @@ const MainPage = () => {
 
   const handleOrganizationClick = (event, organization) => {
     console.log(event)
-    openDetailPage(organization)
+    // openDetailPageCurrentTab(organization)
+    openDetailPageNewTab(organization)
   };
 
-  const openDetailPage = (organization) => {
+  const openDetailPageCurrentTab = (organization) => {
     navigate('organization', { state: organization});
   };
+
+  const openDetailPageNewTab = (organization) => {
+    // topic = `organization${organization.topic}`
+    localStorage.setItem(`organizationData`, JSON.stringify(organization));
+    window.open('organization', "_blank", "noreferrer");
+  }
 
   if (error) {
     return (
