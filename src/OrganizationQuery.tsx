@@ -3,21 +3,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate} from 'react-router-dom';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogClose,
-  } from "@/components/ui/dialog";
+// import {
+//     Dialog,
+//     DialogContent,
+//     DialogHeader,
+//     DialogTitle,
+//     DialogDescription,
+//     DialogClose,
+//   } from "@/components/ui/dialog";
 
 const OrganizationQuery = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [isError, setIsError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const [onClose, setOnClose] = useState(false);
+//   const [isError, setIsError] = useState(false);
+//   const [errorMessage, setErrorMessage] = useState('');
+//   const [isOpen, setIsOpen] = useState(false);
+//   const [onClose, setOnClose] = useState(false);
 
   const navigate = useNavigate();
 
@@ -60,29 +60,29 @@ const OrganizationQuery = () => {
 
   const handleErrorOnUI = () => {
     console.log('dialog should show now')
-    setErrorMessage('Something went wrong!');
-    // setIsError(true);
-    setIsOpen(true)
+    // setErrorMessage('Something went wrong!');
+    // // setIsError(true);
+    // setIsOpen(true)
   };
 
 
-  const ErrorPopup = ({ isOpen, onClose, errorMessage }) => {
-    return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Error</DialogTitle>
-            <DialogDescription className="text-red-500">
-              {errorMessage}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogClose asChild>
-            <Button>Close</Button>
-          </DialogClose>
-        </DialogContent>
-      </Dialog>
-    );
-  };
+//   const ErrorPopup = ({ isOpen, onClose, errorMessage }) => {
+//     return (
+//       <Dialog open={isOpen} onOpenChange={onClose}>
+//         <DialogContent>
+//           <DialogHeader>
+//             <DialogTitle>Error</DialogTitle>
+//             <DialogDescription className="text-red-500">
+//               {errorMessage}
+//             </DialogDescription>
+//           </DialogHeader>
+//           <DialogClose asChild>
+//             <Button>Close</Button>
+//           </DialogClose>
+//         </DialogContent>
+//       </Dialog>
+//     );
+//   };
 
   return (
     <div className="min-h-screen w-screen flex items-center py-10 justify-center bg-white">

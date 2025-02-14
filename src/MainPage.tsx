@@ -95,9 +95,9 @@ const MainPage = () => {
     openDetailPageNewTab(organization)
   };
 
-  const openDetailPageCurrentTab = (organization) => {
-    navigate('organization', { state: organization});
-  };
+  // const openDetailPageCurrentTab = (organization) => {
+  //   navigate('organization', { state: organization});
+  // };
 
   const openDetailPageNewTab = (organization) => {
     // topic = `organization${organization.topic}`

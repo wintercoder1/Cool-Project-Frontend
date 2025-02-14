@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { useNavigate} from 'react-router-dom';
 
 const OrganizationDetail = () => {
