@@ -14,8 +14,8 @@ const MainPage = () => {
     console.log('Page loaded?')
     const fetchData = async () => {
       try {
-        // const response = await fetch('http://18.188.2.109:443/getCachedPolitcalLeanings');
-        const response = await fetch('http://127.0.0.1:8000/getCachedPolitcalLeanings');
+        const response = await fetch('http://18.188.2.109:443/getCachedPolitcalLeanings');
+        // const response = await fetch('http://127.0.0.1:8000/getCachedPolitcalLeanings');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -86,7 +86,7 @@ const MainPage = () => {
     if (isConservative) {
       return 'Conservative'
     }
-    return 'Neautral'
+    return 'Neutral'
   }
 
   const handleOrganizationClick = (event, organization) => {
