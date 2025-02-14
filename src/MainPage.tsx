@@ -102,7 +102,9 @@ const MainPage = () => {
   const openDetailPageNewTab = (organization) => {
     // topic = `organization${organization.topic}`
     localStorage.setItem(`organizationData`, JSON.stringify(organization));
-    window.open('organization', "_blank", "noreferrer");
+    {/* The hastag is for hash router */ }
+    window.open('/#organization', "_blank", "noreferrer");
+    // window.open('organization', "_blank", "noreferrer");
   }
 
   const handleNewQueryClick = (event) => {
