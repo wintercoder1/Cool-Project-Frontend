@@ -1,89 +1,100 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useNavigate} from 'react-router-dom';
-// import {
-//     Dialog,
-//     DialogContent,
-//     DialogHeader,
-//     DialogTitle,
-//     DialogDescription,
-//     DialogClose,
-//   } from "@/components/ui/dialog";
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const OrganizationQuery = () => {
   const [searchTerm, setSearchTerm] = useState('');
-//   const [isError, setIsError] = useState(false);
-//   const [errorMessage, setErrorMessage] = useState('');
-//   const [isOpen, setIsOpen] = useState(false);
-//   const [onClose, setOnClose] = useState(false);
-
+  const [category, setCategory] = useState('Political Leaning');
+  
   const navigate = useNavigate();
+  const location = useLocation();
+  const { data } = location.state;
+
+  useEffect(() => {
+    // Get category from location state if provided
+    console.log('____ ____')
+    console.log(location)
+    console.log(location.state)
+    console.log(location.state.current_category)
+    // console.log(location.state.data)
+    // console.log(location.state.data.current_category)
+    // console.log(data)
+    // console.log(data.current_category)
+    // console.log(location.data)
+    console.log('____ ____')
+    if (location && location.state && location.state.current_category) {
+      setCategory(location.state.current_category);
+    }
+  }, [location]);
+
+  const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
+  //const  ENVIRONMENT_BASE_URL = 'http://18.188.2.109:443'
+
+  const categoryEndpoints = {
+    'Political Leaning': ENVIRONMENT_BASE_URL + '/getPoliticalLeaning/',
+    'DEI Friendliness': ENVIRONMENT_BASE_URL + '/getDEIFriendlinessScore/',
+    'Wokeness': ENVIRONMENT_BASE_URL + '/getWokenessScore/'
+  };
+
+  const getCategoryPrompt = () => {
+    // setCategory('DEI Friendliness')
+    switch(category) {
+      case 'Political Leaning':
+        return "What organization do you want to find the political leaning of?";
+      case 'DEI Friendliness':
+        return "What organization do you want to find the DEI friendliness score of?";
+      case 'Wokeness':
+        return "What organization do you want to find the wokeness score of?";
+      default:
+        return "What organization would you like to search for?";
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle the search submission here
-    console.log('User typed in:', searchTerm);
-    fetchData(searchTerm)
-    openWaitingPageCurrentTab()
+    console.log(`User searched for: ${searchTerm} in category: ${category}`);
+    fetchData(searchTerm);
+    openWaitingPageCurrentTab();
   };
 
   const fetchData = async (query_topic) => {
-    // query_topic = query_topic.trim()
     try {
-      const response = await fetch(`http://18.188.2.109:443/getPoliticalLeaning/${query_topic}`);
-    //   const response = await fetch(`http://127.0.0.1:8000/getPoliticalLeaning/${query_topic}`);
+      const baseEndpoint = categoryEndpoints[category] || categoryEndpoints['Political Leaning'];
+      const response = await fetch(`${baseEndpoint}${encodeURIComponent(query_topic)}`);
+      
       if (!response.ok) {
-        handleErrorOnUI()
+        handleErrorOnUI();
         throw new Error('Network response was not ok');
       }
+      
       const jsonData = await response.json();
-      console.log('data fetched:')
-      console.log(jsonData)
-      openDetailPageCurrentTab(jsonData)
-    //   setData(jsonData);
+      console.log('Data fetched:', jsonData);
+      openDetailPageCurrentTab(jsonData);
     } catch (err) {
-    //   setError(err.message);
       console.error('Error fetching data:', err);
-      handleErrorOnUI()
+      handleErrorOnUI();
     }
   };
 
   const openDetailPageCurrentTab = (organization) => {
-    navigate('/organization', { state: organization});
+    navigate('/organization', { 
+      state: { 
+        ...organization, 
+        category: category 
+      }
+    });
   };
 
   const openWaitingPageCurrentTab = () => {
-    navigate('/waiting', {});
+    navigate('/waiting', { state: { category: category } });
   };
 
   const handleErrorOnUI = () => {
-    console.log('dialog should show now')
-    // setErrorMessage('Something went wrong!');
-    // // setIsError(true);
-    // setIsOpen(true)
+    console.log('Dialog should show now');
   };
-
-
-//   const ErrorPopup = ({ isOpen, onClose, errorMessage }) => {
-//     return (
-//       <Dialog open={isOpen} onOpenChange={onClose}>
-//         <DialogContent>
-//           <DialogHeader>
-//             <DialogTitle>Error</DialogTitle>
-//             <DialogDescription className="text-red-500">
-//               {errorMessage}
-//             </DialogDescription>
-//           </DialogHeader>
-//           <DialogClose asChild>
-//             <Button>Close</Button>
-//           </DialogClose>
-//         </DialogContent>
-//       </Dialog>
-//     );
-//   };
-
+ 
   return (
     <div className="min-h-screen w-screen flex items-center py-10 justify-center bg-white">
       <Card className="w-full max-w-md mx-4">
@@ -91,9 +102,7 @@ const OrganizationQuery = () => {
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="text-center space-y-6">
               <h1 className="text-xl font-medium">
-                What organization do you want to find 
-                <br />
-                the political leaning of?
+                {getCategoryPrompt()}
               </h1>
               
               <Input
