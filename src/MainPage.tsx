@@ -23,14 +23,13 @@ const MainPage = () => {
   useEffect(() => {
     console.log('Fetching data for category:', category);
     // Set to empty before each request.
-    if (location && location.state && location.state.current_category) {
-      setCategory(location.state.current_category);
-    }
+    // if (location && location.state && location.state.current_category) {
+    //   setCategory(location.state.current_category);
+    // }
     const fetchData = async () => {
       try {
         const endpoint = categoryEndpoints[category];
         const response = await fetch(endpoint);
-        setData([])
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -52,6 +51,7 @@ const MainPage = () => {
 
   const selectCategory = (newCategory) => {
     setCategory(newCategory);
+    setData([])
     setDropdownOpen(false);
   };
 
