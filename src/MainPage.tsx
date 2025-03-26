@@ -9,18 +9,19 @@ const MainPage = () => {
   const [category, setCategory] = useState('Political Leaning');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
-  //const  ENVIRONMENT_BASE_URL = 'http://18.188.2.109:443'
+  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
+  // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
 
   const categoryEndpoints = {
-    'Political Leaning': ENVIRONMENT_BASE_URL + '/getCachedPolitcalLeanings',
+    'Political Leaning': ENVIRONMENT_BASE_URL + '/getCachedPoliticalLeanings',
     'DEI Friendliness': ENVIRONMENT_BASE_URL + '/getCachedDEIScores',
-    'Wokeness': ENVIRONMENT_BASE_URL + '/getCachedWokenessScores'
+    'Wokeness': ENVIRONMENT_BASE_URL + '/getCachedFinancialContributions',
+    'Financial Contributions': ENVIRONMENT_BASE_URL + '/getCachedFinancialContributions'
   };
 
   useEffect(() => {
+    console.log('With base URL: ', ENVIRONMENT_BASE_URL);
     console.log('Fetching data for category:', category);
     // Set to empty before each request.
     // if (location && location.state && location.state.current_category) {
