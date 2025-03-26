@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, ChevronDown } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
   const [data, setData] = useState([]);
@@ -10,6 +10,7 @@ const MainPage = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
+  // @ts-expect-error
   const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
   // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
 
@@ -56,48 +57,48 @@ const MainPage = () => {
     setDropdownOpen(false);
   };
 
-  const getLeaningStyle = (rating, lean) => {
-    const isLiberal = lean.toLowerCase().includes('liberal');
-    const isNeutral = rating == '0';
-    const baseStyle = 'text-right font-medium';
+  // const getLeaningStyle = (rating, lean) => {
+  //   const isLiberal = lean.toLowerCase().includes('liberal');
+  //   const isNeutral = rating == '0';
+  //   const baseStyle = 'text-right font-medium';
 
-    if (isNeutral) {
-      return `${baseStyle} ${'text-gray-600'}`;
-    }
+  //   if (isNeutral) {
+  //     return `${baseStyle} ${'text-gray-600'}`;
+  //   }
 
-    if (isLiberal) {
-      switch (rating) {
-        case 1:
-          return 'text-blue-100';
-        case 2:
-          return 'text-blue-300';
-        case 3:
-          return 'text-blue-500';
-        case 4:
-          return 'text-blue-700';
-        case 5:
-          return 'text-blue-900';
-        default:
-          return 'text-blue-900'
-      }   
-    }
-    else {
-      switch (rating) {
-        case 1:
-          return 'text-red-100'
-        case 2:
-          return 'text-red-300'
-        case 3:
-          return 'text-red-500'
-        case 4:
-          return 'text-red-700'
-        case 5:
-          return 'text-red-900'
-        default:
-          return 'text-red-900'
-      }
-    }
-  };
+  //   if (isLiberal) {
+  //     switch (rating) {
+  //       case 1:
+  //         return 'text-blue-100';
+  //       case 2:
+  //         return 'text-blue-300';
+  //       case 3:
+  //         return 'text-blue-500';
+  //       case 4:
+  //         return 'text-blue-700';
+  //       case 5:
+  //         return 'text-blue-900';
+  //       default:
+  //         return 'text-blue-900'
+  //     }   
+  //   }
+  //   else {
+  //     switch (rating) {
+  //       case 1:
+  //         return 'text-red-100'
+  //       case 2:
+  //         return 'text-red-300'
+  //       case 3:
+  //         return 'text-red-500'
+  //       case 4:
+  //         return 'text-red-700'
+  //       case 5:
+  //         return 'text-red-900'
+  //       default:
+  //         return 'text-red-900'
+  //     }
+  //   }
+  // };
 
   const getCleanedLeanString = (rating) => {
     if (!rating) {
