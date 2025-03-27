@@ -1,3 +1,4 @@
+// @ts-expect-error
 import './index.css'
 import ReactDOM from "react-dom/client";
 import { StrictMode } from 'react'
