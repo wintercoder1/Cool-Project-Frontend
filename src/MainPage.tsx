@@ -137,7 +137,7 @@ const MainPage = () => {
 
   const openDetailPageNewTab = (organization) => {
     localStorage.setItem(`organizationData`, JSON.stringify(organization));
-    window.open('/#/organization', "_blank", "noreferrer");
+    window.open('#/organization', "_blank", "noreferrer");
   }
 
   const handleNewQueryClick = (event) => {
