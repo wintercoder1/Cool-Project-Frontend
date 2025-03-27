@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "homepage": "./",
+  "homepage": "https://wintercoder1.github.io/Cool-Project-Frontend",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
