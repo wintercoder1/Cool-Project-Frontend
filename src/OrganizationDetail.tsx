@@ -8,6 +8,7 @@ const OrganizationDetail = () => {
   const organizationDataLocation = location.state; 
   const [organizationDataLocalStorage, _] = useState(JSON.parse(localStorage.getItem("organizationData")));
   const [categoryData, __] = useState(localStorage.getItem("categoryData"));
+  // @ts-expect-error
   const [isFinacialData, setIsFinacialData] = useState(false);
   const navigate = useNavigate();
 
