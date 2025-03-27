@@ -1,12 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from 'react-router-dom';
-import { useState} from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate} from 'react-router-dom';
 
 const OrganizationDetail = () => {
   const location = useLocation();
   const organizationDataLocation = location.state; 
   const [organizationDataLocalStorage, _] = useState(JSON.parse(localStorage.getItem("organizationData")));
+  const [categoryData, __] = useState(localStorage.getItem("categoryData"));
+  const [isFinacialData, setIsFinacialData] = useState(false);
   const navigate = useNavigate();
 
   // Default data if none provided
@@ -20,7 +22,7 @@ const OrganizationDetail = () => {
   };
 
   // Use provided data or fall back to default
-  const {
+  var {
     topic,
     lean,
     rating,
@@ -28,10 +30,37 @@ const OrganizationDetail = () => {
     citation
   } = organizationDataLocation || organizationDataLocalStorage || defaultData;
 
+  // If financial contrubution. 
+  // TODO: Actually learn react and figure out a better way to do this
+  if (categoryData == 'Financial Contributions') {
+    context = (organizationDataLocation && organizationDataLocation.fec_financial_contributions_summary_text)
+    || (organizationDataLocalStorage && organizationDataLocalStorage.fec_financial_contributions_summary_text)
+    // setIsFinacialData(true)
+  }
+
+  useEffect(() => {
+    setIsFinacialData(categoryData == 'Financial Contributions')
+  }, [categoryData]);
+
   const handleLogoClick = (event) => {
     console.log(event)
     navigate('/', {});
   };
+
+  function leanAndRatingContent(lean, rating) {
+    if (!isFinacialData) {
+      return (<div className="space-y-1">
+                <div className="text-lg">
+                    Lean: {lean ? lean.trim(): ''}
+                </div>
+                <div className="text-lg">
+                    Rating {rating}
+                </div>
+             </div>);
+    } else {
+      return (<div/>);
+    }
+  }
 
   return (
       <div className="flex justify-even">
@@ -44,7 +73,7 @@ const OrganizationDetail = () => {
         >
           <h1 className="text-4xl font-bold text-black ">CompassAI</h1>
         </div>
-
+        {/* categoryData */}
         <Card className="w-screen mx-auto absolute top-20 px-10 py-10 bg-white">
           <CardHeader className="pb-2">
             <CardTitle className="text-2xl font-bold">
@@ -54,35 +83,45 @@ const OrganizationDetail = () => {
           
           <CardContent className="space-y-6">
             {/* Lean and Rating */}
-            <div className="space-y-1">
-              <div className="text-lg">
-                Lean: {lean ? lean.trim(): ''}
+            {/* leanAndRatingContent(lean, rating) */}
+
+            {/* {!isFinacialData && ( */}
+              <div className="space-y-1">
+                <div className="text-lg">
+                  Lean: {lean ? lean.trim(): ''}
+                </div>
+                <div className="text-lg">
+                  Rating {rating}
+                </div>
               </div>
-              <div className="text-lg">
-                Rating {rating}
-              </div>
-            </div>
+            {/* )} */}
 
             {/* Context */}
             <div className="text-base">
               {context}
             </div>
 
-            {/* Citations */}
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Citations:</h3>
-              <div className="text-base">
-                {citation !== "none" ? citation : "No citations available"}
-              </div>
-            </div>
+            {/* Citations */ }
+            {/* { !isFinacialData && ( */}
+            {/*  <div className="space-y-2">
+               <h3 className="text-lg font-semibold">Citations:</h3>
+               <div className="text-base">
+                 {citation !== "none" ? citation : "No citations available"}
+               </div>
+             </div> */}
+            {/* )} */}
 
             {/* Financial Contributions */}
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Financial Contributions:</h3>
-              <div className="text-base">
-                Information about financial contributions will be displayed here.
-              </div>
-            </div>
+            {/* { !isFinacialData && ( */}
+            {/* // <div className="space-y-2">
+            //   <h3 className="text-lg font-semibold">Financial Contributions:</h3>
+            //   <div className="text-base">
+            //     Information about financial contributions will be displayed here.
+            //   </div>
+            // </div> */}
+            {/* )} */}
+
+            {/* } */}
           </CardContent> 
         </Card> 
       </div>

@@ -11,8 +11,8 @@ const MainPage = () => {
   const navigate = useNavigate();
 
   // @ts-expect-error
-  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
-  // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
+  // const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
+  const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
 
   const categoryEndpoints = {
     'Political Leaning': ENVIRONMENT_BASE_URL + '/getCachedPoliticalLeanings',
@@ -125,18 +125,21 @@ const MainPage = () => {
         return (item) => `${item.rating}/5`;
       case 'Wokeness':
         return (item) => `${item.rating}/5`;
+      case 'Financial Contributions':
+        return (item) => ``;
       default:
         return (item) => `${item.rating}`;
     }
   };
 
-  const handleOrganizationClick = (event, organization) => {
+  const handleOrganizationClick = (event, organization, category) => {
     console.log(event)
-    openDetailPageNewTab(organization)
+    openDetailPageNewTab(organization, category)
   };
 
-  const openDetailPageNewTab = (organization) => {
+  const openDetailPageNewTab = (organization, category) => {
     localStorage.setItem(`organizationData`, JSON.stringify(organization));
+    localStorage.setItem(`categoryData`, category);
     window.open('#/organization', "_blank", "noreferrer");
   }
 
@@ -201,7 +204,7 @@ const MainPage = () => {
             <div 
               key={index}
               className="flex justify-between items-center p-2 border rounded cursor-pointer hover:bg-gray-50"
-              onClick={(event) => handleOrganizationClick(event, item)}
+              onClick={(event) => handleOrganizationClick(event, item, category)}
             >
               <div className="font-medium">
                 {item.topic}
@@ -210,7 +213,7 @@ const MainPage = () => {
                 {getCategoryValueLabel()(item)}
               </div> */}
               <div className='text-right font-medium text-gray-600'> 
-              {/* {getLeaningStyle(item.rating, item.lean)}> */}
+                {/* {getLeaningStyle(item.rating, item.lean)} */}
                 {getCategoryValueLabel()(item)}
               </div>
             </div>
