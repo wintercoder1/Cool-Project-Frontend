@@ -18,5 +18,5 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: '/Cool-Project-Frontend/', 
+  base: '/Cool-Project-Frontend', 
 })
