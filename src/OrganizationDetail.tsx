@@ -27,6 +27,7 @@ const OrganizationDetail = () => {
     lean,
     rating,
     context,
+    // @ts-expect-error
     citation
   } = organizationDataLocation || organizationDataLocalStorage || defaultData;
 
@@ -47,20 +48,20 @@ const OrganizationDetail = () => {
     navigate('/', {});
   };
 
-  function leanAndRatingContent(lean, rating) {
-    if (!isFinacialData) {
-      return (<div className="space-y-1">
-                <div className="text-lg">
-                    Lean: {lean ? lean.trim(): ''}
-                </div>
-                <div className="text-lg">
-                    Rating {rating}
-                </div>
-             </div>);
-    } else {
-      return (<div/>);
-    }
-  }
+  // function leanAndRatingContent(lean, rating) {
+  //   if (!isFinacialData) {
+  //     return (<div className="space-y-1">
+  //               <div className="text-lg">
+  //                   Lean: {lean ? lean.trim(): ''}
+  //               </div>
+  //               <div className="text-lg">
+  //                   Rating {rating}
+  //               </div>
+  //            </div>);
+  //   } else {
+  //     return (<div/>);
+  //   }
+  // }
 
   return (
       <div className="flex justify-even">
