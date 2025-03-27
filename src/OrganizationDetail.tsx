@@ -45,7 +45,7 @@ const OrganizationDetail = () => {
           <h1 className="text-4xl font-bold text-black ">CompassAI</h1>
         </div>
 
-        <Card className="w-screen mx-auto absolute top-20 px-20 py-10 bg-white">
+        <Card className="w-screen mx-auto absolute top-20 px-10 py-10 bg-white">
           <CardHeader className="pb-2">
             <CardTitle className="text-2xl font-bold">
               Overview for {topic}
