@@ -10,7 +10,6 @@ const OrganizationQuery = () => {
   
   const navigate = useNavigate();
   const location = useLocation();
-  const { data } = location.state;
 
   useEffect(() => {
     // Get category from location state if provided

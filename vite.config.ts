@@ -8,7 +8,6 @@ export default defineConfig({
   plugins: [
     react(), 
   ],
-  // tailwindcss(),],
   css: {
     postcss: {
       plugins: [tailwindcss()],
@@ -19,4 +18,5 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  base: '/Cool-Project-Frontend/', 
 })
