@@ -11,23 +11,19 @@ const MainPage = () => {
   const navigate = useNavigate();
 
   // @ts-expect-error
-  // const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
-  const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
+  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
+  // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
 
   const categoryEndpoints = {
     'Political Leaning': ENVIRONMENT_BASE_URL + '/getCachedPoliticalLeanings',
     'DEI Friendliness': ENVIRONMENT_BASE_URL + '/getCachedDEIScores',
-    'Wokeness': ENVIRONMENT_BASE_URL + '/getCachedFinancialContributions',
+    'Wokeness': ENVIRONMENT_BASE_URL + '/getCachedWokenessScores',
     'Financial Contributions': ENVIRONMENT_BASE_URL + '/getCachedFinancialContributions'
   };
 
   useEffect(() => {
     console.log('With base URL: ', ENVIRONMENT_BASE_URL);
     console.log('Fetching data for category:', category);
-    // Set to empty before each request.
-    // if (location && location.state && location.state.current_category) {
-    //   setCategory(location.state.current_category);
-    // }
     const fetchData = async () => {
       try {
         const endpoint = categoryEndpoints[category];
@@ -53,6 +49,7 @@ const MainPage = () => {
 
   const selectCategory = (newCategory) => {
     setCategory(newCategory);
+    // Set to empty before each request.
     setData([])
     setDropdownOpen(false);
   };
@@ -126,7 +123,7 @@ const MainPage = () => {
       case 'Wokeness':
         return (item) => `${item.rating}/5`;
       case 'Financial Contributions':
-        return (item) => ``;
+        return () => ``;
       default:
         return (item) => `${item.rating}`;
     }
@@ -220,14 +217,18 @@ const MainPage = () => {
           ))}
         </div>
 
-        <div className="fixed bottom-6 right-6">
-          <button 
-            className="w-14.5 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
-            onClick={(event) => handleNewQueryClick(event)}
-          >
-            <Plus size={60} />
-          </button>
-        </div>
+        {/* Temporarily disable the new company/indiviudal response button until this is corerctly wired up on the backed. */}
+        {/* TODO: Make the backend for this work on financial contributions. */}
+        {category !== 'Financial Contributions' && (
+          <div className="fixed bottom-6 right-6">
+            <button 
+              className="w-14.5 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
+              onClick={(event) => handleNewQueryClick(event)}
+            >
+              <Plus size={60} />
+            </button>
+          </div>
+        )}
 
         {/* Empty Placeholder to allow scrolling past the (+) button */}
         <div className="py-10"></div>

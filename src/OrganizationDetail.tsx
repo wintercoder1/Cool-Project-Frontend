@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useNavigate} from 'react-router-dom';
+import React from "react";
 
 const OrganizationDetail = () => {
   const location = useLocation();
@@ -28,7 +29,6 @@ const OrganizationDetail = () => {
     lean,
     rating,
     context,
-    // @ts-expect-error
     citation
   } = organizationDataLocation || organizationDataLocalStorage || defaultData;
 
@@ -88,42 +88,70 @@ const OrganizationDetail = () => {
             {/* leanAndRatingContent(lean, rating) */}
 
             {/* {!isFinacialData && ( */}
+            {categoryData == 'Political Leaning' && (
               <div className="space-y-1">
+                <br/>
                 <div className="text-lg">
                   Lean: {lean ? lean.trim(): ''}
                 </div>
                 <div className="text-lg">
-                  Rating {rating}
+                  Rating: {rating}
                 </div>
               </div>
+            )}
+            {categoryData == 'DEI Friendliness' && (
+              <div className="space-y-1">
+                <div className="text-lg">
+                DEI Friendliness Rating: {rating}
+                </div>
+              </div>
+            )}
+            {categoryData == 'Wokeness' && (
+              <div className="space-y-1">
+                <div className="text-lg">
+                  Wokeness Rating: {rating}
+                </div>
+              </div>
+            )}
             {/* )} */}
 
             {/* Context */}
             <div className="text-base">
-              {context}
+              {context.split('\n').map((line, i) => (
+                <React.Fragment key={i}>
+                  {line.trim()}
+                  {i < context.split('\n').length - 1 && <br />}
+                </React.Fragment>
+              ))}
             </div>
+            {/* <div className="text-base" style={{ whiteSpace: "pre-wrap" }}>
+              {context}
+              {/* {context.replace(/\n\s+/g, '\n')} */}
+            {/* </div> */} 
 
             {/* Citations */ }
-            {/* { !isFinacialData && ( */}
-            {/*  <div className="space-y-2">
-               <h3 className="text-lg font-semibold">Citations:</h3>
-               <div className="text-base">
-                 {citation !== "none" ? citation : "No citations available"}
-               </div>
-             </div> */}
-            {/* )} */}
+            {categoryData !== 'Financial Contributions' && (
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">Citations:</h3>
+                <div className="text-base">
+                  {(citation == null || citation !== "none") ? citation : "No citations available"}
+                </div>
+              </div>
+            )}
 
             {/* Financial Contributions */}
-            {/* { !isFinacialData && ( */}
-            {/* // <div className="space-y-2">
-            //   <h3 className="text-lg font-semibold">Financial Contributions:</h3>
-            //   <div className="text-base">
-            //     Information about financial contributions will be displayed here.
-            //   </div>
-            // </div> */}
-            {/* )} */}
+            {/*Temporarily remove this from all pages now that financial contributions is 
+               its own category. Eventually this can be rolled into the responses to backup 
+               and be used to generate the text in the other categories. */}
+            {/* {categoryData !== 'Financial Contributions' && (
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold">Financial Contributions:</h3>
+                <div className="text-base">
+                  Information about financial contributions will be displayed here.
+                </div>
+              </div>
+            )} */}
 
-            {/* } */}
           </CardContent> 
         </Card> 
       </div>
