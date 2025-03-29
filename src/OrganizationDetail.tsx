@@ -68,8 +68,8 @@ const OrganizationDetail = () => {
       <div className="flex justify-even">
         {/* Logo */}
         <div 
-          className="absolute top-3 left-8 w-screen mx-auto cursor-pointer py-2"
-          // className="flex top-3 left-8 justify-between items-center pt-5 px-8"
+          // className="absolute top-3 left-8 w-screen mx-auto cursor-pointer py-2"
+          // className="flex  items-center pt-5 px-8"
           role="button"
           onClick={handleLogoClick}
           tabIndex={0}
