@@ -167,7 +167,7 @@ const MainPage = () => {
       {/* Header with Logo and Dropdown */}
       <div className="flex justify-between items-center pt-5 px-8">
 
-        <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <svg className="hidden sm:block" width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         {/* <svg width="40" height="40" viewBox="0 0 100 100" xmlns="assets/compass_pic.png"> */}
           <circle cx="50" cy="50" r="45" fill="white" stroke="black" strokeWidth="2" />
           <circle cx="50" cy="50" r="40" fill="none" stroke="black" strokeWidth="1" />
