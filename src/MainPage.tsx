@@ -166,7 +166,39 @@ const MainPage = () => {
     <Card className="px-5 w-screen mx-auto bg-white">
       {/* Header with Logo and Dropdown */}
       <div className="flex justify-between items-center pt-5 px-8">
-        <h1 className="text-4xl font-bold text-black">CompassAI</h1>
+
+        <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        {/* <svg width="40" height="40" viewBox="0 0 100 100" xmlns="assets/compass_pic.png"> */}
+          <circle cx="50" cy="50" r="45" fill="white" stroke="black" strokeWidth="2" />
+          <circle cx="50" cy="50" r="40" fill="none" stroke="black" strokeWidth="1" />
+          <circle cx="50" cy="50" r="4" fill="black" />
+          
+          {/* North-South needle */}
+          <path d="M50 15 L54 45 L50 50 L46 45 Z" fill="black" />
+          <path d="M50 85 L54 55 L50 50 L46 55 Z" fill="white" stroke="black" strokeWidth="1" />
+          
+          {/* Directional markers */}
+          <text x="50" y="20" textAnchor="middle" fontSize="10" fontWeight="bold">N</text>
+          <text x="50" y="85" textAnchor="middle" fontSize="10" fontWeight="bold">S</text>
+          <text x="85" y="52" textAnchor="middle" fontSize="10" fontWeight="bold">E</text>
+          <text x="15" y="52" textAnchor="middle" fontSize="10" fontWeight="bold">W</text>
+          
+          {/* Tick marks */}
+          {Array.from({length: 36}).map((_, i) => (
+            <line 
+              key={i}
+              x1={50 + 38 * Math.sin(i * 10 * Math.PI / 180)}
+              y1={50 - 38 * Math.cos(i * 10 * Math.PI / 180)}
+              x2={50 + 42 * Math.sin(i * 10 * Math.PI / 180)}
+              y2={50 - 42 * Math.cos(i * 10 * Math.PI / 180)}
+              stroke="black"
+              strokeWidth="1"
+            />
+          ))}
+        </svg>
+
+
+        <h1 className="text-4xl font-bold text-black">Compass AI</h1>
         
         {/* Category Dropdown */}
         <div className="relative">
