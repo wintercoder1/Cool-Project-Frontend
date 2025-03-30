@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+// @ts-expect-error
+import compass_logo from './assets/compass_logo.png';
 
 const MainPage = () => {
   const [data, setData] = useState([]);
@@ -163,43 +165,15 @@ const MainPage = () => {
   }
 
   return (
-    <Card className="px-5 w-screen mx-auto bg-white">
+    <Card className="absolute top-0 absolute bottom-0 px-0 w-screen mx-auto bg-white">
       {/* Header with Logo and Dropdown */}
-      <div className="flex justify-between items-center pt-5 px-8">
+      <div className="flex justify-between items-center pt-2 px-8 ">
 
-        <svg className="hidden sm:block" width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        {/* <svg width="40" height="40" viewBox="0 0 100 100" xmlns="assets/compass_pic.png"> */}
-          <circle cx="50" cy="50" r="45" fill="white" stroke="black" strokeWidth="2" />
-          <circle cx="50" cy="50" r="40" fill="none" stroke="black" strokeWidth="1" />
-          <circle cx="50" cy="50" r="4" fill="black" />
-          
-          {/* North-South needle */}
-          <path d="M50 15 L54 45 L50 50 L46 45 Z" fill="black" />
-          <path d="M50 85 L54 55 L50 50 L46 55 Z" fill="white" stroke="black" strokeWidth="1" />
-          
-          {/* Directional markers */}
-          <text x="50" y="20" textAnchor="middle" fontSize="10" fontWeight="bold">N</text>
-          <text x="50" y="85" textAnchor="middle" fontSize="10" fontWeight="bold">S</text>
-          <text x="85" y="52" textAnchor="middle" fontSize="10" fontWeight="bold">E</text>
-          <text x="15" y="52" textAnchor="middle" fontSize="10" fontWeight="bold">W</text>
-          
-          {/* Tick marks */}
-          {Array.from({length: 36}).map((_, i) => (
-            <line 
-              key={i}
-              x1={50 + 38 * Math.sin(i * 10 * Math.PI / 180)}
-              y1={50 - 38 * Math.cos(i * 10 * Math.PI / 180)}
-              x2={50 + 42 * Math.sin(i * 10 * Math.PI / 180)}
-              y2={50 - 42 * Math.cos(i * 10 * Math.PI / 180)}
-              stroke="black"
-              strokeWidth="1"
-            />
-          ))}
-        </svg>
+        <div className="flex items-center gap-2">
+          <img src={compass_logo} className="hidden sm:block" width="65" height="65" alt="compass_logo" />
+          <h1 className="text-4xl font-bold text-black">Compass AI</h1>
+        </div>
 
-
-        <h1 className="text-4xl font-bold text-black">Compass AI</h1>
-        
         {/* Category Dropdown */}
         <div className="relative">
           <button 
@@ -225,8 +199,8 @@ const MainPage = () => {
         </div>
       </div>
 
-      <CardContent className="p-4">
-        <div className="py-4"></div>
+      <CardContent className="p-4 mt-2">
+        <div className="py-0"></div>
         
         <div className="space-y-2">
           {data.map((item, index) => (
@@ -248,6 +222,17 @@ const MainPage = () => {
             </div>
           ))}
         </div>
+
+        {/* Show a message when no data is available */}
+        {data.length === 0 && (
+          <div className="py-4 text-center text-gray-500">
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            Loading data...
+          </div>
+        )}
 
         {/* Temporarily disable the new company/indiviudal response button until this is corerctly wired up on the backed. */}
         {/* TODO: Make the backend for this work on financial contributions. */}
