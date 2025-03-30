@@ -6,15 +6,22 @@ import { useNavigate } from 'react-router-dom';
 import compass_logo from './assets/compass_logo.png';
 
 const MainPage = () => {
-  const [dataCache, setDataCache] = useState({
-    'Political Leaning': [],
-    'DEI Friendliness': [],
-    'Wokeness': [],
-    'Financial Contributions': []
+  // Initialize dataCache from localStorage if available, otherwise use empty arrays
+  const [dataCache, setDataCache] = useState(() => {
+    const savedCache = localStorage.getItem('compassAIDataCache');
+    return savedCache ? JSON.parse(savedCache) : {
+      'Political Leaning': [],
+      'DEI Friendliness': [],
+      'Wokeness': [],
+      'Financial Contributions': []
+    };
   });
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [category, setCategory] = useState('Political Leaning');
+  const [category, setCategory] = useState(() => {
+    return localStorage.getItem('compassAILastCategory') || 'Political Leaning';
+  });
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -29,13 +36,23 @@ const MainPage = () => {
     'Financial Contributions': ENVIRONMENT_BASE_URL + '/getCachedFinancialContributions'
   };
 
+  // Save dataCache to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('compassAIDataCache', JSON.stringify(dataCache));
+  }, [dataCache]);
+
+  // Save last selected category
+  useEffect(() => {
+    localStorage.setItem('compassAILastCategory', category);
+  }, [category]);
+
   useEffect(() => {
     const fetchDataForCategory = async (cat) => {
       // Skip fetching if we already have data for this category
-      if (dataCache[cat].length > 0) {
-        console.log(`Using cached data for ${cat}`);
-        return;
-      }
+      // if (dataCache[cat] && dataCache[cat].length > 0) {
+      //   console.log(`Using cached data for ${cat}`);
+      //   return;
+      // }
 
       setLoading(true);
       console.log(`Fetching data for category: ${cat} from ${categoryEndpoints[cat]}`);
@@ -68,6 +85,19 @@ const MainPage = () => {
     
   }, [category]);
 
+  // Add a function to clear cache if needed (optional, for debug/development)
+  const clearCache = () => {
+    localStorage.removeItem('compassAIDataCache');
+    localStorage.removeItem('compassAILastCategory');
+    setDataCache({
+      'Political Leaning': [],
+      'DEI Friendliness': [],
+      'Wokeness': [],
+      'Financial Contributions': []
+    });
+    setCategory('Political Leaning');
+  };
+
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
@@ -77,7 +107,31 @@ const MainPage = () => {
     setDropdownOpen(false);
   };
 
-  // TODO: Use this method only on Political leaning mode.
+  // Rest of your component remains the same...
+  
+  // (getLeaningStyle, getCleanedLeanString, getCategoryValueLabel, etc.)
+
+  // Get the data for the current category from the cache
+  const currentData = dataCache[category] || [];
+
+  if (error) {
+    return (
+      <Card className="w-full max-w-md mx-auto">
+        <CardContent className="p-4">
+          <div className="text-red-500">Error loading data: {error}</div>
+          {/* Optional: Add a button to clear cache if there's an error */}
+          <button 
+            className="mt-2 px-4 py-2 bg-gray-200 rounded"
+            onClick={clearCache}
+          >
+            Clear Cache and Retry
+          </button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+    // TODO: Use this method only on Political leaning mode.
   // @ts-expect-error
   const getLeaningStyle = (rating, lean) => {
     const isLiberal = lean.toLowerCase().includes('liberal');
@@ -175,7 +229,7 @@ const MainPage = () => {
   };
 
   // Get the data for the current category from the cache
-  const currentData = dataCache[category] || [];
+  // const currentData = dataCache[category] || [];
 
   if (error) {
     return (
@@ -257,7 +311,7 @@ const MainPage = () => {
         {category !== 'Financial Contributions' && (
           <div className="fixed bottom-6 right-6">
             <button 
-              className="w-14.5 h-14 bg-blue-500 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
+              className="w-14.5 h-14 bg-blue-400 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
               onClick={(event) => handleNewQueryClick(event)}
             >
               <Plus size={60} />
@@ -267,10 +321,20 @@ const MainPage = () => {
 
         {/* Empty Placeholder to allow scrolling past the (+) button */}
         <div className="py-10"></div>
-
+        
       </CardContent>
     </Card>
   );
 };
 
 export default MainPage;
+
+  // return (
+  //   <Card className="absolute top-0 absolute bottom-0 px-0 w-screen mx-auto bg-white">
+  //     {/* Rest of your rendering code... */}
+      
+  //     {/* Optional: You could add a debug button to clear cache */}
+  //     {/* <button onClick={clearCache} className="absolute top-2 right-2 text-xs text-gray-400">Clear Cache</button> */}
+  //   </Card>
+  // );
+// };
