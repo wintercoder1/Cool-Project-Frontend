@@ -84,7 +84,7 @@ const OrganizationDetail = () => {
        
 
         {/* categoryData */}
-        <Card className="w-screen mx-auto absolute top-20 px-5 py-5 bg-white">
+        <Card className="w-screen mx-auto absolute top-20 px-4 py-5 bg-white">
           <CardHeader className="pb-2">
             <CardTitle className="text-2xl font-bold">
               Overview for {topic}

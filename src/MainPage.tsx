@@ -202,7 +202,7 @@ const MainPage = () => {
       <CardContent className="p-4 mt-2">
         <div className="py-0"></div>
         
-        <div className="space-y-2">
+        <div className="space-y-2 px-4">
           {data.map((item, index) => (
             <div 
               key={index}
