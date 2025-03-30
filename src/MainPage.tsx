@@ -6,7 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import compass_logo from './assets/compass_logo.png';
 
 const MainPage = () => {
-  const [data, setData] = useState([]);
+  const [dataCache, setDataCache] = useState({
+    'Political Leaning': [],
+    'DEI Friendliness': [],
+    'Wokeness': [],
+    'Financial Contributions': []
+  });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [category, setCategory] = useState('Political Leaning');
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -24,25 +30,42 @@ const MainPage = () => {
   };
 
   useEffect(() => {
-    console.log('With base URL: ', ENVIRONMENT_BASE_URL);
-    console.log('Fetching data for category:', category);
-    const fetchData = async () => {
+    const fetchDataForCategory = async (cat) => {
+      // Skip fetching if we already have data for this category
+      if (dataCache[cat].length > 0) {
+        console.log(`Using cached data for ${cat}`);
+        return;
+      }
+
+      setLoading(true);
+      console.log(`Fetching data for category: ${cat} from ${categoryEndpoints[cat]}`);
+      
       try {
-        const endpoint = categoryEndpoints[category];
+        const endpoint = categoryEndpoints[cat];
         const response = await fetch(endpoint);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const jsonData = await response.json();
         console.log('Data fetched:', jsonData);
-        setData(jsonData);
+        
+        // Update the cache with the new data
+        setDataCache(prevCache => ({
+          ...prevCache,
+          [cat]: jsonData
+        }));
+        
       } catch (err) {
         setError(err.message);
         console.error('Error fetching data:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchData();
+    // Only fetch if we don't have data for the current category
+    fetchDataForCategory(category);
+    
   }, [category]);
 
   const toggleDropdown = () => {
@@ -51,8 +74,6 @@ const MainPage = () => {
 
   const selectCategory = (newCategory) => {
     setCategory(newCategory);
-    // Set to empty before each request.
-    setData([])
     setDropdownOpen(false);
   };
 
@@ -147,12 +168,14 @@ const MainPage = () => {
     openNewQueryPageCurrentTab()
   };
 
-  
   const openNewQueryPageCurrentTab = () => {
     navigate('query', {
         state: {current_category: category},
     });
   };
+
+  // Get the data for the current category from the cache
+  const currentData = dataCache[category] || [];
 
   if (error) {
     return (
@@ -203,7 +226,7 @@ const MainPage = () => {
         <div className="py-0"></div>
         
         <div className="space-y-2 px-4">
-          {data.map((item, index) => (
+          {currentData.map((item, index) => (
             <div 
               key={index}
               className="flex justify-between items-center p-2 border rounded cursor-pointer hover:bg-gray-50"
@@ -212,11 +235,7 @@ const MainPage = () => {
               <div className="font-medium">
                 {item.topic}
               </div>
-              {/* <div className={getLeaningStyle(item.rating, item.lean)}>
-                {getCategoryValueLabel()(item)}
-              </div> */}
               <div className='text-right font-medium text-gray-600'> 
-                {/* {getLeaningStyle(item.rating, item.lean)} */}
                 {getCategoryValueLabel()(item)}
               </div>
             </div>
@@ -224,18 +243,17 @@ const MainPage = () => {
         </div>
 
         {/* Show a message when no data is available */}
-        {data.length === 0 && (
+        {(currentData.length === 0 || loading) && (
           <div className="py-4 text-center text-gray-500">
             <br/>
             <br/>
             <br/>
             <br/>
-            Loading data...
+            {loading ? "Loading data..." : "No data available"}
           </div>
         )}
 
-        {/* Temporarily disable the new company/indiviudal response button until this is corerctly wired up on the backed. */}
-        {/* TODO: Make the backend for this work on financial contributions. */}
+        {/* New company/individual response button */}
         {category !== 'Financial Contributions' && (
           <div className="fixed bottom-6 right-6">
             <button 
