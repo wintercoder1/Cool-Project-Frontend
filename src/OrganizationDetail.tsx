@@ -76,7 +76,7 @@ const OrganizationDetail = () => {
           tabIndex={0}
         >
           <div className="flex items-center gap-2">
-            <img src={compass_logo} className="hidden sm:block" width="65" height="65" alt="compass_logo" />
+            <img src={compass_logo} className="block" width="65" height="65" alt="compass_logo" />
             <h1 className="text-4xl font-bold text-black">Compass AI</h1>
           </div>
           
@@ -106,6 +106,7 @@ const OrganizationDetail = () => {
             )}
             {categoryData == 'DEI Friendliness' && (
               <div className="space-y-1">
+                <br/>
                 <div className="text-lg">
                 DEI Friendliness Rating: {rating}
                 </div>
@@ -113,6 +114,7 @@ const OrganizationDetail = () => {
             )}
             {categoryData == 'Wokeness' && (
               <div className="space-y-1">
+                <br/>
                 <div className="text-lg">
                   Wokeness Rating: {rating}
                 </div>
