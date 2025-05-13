@@ -69,6 +69,9 @@ const MainPage = () => {
     }
     // Reset to page 1 when category changes
     setCurrentPage(1);
+    if (dataCache[category] == 0 || dataCache[category] == null) {
+      fetchDataForCategory();
+    }
   }, [category]);
 
   // Fetch total number of items for pagination
