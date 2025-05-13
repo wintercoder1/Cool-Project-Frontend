@@ -251,6 +251,7 @@ const MainPage = () => {
   const handleOrganizationClick = (event, organization, category) => {
     console.log(event)
     openDetailPageNewTab(organization, category)
+    // openDetailPageCurrnetTab(organization, category)
   };
 
   const openDetailPageNewTab = (organization, category) => {
@@ -308,17 +309,18 @@ const MainPage = () => {
     );
   }
 
-  return (
+  return(
     <div className="absolute top-0 bottom-0 px-0 w-screen mx-auto bg-white">
       {/* Header with Logo and Dropdown */}
-      <div className="flex justify-between items-center pt-2 px-8">
-        <div className="flex items-center gap-2">
-          <img src={compass_logo} className="hidden sm:block" width="65" height="65" alt="compass_logo" />
+      {/* Header with Logo and Dropdown */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 px-8">
+        <div className="flex items-center gap-2 justify-center sm:justify-start">
+          <img src={compass_logo} className="block" width="65" height="65" alt="compass_logo" />
           <h1 className="text-4xl font-bold text-black">Compass AI</h1>
         </div>
 
         {/* Category Dropdown */}
-        <div className="relative">
+        <div className="relative mt-4 sm:mt-0 flex justify-center sm:justify-end">
           <button 
             className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-md hover:bg-gray-200"
             onClick={toggleDropdown}
@@ -429,6 +431,128 @@ const MainPage = () => {
       </div>
     </div>
   );
+//   return (
+//     <div className="absolute top-0 bottom-0 px-0 w-screen mx-auto bg-white">
+//       {/* Header with Logo and Dropdown */}
+//       <div className="flex justify-between items-center pt-2 px-8">
+//         <div className="flex items-center gap-2">
+//           <img src={compass_logo} className="hidden sm:block" width="65" height="65" alt="compass_logo" />
+//           <h1 className="text-4xl font-bold text-black">Compass AI</h1>
+//         </div>
+
+//         {/* Category Dropdown */}
+//         <div className="relative">
+//           <button 
+//             className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-md hover:bg-gray-200"
+//             onClick={toggleDropdown}
+//           >
+//             {category} <ChevronDown size={16} />
+//           </button>
+          
+//           {dropdownOpen && (
+//             <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-10">
+//               {Object.keys(categoryEndpoints).map((cat) => (
+//                 <div 
+//                   key={cat} 
+//                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+//                   onClick={() => selectCategory(cat)}
+//                 >
+//                   {cat}
+//                 </div>
+//               ))}
+//             </div>
+//           )}
+//         </div>
+//       </div>
+
+//       <div className="p-4 mt-2">
+//         <div className="py-0"></div>
+        
+//         <div className="space-y-2 px-4">
+//           {currentData.map((item, index) => (
+//             <div 
+//               key={index}
+//               className="flex justify-between items-center p-2 border rounded cursor-pointer hover:bg-gray-50"
+//               onClick={(event) => handleOrganizationClick(event, item, category)}
+//             >
+//               <div className="font-medium">
+//                 {item.topic}
+//               </div>
+//               <div className='text-right font-medium text-gray-600'> 
+//                 {getCategoryValueLabel()(item)}
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Show a message when no data is available */}
+//         {(currentData.length === 0 || loading) && (
+//           <div className="py-4 text-center text-gray-500">
+//             <br/>
+//             <br/>
+//             <br/>
+//             <br/>
+//             {loading ? "Loading data..." : "No data available"}
+//           </div>
+//         )}
+
+
+//         {/* Pagination Controls */}
+//         {/* {totalItems > 0 && ( */}
+//             <div className="flex justify-center items-center mt-6 mb-16">
+
+//               <button 
+//                 onClick={goToPrevPage}
+//                 disabled={currentPage === 1}
+//                 className={`p-2 rounded-md transition-colors ${
+//                   currentPage === 1 
+//                     ? 'bg-gray-100 text-gray-300 cursor-not-allowed' 
+//                     : 'bg-gray-100 text-blue-500 hover:bg-blue-50 touch-manipulation'
+//                   }`}
+//                 >
+//                 <span style={{ display: "inline-block", width: "20px", height: "20px" }}>
+//                   <ChevronLeft size={20} width={20} height={20}/>
+//                 </span>
+//               </button>
+              
+//               <span className="mx-4 text-sm">
+//                 Page {currentPage} of {totalPages}
+//               </span>
+              
+//               <button 
+//                 onClick={goToNextPage}
+//                 disabled={currentPage === totalPages}
+//                 className={`p-2 rounded-md transition-colors ${
+//                   currentPage === totalPages 
+//                     ? 'bg-gray-100 text-gray-300 cursor-not-allowed' 
+//                     : 'bg-gray-100 text-blue-500 hover:bg-blue-50 active:bg-blue-100 touch-manipulation'
+//                   }`}
+//                 >
+//                 <span style={{ display: "inline-block", width: "20px", height: "20px" }}>
+//                   <ChevronRight size={20} width={20} height={20}/>
+//                 </span>
+//               </button>
+
+//             </div>
+//         {/* )} */}
+        
+
+//         {/* New company/individual response button */}
+//         {category !== 'Financial Contributions' && (
+//           <div className="fixed bottom-12 right-8">
+//             <button 
+//               className="w-14 h-12 bg-blue-400 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
+//               onClick={(event) => handleNewQueryClick(event)}
+//             >
+//               <Plus size={50} />
+//             </button>
+//           </div>
+//         )}
+
+//       </div>
+//     </div>
+//   );
+
 };
 
 export default MainPage;
