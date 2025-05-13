@@ -1,20 +1,39 @@
 import { useState, useEffect } from 'react';
-import { Plus, ChevronDown } from 'lucide-react';
+import { Plus, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 // @ts-expect-error
 import compass_logo from './assets/compass_logo.png';
 
 const MainPage = () => {
+
+  const itemsPerPage = 10;
+ 
+  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
+  // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
+
+
   // Initialize dataCache from localStorage if available, otherwise use empty arrays
   const [dataCache, setDataCache] = useState(() => {
     const savedCache = localStorage.getItem('compassAIDataCache');
     return savedCache ? JSON.parse(savedCache) : {
-      'Political Leaning': [],
-      'DEI Friendliness': [],
-      'Wokeness': [],
-      'Environmental Impact': [],
-      'Financial Contributions': []
+      'Political Leaning p0': [],
+      'DEI Friendliness p0': [],
+      'Wokeness p0': [],
+      'Environmental Impact p0': [],
+      'Financial Contributions p0': []
     };
+  });
+
+
+  const [totalItemsForCategoryCache, setTotalItemsForCategoryCache] = useState(() => {
+    const savedCache = localStorage.getItem('compassAITotalItemsForCategory');
+      return savedCache ? JSON.parse(savedCache) : {
+        'Political Leaning': 0,
+        'DEI Friendliness': 0,
+        'Wokeness': 0,
+        'Environmental Impact': 0,
+        'Financial Contributions': 0
+      };
   });
   
   const [loading, setLoading] = useState(false);
@@ -25,9 +44,10 @@ const MainPage = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
-  // const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
-  const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
-
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  // const [totalItems, setTotalItems] = useState(0);
+  
   const categoryEndpoints = {
     'Political Leaning': ENVIRONMENT_BASE_URL + '/getCachedPoliticalLeanings',
     'DEI Friendliness': ENVIRONMENT_BASE_URL + '/getCachedDEIScores',
@@ -36,40 +56,80 @@ const MainPage = () => {
     'Financial Contributions': ENVIRONMENT_BASE_URL + '/getCachedFinancialContributions'
   };
 
-  // Save dataCache to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('compassAIDataCache', JSON.stringify(dataCache));
-  }, [dataCache]);
-
   // Save last selected category
   useEffect(() => {
     localStorage.setItem('compassAILastCategory', category);
+    // Reset to page 1 when category changes
+    setCurrentPage(1);
+    // set totalpage count to zero when changing categories
+    // setTotalItems(0)
+    // Fetch the total count for the new category
+    console.log('Category is now:', category);
+    if (totalItemsForCategoryCache[category] == 0) {
+      fetchTotalItems(category);
+    }
   }, [category]);
 
-  useEffect(() => {
-    const fetchDataForCategory = async (cat) => {
-      // Skip fetching if we already have data for this category
-      // if (dataCache[cat] && dataCache[cat].length > 0) {
-      //   console.log(`Using cached data for ${cat}`);
-      //   return;
-      // }
+  // Fetch total number of items for pagination
+  const fetchTotalItems = async (category) => {
+    try {
+      const category_upper = category.toUpperCase()
+      const endpoint = `${ENVIRONMENT_BASE_URL}/getNumberOfTopics?queryType=${category_upper}`;
+      const response = await fetch(endpoint);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch total items');
+      }
+      
+      console.log('Total count data fetched:', response);
 
-      setLoading(true);
-      console.log(`Fetching data for category: ${cat} from ${categoryEndpoints[cat]}`);
+      const data = await response.json();
+      console.log('Total count data fetched:', data);
+      const count = data[0]
+      console.log('The count :', count);
+      // setTotalItems(count);
+
+      setTotalItemsForCategoryCache(prevCache => ({
+        ...prevCache,
+        [category]: count
+      }));
+
+    } catch (err) {
+      console.error('Error fetching total items:', err);
+      setError(err.message);
+    }
+  };
+ 
+  
+  // Fetch data with pagination
+  useEffect(() => {
+    const fetchDataForCategory = async () => {
+      // 
+      if ( dataCache[`${category} p${currentPage}`] == null) {
+        setLoading(true);
+      }
+      const offset = (currentPage - 1) * itemsPerPage;
       
       try {
-        const endpoint = categoryEndpoints[cat];
+        const endpoint = `${categoryEndpoints[category]}?limit=${itemsPerPage}&offset=${offset}`;
+        console.log(`Fetching data for category: ${category} from ${endpoint}`);
+        
         const response = await fetch(endpoint);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
+        
         const jsonData = await response.json();
         console.log('Data fetched:', jsonData);
         
-        // Update the cache with the new data
+        // Update the cache with the new data for the current page
+        // setDataCache(prevCache => ({
+        //   ...prevCache,
+        //   [category]: jsonData
+        // }));
         setDataCache(prevCache => ({
           ...prevCache,
-          [cat]: jsonData
+          [`${category} p${currentPage}`]: jsonData
         }));
         
       } catch (err) {
@@ -80,22 +140,29 @@ const MainPage = () => {
       }
     };
 
-    // Only fetch if we don't have data for the current category
-    fetchDataForCategory(category);
-    
-  }, [category]);
+    fetchDataForCategory();
+  }, [currentPage]);
 
-  // Add a function to clear cache if needed (optional, for debug/development)
   const clearCache = () => {
     localStorage.removeItem('compassAIDataCache');
     localStorage.removeItem('compassAILastCategory');
+    localStorage.removeItem('compassAITotalItemsForCategory');
     setDataCache({
-      'Political Leaning': [],
-      'DEI Friendliness': [],
-      'Wokeness': [],
-      'Financial Contributions': []
+      'Political Leaning p0': [],
+      'DEI Friendliness p0': [],
+      'Wokeness p0': [],
+      'Environmental Impact p0': [],
+      'Financial Contributions p0': []
+    });
+    setTotalItemsForCategoryCache({
+      'Political Leaning': 0,
+      'DEI Friendliness': 0,
+      'Wokeness': 0,
+      'Environmental Impact': 0,
+      'Financial Contributions': 0
     });
     setCategory('Political Leaning');
+    setCurrentPage(1);
   };
 
   const toggleDropdown = () => {
@@ -204,8 +271,26 @@ const MainPage = () => {
     });
   };
 
+  // Pagination handlers
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      currentData =  [];
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // Calculate total pages
+  const totalItems = totalItemsForCategoryCache[category]
+  let totalPages = Math.ceil(totalItems / itemsPerPage);
+
   // Get the data for the current category from the cache
-  const currentData = dataCache[category] || [];
+  let currentData = dataCache[`${category} p${currentPage}`] || [];
 
   if (error) {
     return (
@@ -227,7 +312,7 @@ const MainPage = () => {
   return (
     <div className="absolute top-0 bottom-0 px-0 w-screen mx-auto bg-white">
       {/* Header with Logo and Dropdown */}
-      <div className="flex justify-between items-center pt-2 px-8 ">
+      <div className="flex justify-between items-center pt-2 px-8">
         <div className="flex items-center gap-2">
           <img src={compass_logo} className="hidden sm:block" width="65" height="65" alt="compass_logo" />
           <h1 className="text-4xl font-bold text-black">Compass AI</h1>
@@ -288,21 +373,44 @@ const MainPage = () => {
             {loading ? "Loading data..." : "No data available"}
           </div>
         )}
+        {/* Pagination Controls */}
+        {/* {totalItems > 0 && ( */}
+            <div className="flex justify-center items-center mt-6 mb-16">
+              <button 
+                onClick={goToPrevPage}
+                disabled={currentPage === 1}
+                className={`p-2 rounded-md ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-blue-500 hover:bg-blue-50'}`}
+              >
+                <ChevronLeft size={20} />
+              </button>
+              
+              <span className="mx-4 text-sm">
+                Page {currentPage} of {totalPages}
+              </span>
+              
+              <button 
+                onClick={goToNextPage}
+                disabled={currentPage === totalPages}
+                className={`p-2 rounded-md ${currentPage === totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-blue-500 hover:bg-blue-50'}`}
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+        {/* )} */}
+        
 
         {/* New company/individual response button */}
         {category !== 'Financial Contributions' && (
-          <div className="fixed bottom-6 right-6">
+          <div className="fixed bottom-6 right-8">
             <button 
-              className="w-14.5 h-14 bg-blue-400 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
+              className="w-14 h-14 bg-blue-400 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
               onClick={(event) => handleNewQueryClick(event)}
             >
-              <Plus size={60} />
+              <Plus size={40} />
             </button>
           </div>
         )}
 
-        {/* Empty Placeholder to allow scrolling past the (+) button */}
-        <div className="py-10"></div>
       </div>
     </div>
   );
@@ -311,7 +419,6 @@ const MainPage = () => {
 export default MainPage;
 
 // import { useState, useEffect } from 'react';
-// import { Card, CardContent } from "@/components/ui/card";
 // import { Plus, ChevronDown } from 'lucide-react';
 // import { useNavigate } from 'react-router-dom';
 // // @ts-expect-error
@@ -338,7 +445,6 @@ export default MainPage;
 //   const [dropdownOpen, setDropdownOpen] = useState(false);
 //   const navigate = useNavigate();
 
-//   // @ts-expect-error
 //   // const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
 //   const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
 
@@ -420,32 +526,8 @@ export default MainPage;
 //     setCategory(newCategory);
 //     setDropdownOpen(false);
 //   };
-
-//   // Rest of your component remains the same...
   
-//   // (getLeaningStyle, getCleanedLeanString, getCategoryValueLabel, etc.)
-
-//   // Get the data for the current category from the cache
-//   const currentData = dataCache[category] || [];
-
-//   if (error) {
-//     return (
-//       <Card className="w-full max-w-md mx-auto">
-//         <CardContent className="p-4">
-//           <div className="text-red-500">Error loading data: {error}</div>
-//           {/* Optional: Add a button to clear cache if there's an error */}
-//           <button 
-//             className="mt-2 px-4 py-2 bg-gray-200 rounded"
-//             onClick={clearCache}
-//           >
-//             Clear Cache and Retry
-//           </button>
-//         </CardContent>
-//       </Card>
-//     );
-//   }
-
-//     // TODO: Use this method only on Political leaning mode.
+//   // TODO: Use this method only on Political leaning mode.
 //   // @ts-expect-error
 //   const getLeaningStyle = (rating, lean) => {
 //     const isLiberal = lean.toLowerCase().includes('liberal');
@@ -543,24 +625,29 @@ export default MainPage;
 //   };
 
 //   // Get the data for the current category from the cache
-//   // const currentData = dataCache[category] || [];
+//   const currentData = dataCache[category] || [];
 
 //   if (error) {
 //     return (
-//       <Card className="w-full max-w-md mx-auto">
-//         <CardContent className="p-4">
+//       <div className="w-full max-w-md mx-auto">
+//         <div className="p-4">
 //           <div className="text-red-500">Error loading data: {error}</div>
-//         </CardContent>
-//       </Card>
+//           {/* Optional: Add a button to clear cache if there's an error */}
+//           <button 
+//             className="mt-2 px-4 py-2 bg-gray-200 rounded"
+//             onClick={clearCache}
+//           >
+//             Clear Cache and Retry
+//           </button>
+//         </div>
+//       </div>
 //     );
 //   }
 
 //   return (
-//     <Card className="absolute top-0 bottom-0 px-0 w-screen mx-auto bg-white"> 
-//     {/* <Card className="absolute top-0 absolute bottom-0 px-0 w-screen mx-auto bg-white"> */}
+//     <div className="absolute top-0 bottom-0 px-0 w-screen mx-auto bg-white">
 //       {/* Header with Logo and Dropdown */}
 //       <div className="flex justify-between items-center pt-2 px-8 ">
-
 //         <div className="flex items-center gap-2">
 //           <img src={compass_logo} className="hidden sm:block" width="65" height="65" alt="compass_logo" />
 //           <h1 className="text-4xl font-bold text-black">Compass AI</h1>
@@ -591,7 +678,7 @@ export default MainPage;
 //         </div>
 //       </div>
 
-//       <CardContent className="p-4 mt-2">
+//       <div className="p-4 mt-2">
 //         <div className="py-0"></div>
         
 //         <div className="space-y-2 px-4">
@@ -636,20 +723,9 @@ export default MainPage;
 
 //         {/* Empty Placeholder to allow scrolling past the (+) button */}
 //         <div className="py-10"></div>
-        
-//       </CardContent>
-//     </Card>
+//       </div>
+//     </div>
 //   );
 // };
 
 // export default MainPage;
-
-//   // return (
-//   //   <Card className="absolute top-0 absolute bottom-0 px-0 w-screen mx-auto bg-white">
-//   //     {/* Rest of your rendering code... */}
-      
-//   //     {/* Optional: You could add a debug button to clear cache */}
-//   //     {/* <button onClick={clearCache} className="absolute top-2 right-2 text-xs text-gray-400">Clear Cache</button> */}
-//   //   </Card>
-//   // );
-// // };
