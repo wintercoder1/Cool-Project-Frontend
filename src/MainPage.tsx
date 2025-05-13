@@ -8,8 +8,8 @@ const MainPage = () => {
 
   const itemsPerPage = 10;
   // @ts-expect-error
-  // const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
-  const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
+  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
+  // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
 
 
   // Initialize dataCache from localStorage if available, otherwise use empty arrays
@@ -121,11 +121,6 @@ const MainPage = () => {
       const jsonData = await response.json();
       console.log('Data fetched:', jsonData);
       
-      // Update the cache with the new data for the current page
-      // setDataCache(prevCache => ({
-      //   ...prevCache,
-      //   [category]: jsonData
-      // }));
       setDataCache(prevCache => ({
         ...prevCache,
         [`${category} p${currentPage}`]: jsonData
@@ -374,6 +369,7 @@ const MainPage = () => {
             {loading ? "Loading data..." : "No data available"}
           </div>
         )}
+
         {/* Pagination Controls */}
         {/* {totalItems > 0 && ( */}
             <div className="flex justify-center items-center mt-6 mb-16">
@@ -382,7 +378,9 @@ const MainPage = () => {
                 disabled={currentPage === 1}
                 className={`p-2 rounded-md ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-blue-500 hover:bg-blue-50'}`}
               >
-                <ChevronLeft size={20} />
+                <span style={{ display: "inline-block", width: "20px", height: "20px" }}>
+                  <ChevronLeft size={20} />
+                </span>
               </button>
               
               <span className="mx-4 text-sm">
@@ -394,7 +392,9 @@ const MainPage = () => {
                 disabled={currentPage === totalPages}
                 className={`p-2 rounded-md ${currentPage === totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-blue-500 hover:bg-blue-50'}`}
               >
-                <ChevronRight size={20} />
+                <span style={{ display: "inline-block", width: "20px", height: "20px" }}>
+                  <ChevronRight size={20} />
+                </span>
               </button>
             </div>
         {/* )} */}
@@ -402,12 +402,12 @@ const MainPage = () => {
 
         {/* New company/individual response button */}
         {category !== 'Financial Contributions' && (
-          <div className="fixed bottom-6 right-8">
+          <div className="fixed bottom-12 right-8">
             <button 
-              className="w-14 h-14 bg-blue-400 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
+              className="w-15 h-14 bg-blue-400 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
               onClick={(event) => handleNewQueryClick(event)}
             >
-              <Plus size={40} />
+              <Plus size={50} />
             </button>
           </div>
         )}
