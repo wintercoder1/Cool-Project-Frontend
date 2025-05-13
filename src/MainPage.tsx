@@ -7,7 +7,7 @@ import compass_logo from './assets/compass_logo.png';
 const MainPage = () => {
 
   const itemsPerPage = 10;
- 
+  // @ts-expect-error
   const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
   // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
 
