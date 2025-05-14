@@ -314,12 +314,12 @@ const MainPage = () => {
       {/* Header with Logo and Dropdown */}
       {/* Header with Logo and Dropdown */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 px-8">
-        <div className="flex items-center gap-2 justify-center sm:justify-start">
+        {/* <div className="flex items-center gap-2 justify-center sm:justify-start">
           <img src={compass_logo} className="block" width="65" height="65" alt="compass_logo" />
           <h1 className="text-4xl font-bold text-black">Compass AI</h1>
-        </div>
+        </div> */}
         <div className="flex items-center gap-2 justify-center sm:justify-start">
-          {/* <img src={compass_logo} className="block" width="65" height="65" alt="compass_logo" /> */}
+          {/* <img src='' className="block" width="65" height="65" alt="compass_logo" /> */}
           <h1 className="text-4xl font-bold text-black">MoralCheck AI</h1>
         </div>
 
@@ -422,7 +422,7 @@ const MainPage = () => {
 
         {/* New company/individual response button */}
         {category !== 'Financial Contributions' && (
-          <div className="fixed bottom-12 right-8">
+          <div className="fixed bottom-5 right-8">
             <button 
               className="w-14 h-12 bg-blue-400 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
               onClick={(event) => handleNewQueryClick(event)}
