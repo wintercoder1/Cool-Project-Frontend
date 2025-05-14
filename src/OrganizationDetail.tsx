@@ -75,9 +75,12 @@ const OrganizationDetail = () => {
           onClick={handleLogoClick}
           tabIndex={0}
         >
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <img src={compass_logo} className="block" width="65" height="65" alt="compass_logo" />
             <h1 className="text-4xl font-bold text-black">Compass AI</h1>
+          </div> */}
+          <div className="flex items-center gap-2">
+            <h1 className="text-4xl font-bold text-black">Moral Check AI</h1>
           </div>
           
         </div>

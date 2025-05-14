@@ -318,6 +318,10 @@ const MainPage = () => {
           <img src={compass_logo} className="block" width="65" height="65" alt="compass_logo" />
           <h1 className="text-4xl font-bold text-black">Compass AI</h1>
         </div>
+        <div className="flex items-center gap-2 justify-center sm:justify-start">
+          {/* <img src={compass_logo} className="block" width="65" height="65" alt="compass_logo" /> */}
+          <h1 className="text-4xl font-bold text-black">MoralCheck AI</h1>
+        </div>
 
         {/* Category Dropdown */}
         <div className="relative mt-4 sm:mt-0 flex justify-center sm:justify-end">
