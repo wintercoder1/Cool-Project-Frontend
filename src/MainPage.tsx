@@ -313,10 +313,10 @@ const MainPage = () => {
   }
 
   return(
-    <div className="absolute top-0 bottom-0 px-0 w-screen mx-auto bg-white">
+    <div className="absolute top-2  w-screen mx-auto min-h-screen bg-white">
       {/* Header with Logo and Dropdown */}
       {/* Header with Logo and Dropdown */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 px-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 px-8 bg-white">
 
         <div className="flex items-center gap-2 justify-center sm:justify-start">
           <img src={checkmark_logo} className="block" width="55" height="55" alt="blue_check_logo" />
@@ -422,7 +422,7 @@ const MainPage = () => {
 
         {/* New company/individual response button */}
         {category !== 'Financial Contributions' && (
-          <div className="fixed bottom-10 right-8">
+          <div className="fixed bottom-6 right-8">
             <button 
               className="w-14 h-12 bg-blue-400 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
               onClick={(event) => handleNewQueryClick(event)}

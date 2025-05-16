@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useNavigate} from 'react-router-dom';
 // @ts-expect-error
-import compass_logo from './assets/compass_logo.png';
+import checkmark_logo from './assets/blue_checkmark_logo.png';
 import React from "react";
 
 const OrganizationDetail = () => {
@@ -67,22 +67,20 @@ const OrganizationDetail = () => {
   // }
 
   return (
-    <div className="px-0 py-1 flex justify-even">
+    <div className="px-0 py-0 flex justify-even min-h-screen bg-white">
         {/* Logo */}
         <div 
-          className="absolute top-2 left-8 cursor-pointer "
+          className="absolute top-4 left-8 cursor-pointer "
           role="button"
           onClick={handleLogoClick}
           tabIndex={0}
         >
-          {/* <div className="flex items-center gap-2">
-            <img src={compass_logo} className="block" width="65" height="65" alt="compass_logo" />
-            <h1 className="text-4xl font-bold text-black">Compass AI</h1>
-          </div> */}
-          <div className="flex items-center gap-2">
-            <h1 className="text-4xl font-bold text-black">Moral Check AI</h1>
+
+          <div className="flex items-center gap-2 justify-center sm:justify-start">
+              <img src={checkmark_logo} className="block" width="55" height="55" alt="blue_check_logo" />
+              <h1 className="text-4xl font-bold text-black">MoralCheck AI</h1>
           </div>
-          
+    
         </div>
        
 
