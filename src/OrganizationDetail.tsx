@@ -11,7 +11,6 @@ const OrganizationDetail = () => {
   const organizationDataLocation = location.state; 
   const [organizationDataLocalStorage, _] = useState(JSON.parse(localStorage.getItem("organizationData")));
   const [categoryData, __] = useState(localStorage.getItem("categoryData"));
-  // @ts-expect-error
   const [isFinacialData, setIsFinacialData] = useState(false);
   const [contributionsData, setContributionsData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -94,7 +93,7 @@ const OrganizationDetail = () => {
         setContributionsData(data);
       } catch (err) {
         console.error('Error fetching contributions data:', err);
-        setError('Failed to load contributions data');
+        setError('Failed to load contributions percentages breakdown data');
       } finally {
         setIsLoading(false);
       }
@@ -111,7 +110,7 @@ const OrganizationDetail = () => {
   // Render the contributions chart
   const renderContributionsChart = () => {
     if (isLoading) return <div className="text-center py-4">Loading contributions data...</div>;
-    if (error) return <div className="text-center py-4 text-red-500">{error}</div>;
+    if (error) return <div className="text-center py-4 text-gray-500">{error}</div>;
     if (!contributionsData) return null;
 
     const { percent_to_republicans, percent_to_democrats, total_to_republicans, total_to_democrats, total_contributions } = contributionsData;
