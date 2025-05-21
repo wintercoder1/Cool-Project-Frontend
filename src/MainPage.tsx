@@ -72,7 +72,8 @@ const MainPage = () => {
     }
     // Reset to page 1 when category changes
     setCurrentPage(1);
-    if (dataCache[category] == 0 || dataCache[category] == null) {
+    const category_first_page = category + ' p0'
+    if (dataCache[category_first_page] == 0 || dataCache[category_first_page] == null) {
       fetchDataForCategory();
     }
   }, [category]);
