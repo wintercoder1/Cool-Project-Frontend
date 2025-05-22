@@ -25,10 +25,6 @@ const OrganizationRecipientsTotals = () => {
     navigate('/');
   };
 
-  const handleBackClick = () => {
-    window.close(); // Close the current tab
-  };
-
   if (!organizationRecipientsTotalsData) {
     return (
       <div className="px-0 py-0 flex justify-center items-center min-h-screen bg-white">
@@ -89,12 +85,6 @@ const OrganizationRecipientsTotals = () => {
           <h1 className="text-4xl font-bold text-black">MoralCheck AI</h1>
         </div>
         
-        {/* <button
-          onClick={handleBackClick}
-          className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors duration-200 text-sm font-medium"
-        >
-          Close Tab
-        </button> */}
       </div>
 
       {/* Main Content */}
