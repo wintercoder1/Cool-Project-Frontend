@@ -11,7 +11,7 @@ const OrganizationDetailOverview = () => {
   const organizationDataLocation = location.state; 
   const [organizationDataLocalStorage, _] = useState(JSON.parse(localStorage.getItem("organizationData")));
   const [categoryData, __] = useState(localStorage.getItem("categoryData"));
-  const [isFinacialData, setIsFinacialData] = useState(false);
+  const [isFinancialData, setIsFinacialData] = useState(false);
   const [contributionsData, setContributionsData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -19,6 +19,10 @@ const OrganizationDetailOverview = () => {
   const [isLoadingRecipients, setIsLoadingRecipients] = useState(false);
   const [recipientError, setRecipientError] = useState(null);
   const [displayedRecipientsCount, setDisplayedRecipientsCount] = useState(10);
+  const [leadershipData, setLeadershipData] = useState(null);
+  const [isLoadingLeadership, setIsLoadingLeadership] = useState(false);
+  const [leadershipError, setLeadershipError] = useState(null);
+  const [displayedLeadershipCount, setDisplayedLeadershipCount] = useState(10);
   const navigate = useNavigate();
 
   // Default data if none provided.
@@ -134,6 +138,34 @@ const OrganizationDetailOverview = () => {
     fetchRecipientData();
   }, [committee_id]);
 
+  // Fetch leadership contributions data when component mounts or committee_id changes
+  useEffect(() => {
+    const fetchLeadershipData = async () => {
+      if (!committee_id) return;
+      
+      setIsLoadingLeadership(true);
+      setLeadershipError(null);
+      
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/getContributionsToCommitteeFromLeadershipOnly/${committee_id}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setLeadershipData(data);
+      } catch (err) {
+        console.error('Error fetching leadership data:', err);
+        setLeadershipError('Failed to load leadership contributions data');
+      } finally {
+        setIsLoadingLeadership(false);
+      }
+    };
+
+    fetchLeadershipData();
+  }, [committee_id]);
+
   const handleLogoClick = (event) => {
     console.log(event)
     navigate('/', {});
@@ -154,7 +186,7 @@ const OrganizationDetailOverview = () => {
     const totalOther = hasOther ? total_contributions - total_to_republicans - total_to_democrats : 0;
     
     return (
-      <div className="space-y-4 py-4 mt-6">
+      <div className="space-y-4 py-8 mt-6">
         <h3 className="text-xl font-semibold">Political Contributions Breakdown</h3>
         
         <div className="text-base space-y-2">
@@ -198,7 +230,7 @@ const OrganizationDetailOverview = () => {
   };
 
   // Render the recipients chart
-  const renderRecipientsChart = () => {
+  const renderTopContributionRecipientsChart = () => {
     if (isLoadingRecipients) return <div className="text-center py-4">Loading recipients data...</div>;
     if (recipientError) return <div className="text-center py-4 text-gray-500">{recipientError}</div>;
     if (!recipientData || !recipientData.contribution_totals) return null;
@@ -234,7 +266,7 @@ const OrganizationDetailOverview = () => {
     const hasMoreRecipients = displayedRecipientsCount < recipients.length;
     
     return (
-      <div className="space-y-4 py-2 mt-8">
+      <div className="space-y-4 py-8 mt-8">
         <h3 className="text-xl font-semibold">Top Contribution Recipients</h3>
         
         <div className="space-y-3">
@@ -278,7 +310,122 @@ const OrganizationDetailOverview = () => {
               onClick={handleViewAllInNewTab}
               className="px-4 py-2 bg-gray-100 text-gray rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm font-medium"
             >
-              View All
+              View All Contribution Recipients
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Render the leadership contributions chart
+  const renderLeadershipContributionsChart = () => {
+    if (isLoadingLeadership) return <div className="text-center py-4">Loading leadership contributions data...</div>;
+    if (leadershipError) return <div className="text-center py-4 text-gray-500">{leadershipError}</div>;
+    if (!leadershipData || !leadershipData.leadership_contributors_to_committee) return null;
+
+    const leadership = leadershipData.leadership_contributors_to_committee;
+    
+    // Aggregate contributions by person (name + employer combination)
+    const aggregatedContributions = {};
+    leadership.forEach(contributor => {
+      const key = `${contributor.name}-${contributor.employer}`;
+      if (!aggregatedContributions[key]) {
+        aggregatedContributions[key] = {
+          name: contributor.name,
+          employer: contributor.employer,
+          occupation: contributor.occupation,
+          total_amount: 0,
+          contribution_count: 0
+        };
+      }
+      aggregatedContributions[key].total_amount += parseFloat(contributor.transaction_amount);
+      aggregatedContributions[key].contribution_count += 1;
+    });
+    
+    // Convert to array and sort by total contribution amount (descending)
+    const sortedLeadership = Object.values(aggregatedContributions)
+    // @ts-expect-error
+      .sort((a, b) => b.total_amount - a.total_amount);
+    
+    // Take the number of leadership contributors to display
+    const displayedLeadership = sortedLeadership.slice(0, displayedLeadershipCount);
+    
+    const handleViewAllLeadershipInNewTab = () => {
+      localStorage.setItem('leadershipContributionsData', JSON.stringify({
+        leadership: sortedLeadership,
+        organizationName: topic,
+        committeeId: committee_id
+      }));
+ 
+      window.open('#/organizationLeadershipContributions', "_blank", "noreferrer");
+    };
+    
+    // Calculate total amount for summary
+    // @ts-expect-error
+    const totalLeadershipAmount = sortedLeadership.reduce((sum, contributor) => sum + contributor.total_amount, 0);
+    
+    return (
+      <div className="space-y-4 py-8 mt-8">
+        <h3 className="text-xl font-semibold">Leadership Contributions to Company Committee</h3>
+        
+        <div className="text-base mb-4">
+          <div>Total from Leadership: ${totalLeadershipAmount.toLocaleString()}</div>
+          <div className="text-sm text-gray-600">
+            {sortedLeadership.length} leadership contributor{sortedLeadership.length !== 1 ? 's' : ''}
+          </div>
+        </div>
+        
+        <div className="space-y-3">
+          {displayedLeadership.map((contributor, index) => {
+            return (
+              // @ts-expect-error
+              <div key={`${contributor.name}-${contributor.employer}-${index}`} className="p-0 rounded-lg">
+              {/* <div key={`${contributor.name}-${contributor.employer}-${index}`} className="bg-gray-50 p-3 rounded-lg"> */}
+                <div className="flex justify-between items-start">
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-gray-900 truncate">
+                      {/* @ts-expect-error */}
+                      {contributor.name}
+                    </div>
+                    <div className="text-sm text-gray-600 truncate">
+                      {/* @ts-expect-error */}
+                      {contributor.occupation}
+                    </div>
+                    <div className="text-sm text-gray-500 truncate">
+                      {/* @ts-expect-error */}
+                      {contributor.employer}
+                    </div>
+                  </div>
+                  <div className="ml-4 text-right flex-shrink-0">
+                    <div className="font-semibold text-gray-900">
+                    {/* <div className="font-semibold "> */}
+                      {/* @ts-expect-error */}
+                      ${contributor.total_amount.toLocaleString()}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {/* @ts-expect-error */}
+                      {contributor.contribution_count} contribution{contributor.contribution_count !== 1 ? 's' : ''}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        
+        <div className="text-center space-y-2">
+          <div className="text-sm text-gray-500">
+            {/* Showing {displayedLeadershipCount} of {sortedLeadership.length} total leadership contributors */}
+            Showing {sortedLeadership.length} of {displayedLeadershipCount} total leadership contributors
+          </div>
+          
+          <div className="flex justify-center gap-3">
+            <button
+              onClick={handleViewAllLeadershipInNewTab}
+              className="px-4 py-2 bg-gray-100 text-gray rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm font-medium"
+            >
+              View All Leadership Contributors
             </button>
           </div>
         </div>
@@ -363,10 +510,14 @@ const OrganizationDetailOverview = () => {
             )}
 
             {/* Political Contributions Chart */}
-            {(isFinacialData || categoryData === 'Financial Contributions') && renderContributionsChart()}
+            {(isFinancialData || categoryData === 'Financial Contributions') && renderContributionsChart()}
 
-            {/* Recipients Chart */}
-            {(isFinacialData || categoryData === 'Financial Contributions') && renderRecipientsChart()}
+            {/* Top Recipients Chart */}
+            {(isFinancialData || categoryData === 'Financial Contributions') && renderTopContributionRecipientsChart()}
+            
+            {/* Leadership Contributions Chart */}
+            {(isFinancialData || categoryData === 'Financial Contributions') && renderLeadershipContributionsChart()}
+
           </CardContent> 
         </Card> 
       </div>
