@@ -22,7 +22,8 @@ const OrganizationDetailOverview = () => {
   const [leadershipData, setLeadershipData] = useState(null);
   const [isLoadingLeadership, setIsLoadingLeadership] = useState(false);
   const [leadershipError, setLeadershipError] = useState(null);
-  const [displayedLeadershipCount, setDisplayedLeadershipCount] = useState(10);
+  // const [displayedLeadershipCount, setDisplayedLeadershipCount] = useState(10);
+  const [displayedLeadershipCount, ___] = useState(10);
   const navigate = useNavigate();
 
   // Default data if none provided.
