@@ -4,7 +4,8 @@ import ReactDOM from "react-dom/client";
 import { StrictMode } from 'react'
 import { HashRouter, Routes, Route } from "react-router-dom";
 import MainPage from './MainPage.tsx'
-import OrganizationDetail from '@/OrganizationDetail.tsx'
+import OrganizationDetailOverview  from '@/OrganizationDetailOverview.tsx'
+import OrganizationRecipientsTotals from '@/OrganizationRecipientsTotals.tsx'
 import OrganizationQuery from '@/OrganizationQuery.tsx'
 import WaitingPage  from '@/WaitingPage.tsx'
 
@@ -15,7 +16,9 @@ export default function MainRouter() {
         <Route path="/" 
                element={<MainPage />} />
         <Route path="organization" 
-               element={<OrganizationDetail />} />
+               element={<OrganizationDetailOverview />} />
+        <Route path="organizationRecipientsTotals"
+               element={<OrganizationRecipientsTotals/>} />
         <Route path="query" 
                element={<OrganizationQuery />} />
         <Route path="waiting" 
