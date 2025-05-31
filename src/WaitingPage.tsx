@@ -17,6 +17,7 @@ const WaitingPage = () => {
 
   const [_, setSearchTerm] = useState('');
   const [__, setCategory] = useState('');
+  const [fetchComplete, setFetchComplete] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -55,9 +56,11 @@ const WaitingPage = () => {
     // Make the timeout a bit longer for finincial contributions queries. At least for now.
     // TODO: Load the financial contrubtions first, go to page and then create the LLM generated text.
     const TIME_OUT = category == 'Financial Contributions' ?  3000 : 2200
-    setTimeout(() => {
-      showErrorDialog('Request timed out.');
-    }, TIME_OUT);
+    if (!fetchComplete) {
+      setTimeout(() => {
+        showErrorDialog('Request timed out.');
+      }, TIME_OUT);
+    }
   }, []);
 
   const fetchData = async (query_topic, category) => {
@@ -75,6 +78,7 @@ const WaitingPage = () => {
        
       const jsonData = await response.json();
       console.log('Data fetched:', jsonData);
+      setFetchComplete(true)
 
       // Check if the response contains an error
       if (jsonData.error) { 
@@ -169,9 +173,6 @@ const ErrorModal = ({ isOpen, onClose, onGoBack, message }) => {
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 animate-in fade-in duration-200">
         <div className="flex items-center justify-between p-6 border-b">
           <div className="flex items-center space-x-3">
-            {/* <div className="flex-shrink-0">
-              <AlertCircle className="h-6 w-6 text-red-500" />
-            </div> */}
             <h3 className="text-lg font-semibold text-gray-900">
               Error
             </h3>
@@ -180,7 +181,7 @@ const ErrorModal = ({ isOpen, onClose, onGoBack, message }) => {
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5 bg-white" />
           </button>
         </div>
         

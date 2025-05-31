@@ -122,7 +122,7 @@ const OrganizationRecipientsTotals = () => {
               placeholder="Search recipients..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent flex-1 max-w-md"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent flex-1 max-w-md bg-white text-gray-900 placeholder-gray-500"
             />
             
             <div className="flex gap-2 items-center">
@@ -130,7 +130,7 @@ const OrganizationRecipientsTotals = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900"
               >
                 <option value="amount">Amount</option>
                 <option value="name">Name</option>
@@ -139,7 +139,7 @@ const OrganizationRecipientsTotals = () => {
               
               <button
                 onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors duration-200 text-sm"
+                className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors duration-200 text-sm text-gray-900"
               >
                 {sortOrder === 'asc' ? '↑' : '↓'}
               </button>
