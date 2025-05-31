@@ -5,7 +5,6 @@ import { useNavigate} from 'react-router-dom';
 // @ts-expect-error
 import checkmark_logo from './assets/blue_checkmark_logo.png';
 import React from "react";
-import ReactMarkdown from 'react-markdown';
 
 const OrganizationDetailOverview = () => {
   const location = useLocation();
