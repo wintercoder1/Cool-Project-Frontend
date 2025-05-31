@@ -21,6 +21,7 @@ const MainPage = () => {
       'DEI Friendliness p0': [],
       'Wokeness p0': [],
       'Environmental Impact p0': [],
+      'Immigration p0': [],
       'Financial Contributions p0': []
     };
   });
@@ -33,6 +34,7 @@ const MainPage = () => {
         'DEI Friendliness': 0,
         'Wokeness': 0,
         'Environmental Impact': 0,
+        'Immigration': 0,
         'Financial Contributions': 0
       };
   });
@@ -54,6 +56,7 @@ const MainPage = () => {
     'DEI Friendliness': ENVIRONMENT_BASE_URL + '/getCachedDEIScores',
     'Wokeness': ENVIRONMENT_BASE_URL + '/getCachedWokenessScores',
     'Environmental Impact': ENVIRONMENT_BASE_URL + '/getCachedWokenessScores',
+    'Immigration': ENVIRONMENT_BASE_URL + '/getCachedWokenessScores',
     'Financial Contributions': ENVIRONMENT_BASE_URL + '/getCachedFinancialContributions'
   };
 

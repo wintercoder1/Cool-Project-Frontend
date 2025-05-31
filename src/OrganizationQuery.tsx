@@ -28,13 +28,16 @@ const OrganizationQuery = () => {
     }
   }, [location]);
 
-  const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
-  //const  ENVIRONMENT_BASE_URL = 'http://18.188.2.109:443'
+  // @ts-expect-error
+  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
+  // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
 
   const categoryEndpoints = {
     'Political Leaning': ENVIRONMENT_BASE_URL + '/getPoliticalLeaning/',
     'DEI Friendliness': ENVIRONMENT_BASE_URL + '/getDEIFriendlinessScore/',
     'Wokeness': ENVIRONMENT_BASE_URL + '/getWokenessScore/',
+    'Environmental Impact': ENVIRONMENT_BASE_URL + '/getCachedWokenessScores',
+    'Immigration': ENVIRONMENT_BASE_URL + '/getCachedWokenessScores',
     'Financial Contributions': ENVIRONMENT_BASE_URL + '/getFinancialContributions/'
   };
 
@@ -47,6 +50,10 @@ const OrganizationQuery = () => {
         return "What organization do you want to find the DEI friendliness score of?";
       case 'Wokeness':
         return "What organization do you want to find the wokeness score of?";
+      case 'Environmental Impact':
+        return "What organization do you want to find the environmental impact score of?";
+      case 'Immigration':
+        return "What organization do you want to find the immigration friendliness score of?";
       default:
         return "What organization would you like to search for?";
     }
