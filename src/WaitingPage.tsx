@@ -179,9 +179,9 @@ const ErrorModal = ({ isOpen, onClose, onGoBack, message }) => {
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="transition-colors bg-white"
           >
-            <X className="h-5 w-5 bg-white" />
+            <X className="h-8 w-8" />
           </button>
         </div>
         
