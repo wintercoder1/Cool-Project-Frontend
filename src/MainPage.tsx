@@ -356,7 +356,7 @@ const MainPage = () => {
           {currentData.map((item, index) => (
             <div 
               key={index}
-              className="flex justify-between items-center p-5 border rounded cursor-pointer hover:bg-gray-50"
+              className="flex justify-between items-center p-4 border rounded cursor-pointer hover:bg-gray-50"
               onClick={(event) => handleOrganizationClick(event, item, category)}
             >
               <div className="font-medium">
