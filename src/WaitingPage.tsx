@@ -6,24 +6,21 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 
 const WaitingPage = () => {
+  //@ts-expect-error
+  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
+  // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
+
   const [errorModal, setErrorModal] = useState({
     isOpen: false,
     message: ''
   });
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [category, setCategory] = useState('');
+  const [_, setSearchTerm] = useState('');
+  const [__, setCategory] = useState('');
 
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Mock location data - in real app this would come from useLocation()
-
-  // Mock environment variable for demo
-  // const ENVIRONMENT_BASE_URL = 'https://api.example.com';
-  // //@ts-expect-error
-  // const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
-  const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
 
   const categoryEndpoints = {
     'Political Leaning': ENVIRONMENT_BASE_URL + '/getPoliticalLeaning/',
@@ -209,28 +206,3 @@ const ErrorModal = ({ isOpen, onClose, onGoBack, message }) => {
 };
 
 export default WaitingPage;
-
-// import { Loader2 } from 'lucide-react';
-
-// const WaitingPage = () => {
-//   return (
-//     <div className="min-h-screen w-screen flex  flex-col items-center space-y-40 py-40 bg-white space-y-8">
-//       {/* Top text */}
-//       <div className="text-2xl text-gray-500">
-//         Calculating...
-//       </div>
-
-//       {/* Spinner */}
-//       <div className="text-blue-400">
-//         <Loader2 className="h-28 w-28 animate-spin" />
-//       </div>
-
-//       {/* Bottom text */}
-//       <div className="text-lg text-gray-500">
-//         This may take a while..
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default WaitingPage;

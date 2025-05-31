@@ -7,6 +7,9 @@ import checkmark_logo from './assets/blue_checkmark_logo.png';
 import React from "react";
 
 const OrganizationDetailOverview = () => {
+  // @ts-expect-error
+  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
+
   const location = useLocation();
   const organizationDataLocation = location.state; 
   const [organizationDataLocalStorage, _] = useState(JSON.parse(localStorage.getItem("organizationData")));
@@ -26,8 +29,6 @@ const OrganizationDetailOverview = () => {
   const [displayedLeadershipCount, ___] = useState(10);
   const navigate = useNavigate();
 
-  // @ts-expect-error
-  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
 
   // Default data if none provided.
   const defaultData = {
