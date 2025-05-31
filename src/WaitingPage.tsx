@@ -196,7 +196,7 @@ const ErrorModal = ({ isOpen, onClose, onGoBack, message }) => {
               onClick={onGoBack}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
             >
-              Got it
+              Go back
             </Button>
           </div>
         </div>
