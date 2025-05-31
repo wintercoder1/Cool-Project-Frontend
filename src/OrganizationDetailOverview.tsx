@@ -26,6 +26,9 @@ const OrganizationDetailOverview = () => {
   const [displayedLeadershipCount, ___] = useState(10);
   const navigate = useNavigate();
 
+  // @ts-expect-error
+  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
+
   // Default data if none provided.
   const defaultData = {
     timestamp: "2024-11-15T05:17:32.156000",
@@ -92,7 +95,7 @@ const OrganizationDetailOverview = () => {
       setError(null);
       
       try {
-        const response = await fetch(`http://127.0.0.1:8000/getPercentContributionsToDemocratsAndRepublicansWithCommitteeID/${committee_id}`);
+        const response = await fetch(`${ENVIRONMENT_BASE_URL}/getPercentContributionsToDemocratsAndRepublicansWithCommitteeID/${committee_id}`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -120,7 +123,7 @@ const OrganizationDetailOverview = () => {
       setRecipientError(null);
       
       try {
-        const response = await fetch(`http://127.0.0.1:8000/getContributionRecipientTotalsList/${committee_id}`);
+        const response = await fetch(`${ENVIRONMENT_BASE_URL}/getContributionRecipientTotalsList/${committee_id}`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -148,7 +151,7 @@ const OrganizationDetailOverview = () => {
       setLeadershipError(null);
       
       try {
-        const response = await fetch(`http://127.0.0.1:8000/getContributionsToCommitteeFromLeadershipOnly/${committee_id}`);
+        const response = await fetch(`${ENVIRONMENT_BASE_URL}/getContributionsToCommitteeFromLeadershipOnly/${committee_id}`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
