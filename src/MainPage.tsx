@@ -9,8 +9,8 @@ const MainPage = () => {
   const itemsPerPage = 10;
 
   // @ts-expect-error
-  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
-  // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
+  // const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
+  const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
 
 
   // Initialize dataCache from localStorage if available, otherwise use empty arrays
@@ -255,15 +255,27 @@ const MainPage = () => {
 
   const handleOrganizationClick = (event, organization, category) => {
     console.log(event)
+    // TODO: Make this open on current tab not on a new one.
     openDetailPageNewTab(organization, category)
-    // openDetailPageCurrnetTab(organization, category)
+    // openDetailPageCurrentTab(organization, category)
   };
 
+  // TODO: Make this use navigation state not loca storage. Be more consistent with the way it is passed
+  // Through the rest of the app.
   const openDetailPageNewTab = (organization, category) => {
     localStorage.setItem(`organizationData`, JSON.stringify(organization));
     localStorage.setItem(`categoryData`, category);
     window.open('#/organization', "_blank", "noreferrer");
   }
+
+  // TODO: This is wrong. Do this the correct way.
+  // const openDetailPageCurrentTab = (organization, category) => {
+  //   localStorage.setItem(`organizationData`, JSON.stringify(organization));
+  //   localStorage.setItem(`categoryData`, category);
+  //   navigate('organization', {
+  //       state: {current_category: category},
+  //   });
+  // }
 
   const handleNewQueryClick = (event) => {
     console.log(event)
