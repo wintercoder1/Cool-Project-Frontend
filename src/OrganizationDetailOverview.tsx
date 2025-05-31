@@ -5,6 +5,7 @@ import { useNavigate} from 'react-router-dom';
 // @ts-expect-error
 import checkmark_logo from './assets/blue_checkmark_logo.png';
 import React from "react";
+import ReactMarkdown from 'react-markdown';
 
 const OrganizationDetailOverview = () => {
   const location = useLocation();
@@ -267,7 +268,7 @@ const OrganizationDetailOverview = () => {
     const hasMoreRecipients = displayedRecipientsCount < recipients.length;
     
     return (
-      <div className="space-y-4 py-8 mt-8">
+      <div className="space-y-4 py-5 mt-8">
         <h3 className="text-xl font-semibold">Top Contribution Recipients</h3>
         
         <div className="space-y-3">
@@ -298,15 +299,6 @@ const OrganizationDetailOverview = () => {
           </div>
           
           <div className="flex justify-center gap-3">
-            {/* {hasMoreRecipients && (
-              <button
-                onClick={handleLoadMore}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 text-sm font-medium"
-              >
-                Load More ({Math.min(10, recipients.length - displayedRecipientsCount)} more)
-              </button>
-            )} */}
-            
             <button
               onClick={handleViewAllInNewTab}
               className="px-4 py-2 bg-gray-100 text-gray rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm font-medium"
@@ -367,7 +359,7 @@ const OrganizationDetailOverview = () => {
     const totalLeadershipAmount = sortedLeadership.reduce((sum, contributor) => sum + contributor.total_amount, 0);
     
     return (
-      <div className="space-y-4 py-8 mt-8">
+      <div className="space-y-4 py-5 mt-8">
         <h3 className="text-xl font-semibold">Leadership Contributions to Company Committee</h3>
         
         <div className="text-base mb-4">
@@ -417,8 +409,8 @@ const OrganizationDetailOverview = () => {
         
         <div className="text-center space-y-2">
           <div className="text-sm text-gray-500">
-            {/* Showing {displayedLeadershipCount} of {sortedLeadership.length} total leadership contributors */}
-            Showing {sortedLeadership.length} of {displayedLeadershipCount} total leadership contributors
+            Showing {displayedLeadershipCount} of {sortedLeadership.length} total leadership contributors
+            {/* Showing {sortedLeadership.length} of {displayedLeadershipCount} total leadership contributors */}
           </div>
           
           <div className="flex justify-center gap-3">
@@ -491,7 +483,11 @@ const OrganizationDetailOverview = () => {
             )}
 
             {/* Context */}
+            
             <div className="text-base">
+              {/* <div className="text-base prose prose-sm max-w-none">
+                <ReactMarkdown>{context}</ReactMarkdown>
+              </div> */}
               {context.split('\n').map((line, i) => (
                 <React.Fragment key={i}>
                   {line.trim()}

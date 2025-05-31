@@ -9,8 +9,8 @@ const MainPage = () => {
   const itemsPerPage = 15;
 
   // @ts-expect-error
-  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
-  // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
+  // const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
+  const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
 
 
   // Initialize dataCache from localStorage if available, otherwise use empty arrays

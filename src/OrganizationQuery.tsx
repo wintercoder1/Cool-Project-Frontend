@@ -34,7 +34,8 @@ const OrganizationQuery = () => {
   const categoryEndpoints = {
     'Political Leaning': ENVIRONMENT_BASE_URL + '/getPoliticalLeaning/',
     'DEI Friendliness': ENVIRONMENT_BASE_URL + '/getDEIFriendlinessScore/',
-    'Wokeness': ENVIRONMENT_BASE_URL + '/getWokenessScore/'
+    'Wokeness': ENVIRONMENT_BASE_URL + '/getWokenessScore/',
+    'Financial Contributions': ENVIRONMENT_BASE_URL + '/getFinancialContributions/'
   };
 
   const getCategoryPrompt = () => {
