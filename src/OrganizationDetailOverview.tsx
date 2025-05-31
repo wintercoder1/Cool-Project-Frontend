@@ -176,7 +176,7 @@ const OrganizationDetailOverview = () => {
   };
 
   // Render the contributions chart
-  const renderContributionsChart = () => {
+  const renderContributionsToEachPoliticalPartyChart = () => {
     if (isLoading) return <div className="text-center py-4">Loading contributions data...</div>;
     if (error) return <div className="text-center py-4 text-gray-500">{error}</div>;
     if (!contributionsData) return null;
@@ -191,7 +191,7 @@ const OrganizationDetailOverview = () => {
     
     return (
       <div className="space-y-4 py-8 mt-6">
-        <h3 className="text-xl font-semibold">Political Contributions Breakdown</h3>
+        <h3 className="text-xl font-semibold">Contributions to Each Political Party</h3>
         
         <div className="text-base space-y-2">
           <div>Total Contributions: ${total_contributions.toLocaleString()}</div>
@@ -362,7 +362,7 @@ const OrganizationDetailOverview = () => {
     
     return (
       <div className="space-y-4 py-5 mt-8">
-        <h3 className="text-xl font-semibold">Leadership Contributions to Company Committee</h3>
+        <h3 className="text-xl font-semibold">Contributions from Company Leadership</h3>
         
         <div className="text-base mb-4">
           <div>Total from Leadership: ${totalLeadershipAmount.toLocaleString()}</div>
@@ -509,7 +509,7 @@ const OrganizationDetailOverview = () => {
             )}
 
             {/* Political Contributions Chart */}
-            {(isFinancialData || categoryData === 'Financial Contributions') && renderContributionsChart()}
+            {(isFinancialData || categoryData === 'Financial Contributions') && renderContributionsToEachPoliticalPartyChart()}
 
             {/* Top Recipients Chart */}
             {(isFinancialData || categoryData === 'Financial Contributions') && renderTopContributionRecipientsChart()}
