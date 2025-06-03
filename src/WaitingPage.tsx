@@ -55,7 +55,7 @@ const WaitingPage = () => {
 
     // Make the timeout a bit longer for finincial contributions queries. At least for now.
     // TODO: Load the financial contrubtions first, go to page and then create the LLM generated text.
-    const TIME_OUT = category == 'Financial Contributions' ?  3000 : 2200
+    const TIME_OUT = category == 'Financial Contributions' ?  25500 : 15500
     if (!fetchComplete) {
       setTimeout(() => {
         showErrorDialog('Request timed out.');
