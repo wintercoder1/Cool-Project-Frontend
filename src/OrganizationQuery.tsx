@@ -3,6 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from 'react-router-dom';
+// import {usNASDAQTop100WithoutIncOrCompanySufffix} from 'data/organizationSuggestions';
+// import {organizationSuggestions} from 'data/organizationSuggestions';
+import organizationSuggestions from "./data/OrganizationSuggestions";
 
 const OrganizationQuery = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,18 +19,6 @@ const OrganizationQuery = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Sample organization suggestions - you can replace this with your own data source
-  const organizationSuggestions = [
-    'Google', 'Apple', 'Microsoft', 'Amazon', 'Meta', 'Tesla', 'Netflix', 'Twitter',
-    'Facebook', 'Instagram', 'YouTube', 'LinkedIn', 'Uber', 'Airbnb', 'Spotify',
-    'Nike', 'Adidas', 'Coca-Cola', 'Pepsi', 'McDonald\'s', 'Starbucks', 'Walmart',
-    'Target', 'Home Depot', 'Costco', 'Best Buy', 'GameStop', 'AMC', 'Disney',
-    'Warner Bros', 'Sony', 'Nintendo', 'EA Sports', 'Activision', 'Blizzard',
-    'Ford', 'General Motors', 'Toyota', 'Honda', 'BMW', 'Mercedes-Benz',
-    'JPMorgan Chase', 'Bank of America', 'Wells Fargo', 'Goldman Sachs', 'Visa',
-    'Mastercard', 'PayPal', 'Square', 'Robinhood', 'Coinbase', 'Binance'
-  ];
 
   useEffect(() => {
     // Get category from location state if provided
