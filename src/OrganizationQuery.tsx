@@ -3,8 +3,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from 'react-router-dom';
-// import {usNASDAQTop100WithoutIncOrCompanySufffix} from 'data/organizationSuggestions';
-// import {organizationSuggestions} from 'data/organizationSuggestions';
 import organizationSuggestions from "./data/OrganizationSuggestions";
 
 const OrganizationQuery = () => {

@@ -1,3 +1,4 @@
+// @ts-expect-error
 const usNASDAQTop100 = [
     "Palantir Technologies Inc","MicroStrategy (Strategy)","Axon Enterprise Inc","Applovin Corp", "Arm Holdings PLC",
     "Linde PLC","AstraZeneca PLC","Baker Hughes Co","Broadcom Inc","Biogen Inc", "Booking Holdings Inc",
