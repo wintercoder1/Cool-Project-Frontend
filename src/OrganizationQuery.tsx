@@ -102,8 +102,10 @@ const OrganizationQuery = () => {
     setSearchTerm(suggestion);
     setShowDropdown(false);
     setActiveSuggestion(-1);
+    setFilteredSuggestions([]);
     inputRef.current?.focus();
   };
+
 
   const handleKeyDown = (e) => {
     if (!showDropdown || filteredSuggestions.length === 0) return;
