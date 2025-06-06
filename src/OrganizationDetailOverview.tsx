@@ -44,7 +44,8 @@ const OrganizationDetailOverview = () => {
     rating,
     context,
     citation,
-    committee_id
+    committee_id,
+    committee_name
   } = organizationDataLocation || organizationDataLocalStorage || defaultData;
 
   // If financial contrubution. 
@@ -235,7 +236,8 @@ const OrganizationDetailOverview = () => {
       localStorage.setItem('recipientsTotalsData', JSON.stringify({
         recipients: sortedRecipients,
         organizationName: topic,
-        committeeId: committee_id
+        committeeID: committee_id,
+        committeeName: committee_name
       }));
 
       window.open('#/organizationRecipientsTotals', "_blank", "noreferrer");

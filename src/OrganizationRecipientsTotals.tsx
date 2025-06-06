@@ -35,7 +35,7 @@ const OrganizationRecipientsTotals = () => {
     );
   }
 
-  const { recipients, organizationName, committeeId } = organizationRecipientsTotalsData;
+  const { recipients, organizationName, committeeID, committeeName } = organizationRecipientsTotalsData;
 
   const filteredOrganizationRecipientsTotals = recipients.filter(recipient =>
     recipient.recipient_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -93,8 +93,18 @@ const OrganizationRecipientsTotals = () => {
           <CardTitle className="text-2xl font-bold">
             All Contribution Recipients for {organizationName}
           </CardTitle>
+            {/* renderDetailText(commiteeName); */}
           <div className="text-sm text-gray-600">
-            Committee ID: {committeeId}
+            {committeeName && (
+              <div className="text-sm text-gray-600">
+                Committee Name: {committeeName}
+              </div>
+            )}
+            {!committeeName && (
+              <div className="text-sm text-gray-600">
+                Committee ID: {committeeID}
+              </div>
+            )}
           </div>
         </CardHeader>
         

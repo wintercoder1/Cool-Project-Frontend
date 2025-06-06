@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import networkManager from './network/NetworkManager'; 
+import networkManager from './network/NetworkManager.js'; 
 // import networkManager from '@/network/NetworkManager.tsx'
 // @ts-expect-error
 import checkmark_logo from './assets/blue_checkmark_logo.png';
