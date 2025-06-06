@@ -2,14 +2,10 @@ import { useState, useEffect } from 'react';
 import { Loader2, X} from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from 'react-router-dom';
-
-
+import networkManager from './network/NetworkManager';
+// import networkManager from '@/network/NetworkManager.tsx'
 
 const WaitingPage = () => {
-  //@ts-expect-error
-  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
-  // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
-
   const [errorModal, setErrorModal] = useState({
     isOpen: false,
     message: ''
@@ -21,16 +17,6 @@ const WaitingPage = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  
-
-  const categoryEndpoints = {
-    'Political Leaning': ENVIRONMENT_BASE_URL + '/getPoliticalLeaning/',
-    'DEI Friendliness': ENVIRONMENT_BASE_URL + '/getDEIFriendlinessScore/',
-    'Wokeness': ENVIRONMENT_BASE_URL + '/getWokenessScore/',
-    'Environmental Impact': ENVIRONMENT_BASE_URL + '/getCachedWokenessScores',
-    'Immigration': ENVIRONMENT_BASE_URL + '/getCachedWokenessScores',
-    'Financial Contributions': ENVIRONMENT_BASE_URL + '/getFinancialContributionsOverview/'
-  };
 
   // TODO: Make this code cleaner.
   useEffect(() => {
@@ -65,18 +51,9 @@ const WaitingPage = () => {
 
   const fetchData = async (query_topic, category) => {
     try {
-      const baseEndpoint = categoryEndpoints[category] || categoryEndpoints['Political Leaning'];
-      const response = await fetch(`${baseEndpoint}${encodeURIComponent(query_topic)}`);
+      console.log(`Fetching ${category} data for topic: ${query_topic}`);
       
-      console.log('Response:', response);
-
-      if (!response.ok) {
-        const networkError = 'Network response was not ok';
-        showErrorDialog(networkError);
-        throw new Error();
-      }
-       
-      const jsonData = await response.json();
+      const jsonData = await networkManager.getTopicAnalysis(category, query_topic);
       console.log('Data fetched:', jsonData);
       setFetchComplete(true)
 
@@ -86,6 +63,7 @@ const WaitingPage = () => {
         showErrorDialog(message || 'An unexpected error occurred.');
         return;
       }
+      
       console.log('Success so far!!');
       // Success - navigate to organization page
       console.log('Now navigating to page with category ', category)

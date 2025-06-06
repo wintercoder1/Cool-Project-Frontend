@@ -2,14 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useNavigate} from 'react-router-dom';
+import networkManager from './network/NetworkManager'; 
+// import networkManager from '@/network/NetworkManager.tsx'
 // @ts-expect-error
 import checkmark_logo from './assets/blue_checkmark_logo.png';
 import React from "react";
 
 const OrganizationDetailOverview = () => {
-  // @ts-expect-error
-  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
-
   const location = useLocation();
   const organizationDataLocation = location.state; 
   const [organizationDataLocalStorage, _] = useState(JSON.parse(localStorage.getItem("organizationData")));
@@ -25,10 +24,8 @@ const OrganizationDetailOverview = () => {
   const [leadershipData, setLeadershipData] = useState(null);
   const [isLoadingLeadership, setIsLoadingLeadership] = useState(false);
   const [leadershipError, setLeadershipError] = useState(null);
-  // const [displayedLeadershipCount, setDisplayedLeadershipCount] = useState(10);
   const [displayedLeadershipCount, ___] = useState(10);
   const navigate = useNavigate();
-
 
   // Default data if none provided.
   const defaultData = {
@@ -55,7 +52,6 @@ const OrganizationDetailOverview = () => {
   if (categoryData == 'Financial Contributions') {
     context = (organizationDataLocation && organizationDataLocation.fec_financial_contributions_summary_text)
     || (organizationDataLocalStorage && organizationDataLocalStorage.fec_financial_contributions_summary_text)
-    // setIsFinacialData(true)
 
     // Some comittee IDs were wrongly stored as integers with leading zeros removed.
     // We will fix that here.
@@ -64,8 +60,7 @@ const OrganizationDetailOverview = () => {
       if (!isNaN(committee_id) && committee_id[0] != 'C') {
         prepend_C = 'C'
       }
-      // // If leading zeros need to be added.
-      // // If committee ID is number format with missing zeroes.
+      // If leading zeros need to be added.
       let zeros = ''
       if (!isNaN(committee_id) && committee_id.length < 8) {
         const num_zeros_to_add = 8 - committee_id.length
@@ -96,13 +91,7 @@ const OrganizationDetailOverview = () => {
       setError(null);
       
       try {
-        const response = await fetch(`${ENVIRONMENT_BASE_URL}/getPercentContributionsToDemocratsAndRepublicansWithCommitteeID/${committee_id}`);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        
-        const data = await response.json();
+        const data = await networkManager.getContributionPercentages(committee_id);
         setContributionsData(data);
       } catch (err) {
         console.error('Error fetching contributions data:', err);
@@ -124,13 +113,7 @@ const OrganizationDetailOverview = () => {
       setRecipientError(null);
       
       try {
-        const response = await fetch(`${ENVIRONMENT_BASE_URL}/getContributionRecipientTotalsList/${committee_id}`);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        
-        const data = await response.json();
+        const data = await networkManager.getContributionRecipients(committee_id);
         setRecipientData(data);
       } catch (err) {
         console.error('Error fetching recipient data:', err);
@@ -152,13 +135,7 @@ const OrganizationDetailOverview = () => {
       setLeadershipError(null);
       
       try {
-        const response = await fetch(`${ENVIRONMENT_BASE_URL}/getContributionsToCommitteeFromLeadershipOnly/${committee_id}`);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        
-        const data = await response.json();
+        const data = await networkManager.getLeadershipContributions(committee_id);
         setLeadershipData(data);
       } catch (err) {
         console.error('Error fetching leadership data:', err);
@@ -255,16 +232,13 @@ const OrganizationDetailOverview = () => {
     
     const handleViewAllInNewTab = () => {
       // Create a new window/tab with the recipients data
-      // const newWindow = window.open('', '_blank');
-      // if (newWindow) { 
-        localStorage.setItem('recipientsTotalsData', JSON.stringify({
-          recipients: sortedRecipients,
-          organizationName: topic,
-          committeeId: committee_id
-        }));
- 
-        window.open('#/organizationRecipientsTotals', "_blank", "noreferrer");
-      // }
+      localStorage.setItem('recipientsTotalsData', JSON.stringify({
+        recipients: sortedRecipients,
+        organizationName: topic,
+        committeeId: committee_id
+      }));
+
+      window.open('#/organizationRecipientsTotals', "_blank", "noreferrer");
     };
     
     // @ts-expect-error
@@ -377,7 +351,6 @@ const OrganizationDetailOverview = () => {
             return (
               // @ts-expect-error
               <div key={`${contributor.name}-${contributor.employer}-${index}`} className="p-0 rounded-lg">
-              {/* <div key={`${contributor.name}-${contributor.employer}-${index}`} className="bg-gray-50 p-3 rounded-lg"> */}
                 <div className="flex justify-between items-start">
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-gray-900 truncate">
@@ -395,7 +368,6 @@ const OrganizationDetailOverview = () => {
                   </div>
                   <div className="ml-4 text-right flex-shrink-0">
                     <div className="font-semibold text-gray-900">
-                    {/* <div className="font-semibold "> */}
                       {/* @ts-expect-error */}
                       ${contributor.total_amount.toLocaleString()}
                     </div>
@@ -413,7 +385,6 @@ const OrganizationDetailOverview = () => {
         <div className="text-center space-y-2">
           <div className="text-sm text-gray-500">
             Showing {displayedLeadershipCount} of {sortedLeadership.length} total leadership contributors
-            {/* Showing {sortedLeadership.length} of {displayedLeadershipCount} total leadership contributors */}
           </div>
           
           <div className="flex justify-center gap-3">
@@ -443,9 +414,7 @@ const OrganizationDetailOverview = () => {
               <img src={checkmark_logo} className="block" width="55" height="55" alt="blue_check_logo" />
               <h1 className="text-4xl font-bold text-black">MoralCheck AI</h1>
           </div>
-    
         </div>
-       
 
         {/* categoryData */}
         <Card className="w-screen mx-auto absolute top-20 px-4 py-5 min-h-screen bg-white">
@@ -486,11 +455,7 @@ const OrganizationDetailOverview = () => {
             )}
 
             {/* Context */}
-            
             <div className="text-base">
-              {/* <div className="text-base prose prose-sm max-w-none">
-                <ReactMarkdown>{context}</ReactMarkdown>
-              </div> */}
               {context.split('\n').map((line, i) => (
                 <React.Fragment key={i}>
                   {line.trim()}
@@ -523,6 +488,5 @@ const OrganizationDetailOverview = () => {
       </div>
   );
 };
-
 
 export default OrganizationDetailOverview;

@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Plus, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import networkManager from './network/NetworkManager'; 
+// import networkManager from '@/network/NetworkManager.tsx'
 // @ts-expect-error
 import checkmark_logo from './assets/blue_checkmark_logo.png';
 
 const MainPage = () => {
-  // @ts-expect-error
-  const ENVIRONMENT_BASE_URL = import.meta.env.VITE_BASE_URL
-  // const ENVIRONMENT_BASE_URL = 'http://127.0.0.1:8000'
-
   const itemsPerPage = 10;
 
   // Initialize dataCache from localStorage if available, otherwise use empty arrays
@@ -19,11 +17,11 @@ const MainPage = () => {
       'DEI Friendliness p0': [],
       'Wokeness p0': [],
       'Environmental Impact p0': [],
-      'Immigration p0': [],
+      'Immigration Support p0': [],
+      'Technology Innovation p0': [],
       'Financial Contributions p0': []
     };
   });
-
 
   const [totalItemsForCategoryCache, setTotalItemsForCategoryCache] = useState(() => {
     const savedCache = localStorage.getItem('compassAITotalItemsForCategory');
@@ -33,6 +31,7 @@ const MainPage = () => {
         'Wokeness': 0,
         'Environmental Impact': 0,
         'Immigration': 0,
+        'Technology Innovation':0,
         'Financial Contributions': 0
       };
   });
@@ -47,23 +46,22 @@ const MainPage = () => {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  // const [totalItems, setTotalItems] = useState(0);
-  
-  const categoryEndpoints = {
-    'Political Leaning': ENVIRONMENT_BASE_URL + '/getCachedPoliticalLeanings',
-    'DEI Friendliness': ENVIRONMENT_BASE_URL + '/getCachedDEIScores',
-    'Wokeness': ENVIRONMENT_BASE_URL + '/getCachedWokenessScores',
-    'Environmental Impact': ENVIRONMENT_BASE_URL + '/getCachedWokenessScores',
-    'Immigration': ENVIRONMENT_BASE_URL + '/getCachedWokenessScores',
-    'Financial Contributions': ENVIRONMENT_BASE_URL + '/getCachedFinancialContributions'
-  };
+
+  // Available categories for the dropdown
+  const availableCategories = [
+    'Political Leaning',
+    'DEI Friendliness', 
+    'Wokeness',
+    'Environmental Impact',
+    'Immigration Support',
+    'Technology Innovation',
+    'Financial Contributions'
+  ];
 
   // Save last selected category
   useEffect(() => {
     localStorage.setItem('compassAILastCategory', category);
     
-    // set totalpage count to zero when changing categories
-    // setTotalItems(0)
     // Fetch the total count for the new category
     console.log('Category is now:', category);
     if (totalItemsForCategoryCache[category] == 0 || totalItemsForCategoryCache[category] == null) {
@@ -80,21 +78,9 @@ const MainPage = () => {
   // Fetch total number of items for pagination
   const fetchTotalItems = async (category) => {
     try {
-      const category_upper = category.toUpperCase()
-      const endpoint = `${ENVIRONMENT_BASE_URL}/getNumberOfTopics?queryType=${category_upper}`;
-      const response = await fetch(endpoint);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch total items');
-      }
-      
-      console.log('Total count data fetched:', response);
-
-      const data = await response.json();
-      console.log('Total count data fetched:', data);
-      const count = data[0]
-      console.log('The count :', count);
-      // setTotalItems(count);
+      console.log('Fetching total items for category:', category);
+      const count = await networkManager.getCategoryItemCount(category);
+      console.log('The count:', count);
 
       setTotalItemsForCategoryCache(prevCache => ({
         ...prevCache,
@@ -107,24 +93,16 @@ const MainPage = () => {
     }
   };
  
-  
   const fetchDataForCategory = async () => {
-    // 
-    if ( dataCache[`${category} p${currentPage}`] == null) {
+    if (dataCache[`${category} p${currentPage}`] == null) {
       setLoading(true);
     }
     const offset = (currentPage - 1) * itemsPerPage;
     
     try {
-      const endpoint = `${categoryEndpoints[category]}?limit=${itemsPerPage}&offset=${offset}`;
-      console.log(`Fetching data for category: ${category} from ${endpoint}`);
+      console.log(`Fetching data for category: ${category}`);
       
-      const response = await fetch(endpoint);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      
-      const jsonData = await response.json();
+      const jsonData = await networkManager.getCachedCategoryData(category, itemsPerPage, offset);
       console.log('Data fetched:', jsonData);
       
       setDataCache(prevCache => ({
@@ -345,7 +323,7 @@ const MainPage = () => {
           
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-10">
-              {Object.keys(categoryEndpoints).map((cat) => (
+              {availableCategories.map((cat) => (
                 <div 
                   key={cat} 
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
@@ -390,49 +368,42 @@ const MainPage = () => {
           </div>
         )}
 
-
         {/* Pagination Controls */}
-        {/* {totalItems > 0 && ( */}
-            <div className="flex justify-center items-center mt-6 mb-16">
-
-              <button 
-                onClick={goToPrevPage}
-                disabled={currentPage === 1}
-                className={`p-2 rounded-md transition-colors ${
-                  currentPage === 1 
-                    ? 'bg-gray-100 text-gray-300 cursor-not-allowed' 
-                    : 'bg-gray-100 text-blue-500 hover:bg-blue-50 touch-manipulation'
-                  }`}
-                >
-                <span style={{ display: "inline-block", width: "20px", height: "20px" }}>
-                  <ChevronLeft size={20} width={20} height={20}/>
-                </span>
-              </button>
-              
-              <span className="mx-4 text-sm">
-                Page {currentPage} of {totalPages}
-              </span>
-              
-              <button 
-                onClick={goToNextPage}
-                disabled={currentPage === totalPages}
-                className={`p-2 rounded-md transition-colors ${
-                  currentPage === totalPages 
-                    ? 'bg-gray-100 text-gray-300 cursor-not-allowed' 
-                    : 'bg-gray-100 text-blue-500 hover:bg-blue-50 active:bg-blue-100 touch-manipulation'
-                  }`}
-                >
-                <span style={{ display: "inline-block", width: "20px", height: "20px" }}>
-                  <ChevronRight size={20} width={20} height={20}/>
-                </span>
-              </button>
-
-            </div>
-        {/* )} */}
-        
+        <div className="flex justify-center items-center mt-6 mb-16">
+          <button 
+            onClick={goToPrevPage}
+            disabled={currentPage === 1}
+            className={`p-2 rounded-md transition-colors ${
+              currentPage === 1 
+                ? 'bg-gray-100 text-gray-300 cursor-not-allowed' 
+                : 'bg-gray-100 text-blue-500 hover:bg-blue-50 touch-manipulation'
+              }`}
+            >
+            <span style={{ display: "inline-block", width: "20px", height: "20px" }}>
+              <ChevronLeft size={20} width={20} height={20}/>
+            </span>
+          </button>
+          
+          <span className="mx-4 text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+          
+          <button 
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages}
+            className={`p-2 rounded-md transition-colors ${
+              currentPage === totalPages 
+                ? 'bg-gray-100 text-gray-300 cursor-not-allowed' 
+                : 'bg-gray-100 text-blue-500 hover:bg-blue-50 active:bg-blue-100 touch-manipulation'
+              }`}
+            >
+            <span style={{ display: "inline-block", width: "20px", height: "20px" }}>
+              <ChevronRight size={20} width={20} height={20}/>
+            </span>
+          </button>
+        </div>
 
         {/* New company/individual response button */}
-        {/* {category !== 'Financial Contributions' && ( */}
         <div className="fixed bottom-6 right-8">
           <button 
             className="w-14 h-12 bg-blue-400 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-blue-600 transition-colors"
@@ -441,12 +412,10 @@ const MainPage = () => {
             <Plus size={50} />
           </button>
         </div>
-        {/* )} */}
 
       </div>
     </div>
   );
-
 };
 
 export default MainPage;
