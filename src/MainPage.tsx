@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Plus, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import networkManager from './network/NetworkManager.js'; 
-// import networkManager from '@/network/NetworkManager.tsx'
+import networkManager from './network/NetworkManager.js';
+import LogoHeader from './components/LogoHeader';
 // @ts-expect-error
 import checkmark_logo from './assets/blue_checkmark_logo.png';
 
@@ -306,11 +306,9 @@ const MainPage = () => {
     <div className="absolute top-2  w-screen mx-auto min-h-screen bg-white">
       {/* Header with Logo and Dropdown */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 px-8 bg-white">
-
-        <div className="flex items-center gap-2 justify-center sm:justify-start">
-          <img src={checkmark_logo} className="block" width="55" height="55" alt="blue_check_logo" />
-          <h1 className="text-4xl font-bold text-black">MoralCheck AI</h1>
-        </div>
+        
+        {/* Logo */}
+        <LogoHeader />
 
         {/* Category Dropdown */}
         <div className="relative mt-4 sm:mt-0 flex justify-center sm:justify-end">

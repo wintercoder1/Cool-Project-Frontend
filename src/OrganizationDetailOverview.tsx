@@ -7,10 +7,11 @@ import networkManager from './network/NetworkManager';
 import checkmark_logo from './assets/blue_checkmark_logo.png';
 import React from "react";
 
-// Import the new chart components
+// Import components
 import ContributionsByPartyChart from './components/charts/ContributionsByPartyChart';
 import TopContributionRecipientsChart from './components/charts/TopContributionRecipientsChart';
 import LeadershipContributionsChart from './components/charts/LeadershipContributionsChart';
+import LogoHeader from './components/LogoHeader';
 
 const OrganizationDetailOverview = () => {
   const location = useLocation();
@@ -160,16 +161,8 @@ const OrganizationDetailOverview = () => {
   return (
     <div className="px-0 py-0 flex justify-even min-h-screen bg-white">
         {/* Logo */}
-        <div 
-          className="absolute top-4 left-8 cursor-pointer "
-          role="button"
-          onClick={handleLogoClick}
-          tabIndex={0}
-        >
-          <div className="flex items-center gap-2 justify-center sm:justify-start">
-              <img src={checkmark_logo} className="block" width="55" height="55" alt="blue_check_logo" />
-              <h1 className="text-4xl font-bold text-black">MoralCheck AI</h1>
-          </div>
+        <div className="absolute top-4 left-8 cursor-pointer">
+          <LogoHeader onClick={handleLogoClick} />
         </div>
 
         {/* categoryData */}
