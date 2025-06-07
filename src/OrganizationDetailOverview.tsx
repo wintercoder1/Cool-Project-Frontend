@@ -3,24 +3,27 @@ import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useNavigate} from 'react-router-dom';
 import networkManager from './network/NetworkManager'; 
-// import networkManager from '@/network/NetworkManager.tsx'
 // @ts-expect-error
 import checkmark_logo from './assets/blue_checkmark_logo.png';
 import React from "react";
+
+// Import the new chart components
+import ContributionsByPartyChart from './components/charts/ContributionsByPartyChart';
+import TopContributionRecipientsChart from './components/charts/TopContributionRecipientsChart';
+import LeadershipContributionsChart from './components/charts/LeadershipContributionsChart';
 
 const OrganizationDetailOverview = () => {
   const location = useLocation();
   const organizationDataLocation = location.state; 
   const [organizationDataLocalStorage, _] = useState(JSON.parse(localStorage.getItem("organizationData")));
   const [categoryData, __] = useState(localStorage.getItem("categoryData"));
-  const [isFinancialData, setIsFinacialData] = useState(false);
+  const [isFinancialData, setIsFinancialData] = useState(false);
   const [contributionsData, setContributionsData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [recipientData, setRecipientData] = useState(null);
   const [isLoadingRecipients, setIsLoadingRecipients] = useState(false);
   const [recipientError, setRecipientError] = useState(null);
-  const [displayedRecipientsCount, setDisplayedRecipientsCount] = useState(10);
   const [leadershipData, setLeadershipData] = useState(null);
   const [isLoadingLeadership, setIsLoadingLeadership] = useState(false);
   const [leadershipError, setLeadershipError] = useState(null);
@@ -48,13 +51,13 @@ const OrganizationDetailOverview = () => {
     committee_name
   } = organizationDataLocation || organizationDataLocalStorage || defaultData;
 
-  // If financial contrubution. 
+  // If financial contribution. 
   // TODO: Actually learn react and figure out a better way to do this.
   if (categoryData == 'Financial Contributions') {
     context = (organizationDataLocation && organizationDataLocation.fec_financial_contributions_summary_text)
     || (organizationDataLocalStorage && organizationDataLocalStorage.fec_financial_contributions_summary_text)
 
-    // Some comittee IDs were wrongly stored as integers with leading zeros removed.
+    // Some committee IDs were wrongly stored as integers with leading zeros removed.
     // We will fix that here.
     if (committee_id && committee_id.length <= 9) {    
       let prepend_C = ''
@@ -80,7 +83,7 @@ const OrganizationDetailOverview = () => {
   }
 
   useEffect(() => {
-    setIsFinacialData(categoryData == 'Financial Contributions')
+    setIsFinancialData(categoryData == 'Financial Contributions')
   }, [categoryData]);
 
   // Fetch contribution data when component mounts or committee_id changes
@@ -154,254 +157,6 @@ const OrganizationDetailOverview = () => {
     navigate('/', {});
   };
 
-  // Render the contributions chart
-  const renderContributionsToEachPoliticalPartyChart = () => {
-    if (isLoading) return <div className="text-center py-4">Loading contributions data...</div>;
-    if (error) return <div className="text-center py-4 text-gray-500">{error}</div>;
-    if (!contributionsData) return null;
-
-    const { percent_to_republicans, percent_to_democrats, total_to_republicans, total_to_democrats, total_contributions } = contributionsData;
-    
-    // Calculate "Other" percentage if needed
-    const totalPercent = percent_to_republicans + percent_to_democrats;
-    const hasOther = Math.abs(totalPercent - 100) > 0.01; // Using small threshold for floating point comparison
-    const percentOther = hasOther ? 100 - totalPercent : 0;
-    const totalOther = hasOther ? total_contributions - total_to_republicans - total_to_democrats : 0;
-    
-    return (
-      <div className="space-y-4 py-8 mt-6">
-        <h3 className="text-xl font-semibold">Contributions to Each Political Party</h3>
-        
-        <div className="text-base space-y-2">
-          <div>Total Contributions: ${total_contributions.toLocaleString()}</div>
-          <div>To Republicans: ${total_to_republicans.toLocaleString()} ({percent_to_republicans}%)</div>
-          <div>To Democrats: ${total_to_democrats.toLocaleString()} ({percent_to_democrats}%)</div>
-          {hasOther && (
-            <div>Other: ${totalOther.toLocaleString()} ({percentOther.toFixed(2)}%)</div>
-          )}
-        </div>
-        
-        <div className="relative h-8 w-full bg-gray-200 rounded-full overflow-hidden">
-          <div 
-            className="absolute left-0 top-0 h-full bg-blue-500" 
-            style={{ width: `${percent_to_democrats}%` }}
-          ></div>
-          <div 
-            className="absolute right-0 top-0 h-full bg-red-500" 
-            style={{ width: `${percent_to_republicans}%` }}
-          ></div>
-        </div>
-        
-        <div className="flex justify-between text-sm">
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-blue-500 mr-1 rounded-full"></div>
-            <span>Democrats</span>
-          </div>
-          {hasOther && (
-            <div className="flex items-center">
-              <div className="w-3 h-3 bg-gray-200 mr-1 rounded-full"></div>
-              <span>Other</span>
-            </div>
-          )}
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-red-500 mr-1 rounded-full"></div>
-            <span>Republicans</span>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Render the recipients chart
-  const renderTopContributionRecipientsChart = () => {
-    if (isLoadingRecipients) return <div className="text-center py-4">Loading recipients data...</div>;
-    if (recipientError) return <div className="text-center py-4 text-gray-500">{recipientError}</div>;
-    if (!recipientData || !recipientData.contribution_totals) return null;
-
-    const recipients = recipientData.contribution_totals;
-    
-    // Sort recipients by total contribution amount (descending)
-    const sortedRecipients = [...recipients].sort((a, b) => b.total_contribution_amount - a.total_contribution_amount);
-    
-    // Take the number of recipients to display based on current count
-    const displayedRecipients = sortedRecipients.slice(0, displayedRecipientsCount);
-    
-    // @ts-expect-error
-    const handleLoadMore = () => {
-      setDisplayedRecipientsCount(prev => Math.min(prev + 10, recipients.length));
-    };
-    
-    const handleViewAllInNewTab = () => {
-      // Create a new window/tab with the recipients data
-      localStorage.setItem('recipientsTotalsData', JSON.stringify({
-        recipients: sortedRecipients,
-        organizationName: topic,
-        committeeID: committee_id,
-        committeeName: committee_name
-      }));
-
-      window.open('#/organizationRecipientsTotals', "_blank", "noreferrer");
-    };
-    
-    // @ts-expect-error
-    const hasMoreRecipients = displayedRecipientsCount < recipients.length;
-    
-    return (
-      <div className="space-y-4 py-5 mt-8">
-        <h3 className="text-xl font-semibold">Top Contribution Recipients</h3>
-        
-        <div className="space-y-3">
-          {displayedRecipients.map((recipient, _) => { //(recipient, index)
-            
-            return (
-              <div key={recipient.recipient_id} className="space-y-1">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="font-medium text-gray-900 truncate max-w-xs">
-                    {recipient.recipient_name}
-                  </span>
-                  <span className="text-gray-600 whitespace-nowrap ml-2">
-                    ${recipient.total_contribution_amount.toLocaleString()}
-                  </span>
-                </div>
-                
-                <div className="text-xs text-gray-500">
-                  {recipient.number_of_contributions} contribution{recipient.number_of_contributions !== 1 ? 's' : ''}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        
-        <div className="text-center space-y-2">
-          <div className="text-sm text-gray-500">
-            Showing {displayedRecipientsCount} of {recipients.length} total recipients
-          </div>
-          
-          <div className="flex justify-center gap-3">
-            <button
-              onClick={handleViewAllInNewTab}
-              className="px-4 py-2 bg-gray-100 text-gray rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm font-medium"
-            >
-              View All Contribution Recipients
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Render the leadership contributions chart
-  const renderLeadershipContributionsChart = () => {
-    if (isLoadingLeadership) return <div className="text-center py-4">Loading leadership contributions data...</div>;
-    if (leadershipError) return <div className="text-center py-4 text-gray-500">{leadershipError}</div>;
-    if (!leadershipData || !leadershipData.leadership_contributors_to_committee) return null;
-
-    const leadership = leadershipData.leadership_contributors_to_committee;
-    
-    // Aggregate contributions by person (name + employer combination)
-    const aggregatedContributions = {};
-    leadership.forEach(contributor => {
-      const key = `${contributor.name}-${contributor.employer}`;
-      if (!aggregatedContributions[key]) {
-        aggregatedContributions[key] = {
-          name: contributor.name,
-          employer: contributor.employer,
-          occupation: contributor.occupation,
-          total_amount: 0,
-          contribution_count: 0
-        };
-      }
-      aggregatedContributions[key].total_amount += parseFloat(contributor.transaction_amount);
-      aggregatedContributions[key].contribution_count += 1;
-    });
-    
-    // Convert to array and sort by total contribution amount (descending)
-    const sortedLeadership = Object.values(aggregatedContributions)
-    // @ts-expect-error
-      .sort((a, b) => b.total_amount - a.total_amount);
-    
-    // Take the number of leadership contributors to display
-    const displayedLeadership = sortedLeadership.slice(0, displayedLeadershipCount);
-    
-    const handleViewAllLeadershipInNewTab = () => {
-      localStorage.setItem('leadershipContributionsData', JSON.stringify({
-        leadership: sortedLeadership,
-        organizationName: topic,
-        committeeId: committee_id
-      }));
- 
-      window.open('#/organizationLeadershipContributions', "_blank", "noreferrer");
-    };
-    
-    // Calculate total amount for summary
-    // @ts-expect-error
-    const totalLeadershipAmount = sortedLeadership.reduce((sum, contributor) => sum + contributor.total_amount, 0);
-    
-    return (
-      <div className="space-y-4 py-5 mt-8">
-        <h3 className="text-xl font-semibold">Contributions from Company Leadership</h3>
-        
-        <div className="text-base mb-4">
-          <div>Total from Leadership: ${totalLeadershipAmount.toLocaleString()}</div>
-          <div className="text-sm text-gray-600">
-            {sortedLeadership.length} leadership contributor{sortedLeadership.length !== 1 ? 's' : ''}
-          </div>
-        </div>
-        
-        <div className="space-y-3">
-          {displayedLeadership.map((contributor, index) => {
-            return (
-              // @ts-expect-error
-              <div key={`${contributor.name}-${contributor.employer}-${index}`} className="p-0 rounded-lg">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium text-gray-900 truncate">
-                      {/* @ts-expect-error */}
-                      {contributor.name}
-                    </div>
-                    <div className="text-sm text-gray-600 truncate">
-                      {/* @ts-expect-error */}
-                      {contributor.occupation}
-                    </div>
-                    <div className="text-sm text-gray-500 truncate">
-                      {/* @ts-expect-error */}
-                      {contributor.employer}
-                    </div>
-                  </div>
-                  <div className="ml-4 text-right flex-shrink-0">
-                    <div className="font-semibold text-gray-900">
-                      {/* @ts-expect-error */}
-                      ${contributor.total_amount.toLocaleString()}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {/* @ts-expect-error */}
-                      {contributor.contribution_count} contribution{contributor.contribution_count !== 1 ? 's' : ''}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        
-        <div className="text-center space-y-2">
-          <div className="text-sm text-gray-500">
-            Showing {displayedLeadershipCount} of {sortedLeadership.length} total leadership contributors
-          </div>
-          
-          <div className="flex justify-center gap-3">
-            <button
-              onClick={handleViewAllLeadershipInNewTab}
-              className="px-4 py-2 bg-gray-100 text-gray rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm font-medium"
-            >
-              View All Leadership Contributors
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="px-0 py-0 flex justify-even min-h-screen bg-white">
         {/* Logo */}
@@ -411,7 +166,6 @@ const OrganizationDetailOverview = () => {
           onClick={handleLogoClick}
           tabIndex={0}
         >
-
           <div className="flex items-center gap-2 justify-center sm:justify-start">
               <img src={checkmark_logo} className="block" width="55" height="55" alt="blue_check_logo" />
               <h1 className="text-4xl font-bold text-black">MoralCheck AI</h1>
@@ -427,7 +181,7 @@ const OrganizationDetailOverview = () => {
           </CardHeader>
           
           <CardContent className="space-y-6">
-            {/* Rest of your content remains the same */}
+            {/* Category-specific ratings */}
             {categoryData == 'Political Leaning' && (
               <div className="space-y-1">
                 <br/>
@@ -476,14 +230,34 @@ const OrganizationDetailOverview = () => {
               </div>
             )}
 
-            {/* Political Contributions Chart */}
-            {(isFinancialData || categoryData === 'Financial Contributions') && renderContributionsToEachPoliticalPartyChart()}
-
-            {/* Top Recipients Chart */}
-            {(isFinancialData || categoryData === 'Financial Contributions') && renderTopContributionRecipientsChart()}
-            
-            {/* Leadership Contributions Chart */}
-            {(isFinancialData || categoryData === 'Financial Contributions') && renderLeadershipContributionsChart()}
+            {/* Chart Components - only show for Financial Contributions */}
+            {(isFinancialData || categoryData === 'Financial Contributions') && (
+              <>
+                <ContributionsByPartyChart 
+                  contributionsData={contributionsData}
+                  isLoading={isLoading}
+                  error={error}
+                />
+                
+                <TopContributionRecipientsChart 
+                  recipientData={recipientData}
+                  isLoadingRecipients={isLoadingRecipients}
+                  recipientError={recipientError}
+                  topic={topic}
+                  committee_id={committee_id}
+                  committee_name={committee_name}
+                />
+                
+                <LeadershipContributionsChart 
+                  leadershipData={leadershipData}
+                  isLoadingLeadership={isLoadingLeadership}
+                  leadershipError={leadershipError}
+                  topic={topic}
+                  committee_id={committee_id}
+                  displayedLeadershipCount={displayedLeadershipCount}
+                />
+              </>
+            )}
 
           </CardContent> 
         </Card> 
