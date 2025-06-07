@@ -1,13 +1,11 @@
-import React from 'react';
-
-const LeadershipContributionsChart = ({ 
+export default function LeadershipContributionsChart({ 
   leadershipData, 
   isLoadingLeadership, 
   leadershipError,
   topic,
   committee_id,
   displayedLeadershipCount = 10
-}) => {
+}) {
   if (isLoadingLeadership) return <div className="text-center py-4">Loading leadership contributions data...</div>;
   if (leadershipError) return <div className="text-center py-4 text-gray-500">{leadershipError}</div>;
   if (!leadershipData || !leadershipData.leadership_contributors_to_committee) return null;
@@ -110,4 +108,4 @@ const LeadershipContributionsChart = ({
   );
 };
 
-export default LeadershipContributionsChart;
+// export default LeadershipContributionsChart;
