@@ -74,10 +74,18 @@ class NetworkManager {
       orderIncOrDec = 'dec'
     }
     
+    
     let orderByParam = orderBy;
     // Handle special case for Political Leaning API
     if (category === 'Political Leaning' && orderBy === 'number') {
       orderByParam = 'political_number';
+    }
+    if (category === 'Political Leaning' && (orderBy.toLocaleLowerCase() === 'liberal rating' || orderBy.toLocaleLowerCase() === 'liberal leaning' || orderBy.toLocaleLowerCase() === 'liberal lean') ) {
+      orderByParam = 'political_number';
+    }
+    if (category === 'Political Leaning' && (orderBy.toLocaleLowerCase() === 'conservative rating' || orderBy.toLocaleLowerCase() === 'conservative leaning' || orderBy.toLocaleLowerCase() === 'conservative lean') ) {
+      orderByParam = 'political_number';
+      orderIncOrDec === 'dec' ? 'inc' : 'dec' // Invert ordering in this case.
     }
 
     const url = `${this.baseURL}${endpoint}?order_by=${orderByParam}&order_inc_or_dec=${orderIncOrDec}&limit=${limit}&offset=${offset}`;
