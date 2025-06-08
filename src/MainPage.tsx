@@ -69,7 +69,12 @@ const MainPage = () => {
   ];
 
   // Available sort options
-  const sortOptions = ['Name', 'Rating'];
+  // if (category == 'Political Leaning') {
+  // let sortOptions = ['Name', 'Liberal rating', 'Conservatice rating'];
+  // }
+  // else {
+  let sortOptions = ['Name', 'Rating'];
+  // }
 
   // Save last selected category
   useEffect(() => {
