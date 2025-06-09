@@ -61,7 +61,7 @@ const MainPage = () => {
   // Dynamic sort options based on category
   const getSortOptions = () => {
     if (category === 'Political Leaning') {
-      return ['Name', 'Liberal rating', 'Conservative rating'];
+      return ['Name', 'Liberal lean', 'Conservative lean'];
     }
     if (category === 'Financial Contributions') {
       return ['Name'];
