@@ -1,5 +1,5 @@
 import CategoryPrompt from './CategoryPrompt';
-import AutocompleteInput from './AutocompleteInput';
+import AutoCompleteInput from './AutoCompleteInput';
 import SubmitButton from './SubmitButton';
 
 const SearchForm = ({ 
@@ -15,7 +15,7 @@ const SearchForm = ({
       <div className="text-center space-y-6">
         <CategoryPrompt category={category} />
         
-        <AutocompleteInput
+        <AutoCompleteInput
           value={searchTerm}
           onChange={onSearchTermChange}
           suggestions={suggestions}

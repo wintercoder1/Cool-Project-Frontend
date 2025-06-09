@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Input } from "@/components/ui/input";
 import SuggestionDropdown from './SuggestionDropdown';
 
-const AutocompleteInput = ({ 
+const AutoCompleteInput = ({ 
   value, 
   onChange, 
   placeholder = "Type here.", 
@@ -139,4 +139,4 @@ const AutocompleteInput = ({
   );
 };
 
-export default AutocompleteInput;
+export default AutoCompleteInput;
