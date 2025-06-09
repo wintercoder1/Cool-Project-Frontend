@@ -85,7 +85,7 @@ class NetworkManager {
     }
     if (category === 'Political Leaning' && (orderBy.toLocaleLowerCase() === 'conservative rating' || orderBy.toLocaleLowerCase() === 'conservative leaning' || orderBy.toLocaleLowerCase() === 'conservative lean') ) {
       orderByParam = 'political_number';
-      // Invert ordering in this case. We basically turn a most conservative request
+      // Invert ordering in this case. We basically turn a most conservative request 
       orderIncOrDec = (orderIncOrDec === 'dec') ? 'inc'  : 'dec'
     }
 
