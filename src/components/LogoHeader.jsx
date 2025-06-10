@@ -1,5 +1,5 @@
 // @ts-expect-error
-import checkmark_logo from '../assets/blue_checkmark_logo.png';
+import tilt_logo from '../assets/tilt_ai_logo.jpeg';
 
 export default function LogoHeader({ onClick, className = "" }) {
   return (
@@ -10,8 +10,8 @@ export default function LogoHeader({ onClick, className = "" }) {
       tabIndex={onClick ? 0 : undefined}
       style={{ cursor: onClick ? 'pointer' : 'default' }}
     >
-      <img src={checkmark_logo} className="block" width="55" height="55" alt="blue_check_logo" />
-      <h1 className="text-4xl font-bold text-black">MoralCheck AI</h1>
+      <img src={tilt_logo} className="block" width="55" height="55" alt="blue_check_logo" />
+      <h1 className="text-4xl font-bold text-black">Tilt AI</h1>
     </div>
   );
 }

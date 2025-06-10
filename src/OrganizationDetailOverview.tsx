@@ -2,9 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useNavigate} from 'react-router-dom';
-import networkManager from './network/NetworkManager'; 
-// @ts-expect-error
-import checkmark_logo from './assets/blue_checkmark_logo.png';
+import networkManager from './network/NetworkManager';
 import React from "react";
 
 // Import components

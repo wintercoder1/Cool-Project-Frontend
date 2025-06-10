@@ -1,8 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// @ts-expect-error
-import checkmark_logo from './assets/blue_checkmark_logo.png';
+import LogoHeader from './components/LogoHeader';
 
 const OrganizationRecipientsTotals = () => {
 
@@ -74,7 +73,7 @@ const OrganizationRecipientsTotals = () => {
   return (
     <div className="px-0 py-0 flex justify-even min-h-screen bg-white">
       {/* Header */}
-      <div className="absolute top-4 left-8 right-8 flex justify-between items-center">
+      {/* <div className="absolute top-4 left-8 right-8 flex justify-between items-center">
         <div 
           className="cursor-pointer flex items-center gap-2"
           role="button"
@@ -85,6 +84,10 @@ const OrganizationRecipientsTotals = () => {
           <h1 className="text-4xl font-bold text-black">MoralCheck AI</h1>
         </div>
         
+      </div> */}
+
+      <div className="absolute top-4 left-8 cursor-pointer">
+        <LogoHeader onClick={handleLogoClick} />
       </div>
 
       {/* Main Content */}
