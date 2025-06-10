@@ -49,6 +49,7 @@ const OrganizationDetailOverview = () => {
     lean,
     rating,
     context,
+    // @ts-expect-error
     citation,
     committee_id,
     committee_name,
