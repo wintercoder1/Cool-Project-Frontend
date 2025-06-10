@@ -9,6 +9,8 @@ import React from "react";
 import ContributionsByPartyChart from './components/charts/ContributionsByPartyChart';
 import TopContributionRecipientsChart from './components/charts/TopContributionRecipientsChart';
 import LeadershipContributionsChart from './components/charts/LeadershipContributionsChart';
+import PoliticalLeaningQuickLook  from './components/overview/PoliticalLeaningQuickLook';
+import OtherQueryCategoryRatingQuickLook from './components/overview/OtherQueryCategoryRatingQuickLook';
 import LogoHeader from './components/LogoHeader';
 
 const OrganizationDetailOverview = () => {
@@ -230,6 +232,7 @@ const OrganizationDetailOverview = () => {
     window.location.reload();
   };
 
+
   return (
     <div className="px-0 py-0 flex justify-even min-h-screen bg-white">
         {/* Logo */}
@@ -240,9 +243,16 @@ const OrganizationDetailOverview = () => {
         {/* categoryData */}
         <Card className="w-screen mx-auto absolute top-20 px-4 py-5 min-h-screen bg-white">
           <CardHeader className="pb-2">
-            <CardTitle className="text-2xl font-bold">
-              Overview for {topic}
-            </CardTitle>
+            {categoryData !== 'Financial Contributions' && (
+              <CardTitle className="text-2xl font-bold">
+                  Overview for {topic}
+              </CardTitle>
+            )}
+            {categoryData === 'Financial Contributions' && (
+              <CardTitle className="text-2xl font-bold">
+                  Financial Contributions Overview for {topic}
+              </CardTitle>
+            )}
           </CardHeader>
           
           <CardContent className="space-y-6">
@@ -264,36 +274,36 @@ const OrganizationDetailOverview = () => {
             {!(categoryData === 'Financial Contributions' && shouldFetchFinancialOverview && (isLoadingFinancialOverview || financialOverviewError)) && (
               <>
                 {/* Category-specific ratings */}
-                {categoryData == 'Political Leaning' && (
-                  <div className="space-y-1">
-                    <br/>
-                    <div className="text-lg">
-                      Lean: {lean ? lean.trim(): ''}
-                    </div>
-                    <div className="text-lg">
-                      Rating: {rating}
-                    </div>
-                  </div>
-                )}
-                {categoryData == 'DEI Friendliness' && (
-                  <div className="space-y-1">
-                    <br/>
-                    <div className="text-lg">
-                    DEI Friendliness Rating: {rating}
-                    </div>
-                  </div>
-                )}
-                {categoryData == 'Wokeness' && (
-                  <div className="space-y-1">
-                    <br/>
-                    <div className="text-lg">
-                      Wokeness Rating: {rating}
-                    </div>
-                  </div>
-                )}
+
+                {/* Political Leaning Category */}
+                {categoryData === 'Political Leaning' && (
+                  <PoliticalLeaningQuickLook 
+                    lean={lean}
+                    rating={rating}
+                  />
+                )}      
+
+                {/* Other Rating-only Categories */}
+                {/* This includes:
+
+                    DEI Friendliness
+                    Wokeness
+                    Environmental Impact
+                    Immigration Support
+                    Techonology Innovation
+                    .. plus more to come likely
+
+                    Does NOT include Political Leaning or financial contributions.
+                */}
+                {categoryData !== 'Political Leaning' && categoryData !== 'Financial Contributions' &&(
+                  <OtherQueryCategoryRatingQuickLook
+                    text={`${categoryData} Rating:`}
+                    rating={rating}
+                  />
+                )}             
 
                 {/* Context */}
-                <div className="text-base">
+                <div className="text-base space-y-20 ">
                   {context && context.split('\n').map((line, i) => (
                     <React.Fragment key={i}>
                       {line.trim()}
@@ -314,7 +324,7 @@ const OrganizationDetailOverview = () => {
                         className="text-blue-600 hover:text-blue-800 underline cursor-pointer bg-transparent border-none p-0 font-inherit"
                       >
                         {/* Check out the financial contributions overview for a deeper dive into the financial contributions information. */}
-                        Financial contributions overview
+                        Financial Contributions Overview for {topic} 
                       </button>
                     </div>
                   </div>
