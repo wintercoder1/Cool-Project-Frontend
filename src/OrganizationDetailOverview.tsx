@@ -301,30 +301,34 @@ const OrganizationDetailOverview = () => {
                   ))}
                 </div>
                 
+                {/* Financial Contributions Link - only show for Political Leaning when financial data exists */}
+                {categoryData === 'Political Leaning' && created_with_financial_contributions_info === true && (
+                  <div className="space-y-2">
+                    {/* <h3 className="text-lg font-semibold">For a more in depth look</h3> */}
+                    <br></br>
+                    <h3 className="text-lg font-semibold">Citations:</h3>
+                    <div className="text-base">
+                      <button 
+                        onClick={handleFinancialContributionClick}
+                        className="text-blue-600 hover:text-blue-800 underline cursor-pointer bg-transparent border-none p-0 font-inherit"
+                      >
+                        {/* Check out the financial contributions overview for a deeper dive into the financial contributions information. */}
+                        Financial contributions overview
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Citations */ }
-                {categoryData !== 'Financial Contributions' && (
+                {/* This could eventualy include web crawed information and links to articles or Twitter/X posts. */}
+                {/* {categoryData !== 'Financial Contributions' && (
                   <div className="space-y-2">
                     <h3 className="text-lg font-semibold">Citations:</h3>
                     <div className="text-base">
                       {(citation == null || citation !== "none") ? citation : "No citations available"}
                     </div>
                   </div>
-                )}
-
-                {/* Financial Contributions Link - only show for Political Leaning when financial data exists */}
-                {categoryData === 'Political Leaning' && created_with_financial_contributions_info === true && (
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-semibold">For a more in depth look</h3>
-                    <div className="text-base">
-                      <button 
-                        onClick={handleFinancialContributionClick}
-                        className="text-blue-600 hover:text-blue-800 underline cursor-pointer bg-transparent border-none p-0 font-inherit"
-                      >
-                        Check out the financial contributions overview for a deeper dive into the financial contributions information.
-                      </button>
-                    </div>
-                  </div>
-                )}
+                )} */}
 
                 {/* Chart Components - only show for Financial Contributions */}
                 {(isFinancialData || categoryData === 'Financial Contributions') && (
