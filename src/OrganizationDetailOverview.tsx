@@ -29,6 +29,10 @@ const OrganizationDetailOverview = () => {
   const [isLoadingLeadership, setIsLoadingLeadership] = useState(false);
   const [leadershipError, setLeadershipError] = useState(null);
   const [displayedLeadershipCount, ___] = useState(10);
+  const [financialOverviewData, setFinancialOverviewData] = useState(null);
+  const [isLoadingFinancialOverview, setIsLoadingFinancialOverview] = useState(false);
+  const [financialOverviewError, setFinancialOverviewError] = useState(null);
+  const [shouldFetchFinancialOverview, setShouldFetchFinancialOverview] = useState(false);
   const navigate = useNavigate();
 
   // Default data if none provided.
@@ -49,14 +53,22 @@ const OrganizationDetailOverview = () => {
     context,
     citation,
     committee_id,
-    committee_name
+    committee_name,
+    created_with_financial_contributions_info,
   } = organizationDataLocation || organizationDataLocalStorage || defaultData;
 
   // If financial contribution. 
   // TODO: Actually learn react and figure out a better way to do this.
   if (categoryData == 'Financial Contributions') {
-    context = (organizationDataLocation && organizationDataLocation.fec_financial_contributions_summary_text)
-    || (organizationDataLocalStorage && organizationDataLocalStorage.fec_financial_contributions_summary_text)
+    // Use financial overview data if available, otherwise fall back to existing data
+    if (financialOverviewData) {
+      context = financialOverviewData.fec_financial_contributions_summary_text || financialOverviewData.context;
+      committee_id = financialOverviewData.committee_id || committee_id;
+      committee_name = financialOverviewData.committee_name || committee_name;
+    } else {
+      context = (organizationDataLocation && organizationDataLocation.fec_financial_contributions_summary_text)
+      || (organizationDataLocalStorage && organizationDataLocalStorage.fec_financial_contributions_summary_text)
+    }
 
     // Some committee IDs were wrongly stored as integers with leading zeros removed.
     // We will fix that here.
@@ -85,7 +97,46 @@ const OrganizationDetailOverview = () => {
 
   useEffect(() => {
     setIsFinancialData(categoryData == 'Financial Contributions')
+    
+    // Check if we should fetch financial overview data (coming from the link click)
+    const shouldFetch = localStorage.getItem("shouldFetchFinancialOverview");
+    if (shouldFetch === "true") {
+      setShouldFetchFinancialOverview(true);
+      localStorage.removeItem("shouldFetchFinancialOverview"); // Clean up the flag
+    }
   }, [categoryData]);
+
+  // Fetch financial overview data only when triggered by the link click
+  useEffect(() => {
+    const fetchFinancialOverviewData = async () => {
+      if (!shouldFetchFinancialOverview || categoryData !== 'Financial Contributions' || !topic) return;
+      
+      setIsLoadingFinancialOverview(true);
+      setFinancialOverviewError(null);
+      
+      try {
+        const data = await networkManager.getFinancialContributionsOverview(topic);
+        setFinancialOverviewData(data);
+        
+        // Update the organization data with the financial overview data
+        if (data) {
+          const updatedData = {
+            ...(organizationDataLocation || organizationDataLocalStorage || defaultData),
+            ...data
+          };
+          localStorage.setItem("organizationData", JSON.stringify(updatedData));
+        }
+      } catch (err) {
+        console.error('Error fetching financial overview data:', err);
+        setFinancialOverviewError('Failed to load financial contributions overview data');
+      } finally {
+        setIsLoadingFinancialOverview(false);
+        setShouldFetchFinancialOverview(false); // Reset the flag
+      }
+    };
+
+    fetchFinancialOverviewData();
+  }, [shouldFetchFinancialOverview, categoryData, topic]);
 
   // Fetch contribution data when component mounts or committee_id changes
   useEffect(() => {
@@ -158,6 +209,28 @@ const OrganizationDetailOverview = () => {
     navigate('/', {});
   };
 
+  const handleFinancialContributionClick = () => {
+    // Navigate to the same page but with Financial Contributions category
+    const updatedOrganizationData = {
+      ...(organizationDataLocation || organizationDataLocalStorage || defaultData),
+      // Include any additional data needed for financial contributions view
+    };
+    
+    // Set flags to indicate we should fetch financial overview data
+    localStorage.setItem("categoryData", "Financial Contributions");
+    localStorage.setItem("shouldFetchFinancialOverview", "true");
+    localStorage.setItem("organizationData", JSON.stringify(updatedOrganizationData));
+    
+    // Navigate to the same route with updated state
+    navigate(location.pathname, { 
+      state: updatedOrganizationData,
+      replace: true 
+    });
+    
+    // Force a page refresh to ensure the component re-renders with new category
+    window.location.reload();
+  };
+
   return (
     <div className="px-0 py-0 flex justify-even min-h-screen bg-white">
         {/* Logo */}
@@ -174,81 +247,115 @@ const OrganizationDetailOverview = () => {
           </CardHeader>
           
           <CardContent className="space-y-6">
-            {/* Category-specific ratings */}
-            {categoryData == 'Political Leaning' && (
-              <div className="space-y-1">
-                <br/>
-                <div className="text-lg">
-                  Lean: {lean ? lean.trim(): ''}
-                </div>
-                <div className="text-lg">
-                  Rating: {rating}
-                </div>
-              </div>
-            )}
-            {categoryData == 'DEI Friendliness' && (
-              <div className="space-y-1">
-                <br/>
-                <div className="text-lg">
-                DEI Friendliness Rating: {rating}
-                </div>
-              </div>
-            )}
-            {categoryData == 'Wokeness' && (
-              <div className="space-y-1">
-                <br/>
-                <div className="text-lg">
-                  Wokeness Rating: {rating}
-                </div>
+            {/* Show loading state for Financial Contributions only when fetching overview */}
+            {categoryData === 'Financial Contributions' && shouldFetchFinancialOverview && isLoadingFinancialOverview && (
+              <div className="text-center py-8">
+                <div className="text-lg">Loading financial contributions overview...</div>
               </div>
             )}
 
-            {/* Context */}
-            <div className="text-base">
-              {context.split('\n').map((line, i) => (
-                <React.Fragment key={i}>
-                  {line.trim()}
-                  {i < context.split('\n').length - 1 && <br />}
-                </React.Fragment>
-              ))}
-            </div>
-
-            {/* Citations */ }
-            {categoryData !== 'Financial Contributions' && (
-              <div className="space-y-2">
-                <h3 className="text-lg font-semibold">Citations:</h3>
-                <div className="text-base">
-                  {(citation == null || citation !== "none") ? citation : "No citations available"}
-                </div>
+            {/* Show error state for Financial Contributions only when there was a fetch error */}
+            {categoryData === 'Financial Contributions' && financialOverviewError && (
+              <div className="text-center py-8">
+                <div className="text-lg text-red-600">{financialOverviewError}</div>
               </div>
             )}
 
-            {/* Chart Components - only show for Financial Contributions */}
-            {(isFinancialData || categoryData === 'Financial Contributions') && (
+            {/* Only hide content when actively loading financial overview data from link click */}
+            {!(categoryData === 'Financial Contributions' && shouldFetchFinancialOverview && (isLoadingFinancialOverview || financialOverviewError)) && (
               <>
-                <ContributionsByPartyChart 
-                  contributionsData={contributionsData}
-                  isLoading={isLoading}
-                  error={error}
-                />
+                {/* Category-specific ratings */}
+                {categoryData == 'Political Leaning' && (
+                  <div className="space-y-1">
+                    <br/>
+                    <div className="text-lg">
+                      Lean: {lean ? lean.trim(): ''}
+                    </div>
+                    <div className="text-lg">
+                      Rating: {rating}
+                    </div>
+                  </div>
+                )}
+                {categoryData == 'DEI Friendliness' && (
+                  <div className="space-y-1">
+                    <br/>
+                    <div className="text-lg">
+                    DEI Friendliness Rating: {rating}
+                    </div>
+                  </div>
+                )}
+                {categoryData == 'Wokeness' && (
+                  <div className="space-y-1">
+                    <br/>
+                    <div className="text-lg">
+                      Wokeness Rating: {rating}
+                    </div>
+                  </div>
+                )}
+
+                {/* Context */}
+                <div className="text-base">
+                  {context && context.split('\n').map((line, i) => (
+                    <React.Fragment key={i}>
+                      {line.trim()}
+                      {i < context.split('\n').length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
+                </div>
                 
-                <TopContributionRecipientsChart 
-                  recipientData={recipientData}
-                  isLoadingRecipients={isLoadingRecipients}
-                  recipientError={recipientError}
-                  topic={topic}
-                  committee_id={committee_id}
-                  committee_name={committee_name}
-                />
-                
-                <LeadershipContributionsChart 
-                  leadershipData={leadershipData}
-                  isLoadingLeadership={isLoadingLeadership}
-                  leadershipError={leadershipError}
-                  topic={topic}
-                  committee_id={committee_id}
-                  displayedLeadershipCount={displayedLeadershipCount}
-                />
+                {/* Citations */ }
+                {categoryData !== 'Financial Contributions' && (
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold">Citations:</h3>
+                    <div className="text-base">
+                      {(citation == null || citation !== "none") ? citation : "No citations available"}
+                    </div>
+                  </div>
+                )}
+
+                {/* Financial Contributions Link - only show for Political Leaning when financial data exists */}
+                {categoryData === 'Political Leaning' && created_with_financial_contributions_info === true && (
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold">For a more in depth look</h3>
+                    <div className="text-base">
+                      <button 
+                        onClick={handleFinancialContributionClick}
+                        className="text-blue-600 hover:text-blue-800 underline cursor-pointer bg-transparent border-none p-0 font-inherit"
+                      >
+                        Check out the financial contributions overview for a deeper dive into the financial contributions information.
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Chart Components - only show for Financial Contributions */}
+                {(isFinancialData || categoryData === 'Financial Contributions') && (
+                  <>
+                    <ContributionsByPartyChart 
+                      contributionsData={contributionsData}
+                      isLoading={isLoading}
+                      error={error}
+                    />
+                    
+                    <TopContributionRecipientsChart 
+                      recipientData={recipientData}
+                      isLoadingRecipients={isLoadingRecipients}
+                      recipientError={recipientError}
+                      topic={topic}
+                      committee_id={committee_id}
+                      committee_name={committee_name}
+                    />
+                    
+                    <LeadershipContributionsChart 
+                      leadershipData={leadershipData}
+                      isLoadingLeadership={isLoadingLeadership}
+                      leadershipError={leadershipError}
+                      topic={topic}
+                      committee_id={committee_id}
+                      displayedLeadershipCount={displayedLeadershipCount}
+                    />
+                  </>
+                )}
               </>
             )}
 
