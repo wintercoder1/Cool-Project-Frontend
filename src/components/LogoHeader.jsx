@@ -11,7 +11,7 @@ export default function LogoHeader({ onClick, className = "" }) {
       style={{ cursor: onClick ? 'pointer' : 'default' }}
     >
       <img src={tilt_logo} className="block" width="55" height="55" alt="blue_check_logo" />
-      <h1 className="text-4xl font-bold text-black">Tilt AI</h1>
+      <h1 className="text-4xl font-bold text-black">Tilt AI       </h1>
     </div>
   );
 }
