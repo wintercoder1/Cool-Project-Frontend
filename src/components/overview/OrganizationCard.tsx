@@ -3,13 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 
 // Component imports
 import OverviewHeader from './OverviewHeader';
-// @ts-expect-error
 import LoadingStates from './LoadingStates';
-// @ts-expect-error
 import RatingSection from './RatingSection';
-// @ts-expect-error
 import ContextSection from './ContextSection';
-// @ts-expect-error
 import CitationsSection from './CitationsSection';
 import ChartsSection from './ChartsSection';
 

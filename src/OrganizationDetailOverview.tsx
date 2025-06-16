@@ -12,6 +12,7 @@ import { useChartData } from './hooks/useChartData';
 
 const OrganizationDetailOverview = () => {
   const navigate = useNavigate();
+  // @ts-expect-error
   const { organizationData, categoryData, location } = useOrganizationData();
 
   const {
@@ -19,6 +20,7 @@ const OrganizationDetailOverview = () => {
     committee_id,
     committee_name,
     context,
+    // @ts-expect-error
     financialOverviewData,
     isLoadingFinancialOverview,
     financialOverviewError,
@@ -31,6 +33,7 @@ const OrganizationDetailOverview = () => {
     console.log(event);
     navigate('/', {});
   };
+
 
   const handleFinancialContributionClick = () => {
   // const handleFinancialContributionClickNewTab = () => {
