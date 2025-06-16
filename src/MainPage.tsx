@@ -335,9 +335,11 @@ const MainPage = () => {
         />
       </div>
 
-      <div className="p-4 mt-2">
+      <div className="p-4 mt-2 " > 
+        {/* bg-gray-100"> */}
+
         {/* Search Bar and Sort Controls */}
-        <div className="flex justify-between items-center mb-4 px-4">
+        <div className="flex justify-between items-center mb-4 px-4 bg-white">
           <SearchBar onKeyPress={handleSearchKeyPress} />
           <SortControls 
             sortBy={sortBy}
@@ -350,22 +352,24 @@ const MainPage = () => {
           />
         </div>
 
-        <div className="py-0"></div>
+        <div className="py-0 bg-white"></div>
         
-        <CompanyList 
-          data={currentData}
-          loading={loading}
-          category={category}
-          onItemClick={handleOrganizationClick}
-          getCategoryValueLabel={getCategoryValueLabel}
-        />
+        <div className="py-0 bg-white">
+          <CompanyList 
+            data={currentData}
+            loading={loading}
+            category={category}
+            onItemClick={handleOrganizationClick}
+            getCategoryValueLabel={getCategoryValueLabel}
+          />
 
-        <PaginationControls 
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPrevPage={handlePrevPage}
-          onNextPage={handleNextPage}
-        />
+          <PaginationControls 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPrevPage={handlePrevPage}
+            onNextPage={handleNextPage}
+          />
+        </div>
 
         <FloatingActionButton onClick={handleNewQueryClick} />
 
@@ -375,6 +379,7 @@ const MainPage = () => {
         />
       </div>
     </div>
+
   );
 };
 
