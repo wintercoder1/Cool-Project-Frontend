@@ -1,6 +1,8 @@
+import { completeNASDAQCompanyList } from "./CompleteNasdaqCompanyList";
+
 // @ts-expect-error
 const usNASDAQTop100 = [
-    "Palantir Technologies Inc","MicroStrategy (Strategy)","Axon Enterprise Inc","Applovin Corp", "Arm Holdings PLC",
+    "Palantir Technologies Inc","MicroStrategy","Axon Enterprise Inc","Applovin Corp", "Arm Holdings PLC",
     "Linde PLC","AstraZeneca PLC","Baker Hughes Co","Broadcom Inc","Biogen Inc", "Booking Holdings Inc",
     "Cadence Design Systems Inc","Adobe Inc.","Charter Communications Inc", "Copart Inc","CoStar Group Inc",
     "CrowdStrike Holdings Inc","Cintas Corp","Cisco Systems Inc", "Comcast Corp","Costco Wholesale Corp",
@@ -11,7 +13,7 @@ const usNASDAQTop100 = [
     "IDEXX Laboratories Inc","Shopify Inc","Keurig Dr Pepper Inc","KLA Corp","Kraft Heinz Co","Lam Research Corp",
     "Lululemon Athletica Inc","MercadoLibre Inc","Marriott International Inc","Microchip Technology Inc",
     "Mondelez International Inc","Monster Beverage Corp","Microsoft Corp","Micron Technology Inc","Netflix Inc",
-    "Grail Inc","NVIDIA Corp","NXP Semiconductors NV","Old Dominion Freight Line Inc","O’Reilly Automotive Inc",
+    "Grail Inc","NVIDIA Corp","NXP Semiconductors NV","Old Dominion Freight Line Inc","O'Reilly Automotive Inc",
     "Paccar Inc","Palo Alto Networks Inc","Paychex Inc","PDD Holdings Inc","PayPal Holdings Inc","PepsiCo Inc.",
     "Qualcomm Inc","Regeneron Pharmaceuticals Inc","Ross Stores Inc","Starbucks Corp","Synopsys Inc","Tesla Inc",
     "Texas Instruments Inc","T-Mobile US Inc","Verisk Analytics Inc","Vertex Pharmaceuticals Inc","Warner Bros Discovery Inc",
@@ -22,8 +24,9 @@ const usNASDAQTop100 = [
     "Autodesk Inc"
 ]
 
+// @ts-expect-error
 const usNASDAQTop100WithoutIncOrCompanySufffix = [
-    "Palantir Technologies","MicroStrategy (Strategy)","Axon Enterprise","Applovin","Arm Holdings","Linde","AstraZeneca",
+    "Palantir Technologies","MicroStrategy","Axon Enterprise","Applovin","Arm Holdings","Linde","AstraZeneca",
     "Baker Hughes","Broadcom","Biogen","Booking Holdings","Cadence Design Systems","Adobe","Charter Communications",
     "Copart","CoStar Group","CrowdStrike Holdings","Cintas","Cisco Systems","Comcast","Costco Wholesale","CSX",
     "Cognizant Technology Solutions","Datadog","Dexcom","Diamondback Energy","Electronic Arts","ON Semiconductor",
@@ -32,7 +35,7 @@ const usNASDAQTop100WithoutIncOrCompanySufffix = [
     "Marvell Technology","IDEXX Laboratories","Shopify","Keurig Dr Pepper","KLA","Kraft Heinz","Lam Research",
     "Lululemon Athletica","MercadoLibre","Marriott International","Microchip Technology","Mondelez International",
     "Monster Beverage","Microsoft","Micron Technology","Netflix","Grail","NVIDIA","NXP Semiconductors",
-    "Old Dominion Freight Line","O’Reilly Automotive","Paccar","Palo Alto Networks","Paychex","PDD Holdings",
+    "Old Dominion Freight Line","O'Reilly Automotive","Paccar","Palo Alto Networks","Paychex","PDD Holdings",
     "PayPal Holdings","PepsiCo","Qualcomm","Regeneron Pharmaceuticals","Ross Stores","Starbucks","Synopsys","Tesla",
     "Texas Instruments","T-Mobile US","Verisk Analytics","Vertex Pharmaceuticals","Warner Bros Discovery","Workday",
     "Xcel Energy","Zscaler","Automatic Data Processing","Airbnb","Advanced Micro Devices","Constellation Energy",
@@ -59,7 +62,7 @@ const miscOrgs = ['Google', 'Meta', 'Tesla', 'Facebook', 'Instagram', 'YouTube',
 const miscOrgsInternational = ['Sony', 'Nintendo', 'Toyota', 'Honda', 'BMW', 'Mercedes-Benz', 'Audi']
 
 
-const organizationSuggestions = [...usNASDAQTop100WithoutIncOrCompanySufffix, ...miscOrgs, ...miscOrgsInternational];
-
+// const organizationSuggestions = [...usNASDAQTop100WithoutIncOrCompanySufffix, ...miscOrgs, ...miscOrgsInternational];
+const organizationSuggestions = [ ...miscOrgs, ...miscOrgsInternational, ...completeNASDAQCompanyList];
 
 export default organizationSuggestions;
