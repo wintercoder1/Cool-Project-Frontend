@@ -1,8 +1,8 @@
 class NetworkManager {
   constructor() {
     // @ts-expect-error
-    this.baseURL = import.meta.env.VITE_BASE_URL;
-    // this.baseURL = 'http://127.0.0.1:8000';
+    // this.baseURL = import.meta.env.VITE_BASE_URL;
+    this.baseURL = 'http://127.0.0.1:8000';
     this.defaultOptions = {
       headers: {
         'Content-Type': 'application/json',
@@ -142,8 +142,15 @@ class NetworkManager {
    * @param {string} topic - The topic to analyze
    * @returns {Promise<any>} - The financial contributions data
    */
-  async getFinancialContributionsOverview(topic) {
-    const url = `${this.baseURL}/getFinancialContributionsOverview/${encodeURIComponent(topic)}`;
+  async getOrCreateFinancialContributionsOverview(topic) {
+    const url = `${this.baseURL}/getOrCreateFinancialContributionsOverview/${encodeURIComponent(topic)}`;
+    console.log('Financial contributions overview URL:', url);
+    return this.makeRequest(url);
+  }
+
+  async getFinancialContributionsOverviewTextOnly(topic) {
+    const url = `${this.baseURL}/getFinancialContributionsOverviewTextOnly/${encodeURIComponent(topic)}`;
+    console.log('Financial contributions overview URL:', url);
     return this.makeRequest(url);
   }
 
@@ -190,7 +197,7 @@ class NetworkManager {
       'Wokeness': () => this.getWokenessScore(topic),
       'Environmental Impact': () => this.getWokenessScore(topic), // Uses same endpoint
       'Immigration': () => this.getWokenessScore(topic), // Uses same endpoint
-      'Financial Contributions': () => this.getFinancialContributionsOverview(topic)
+      'Financial Contributions': () => this.getOrCreateFinancialContributionsOverview(topic)
     };
 
     const method = categoryMethods[category];

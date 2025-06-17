@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-// import networkManager from '../network/NetworkManager';
+import networkManager from '../network/NetworkManager';
 
 export const useFinancialData = (categoryData, topic, organizationData, defaultData) => {
   const [isFinancialData, setIsFinancialData] = useState(false);
@@ -57,7 +57,9 @@ export const useFinancialData = (categoryData, topic, organizationData, defaultD
       setFinancialOverviewError(null);
       
       try {
-        const data = await networkManager.getFinancialContributionsOverview(topic);
+        console.log('Fetching financial overview data for:', topic);
+        const data = await networkManager.getFinancialContributionsOverviewTextOnly(topic);
+        console.log('Financial overview data:', data);
         setFinancialOverviewData(data);
         
         if (data) {
