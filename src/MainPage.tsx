@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import networkManager from './network/NetworkManager.js';
+import networkManager from './network/NetworkManager';
 import LogoHeader from './components/LogoHeader';
 import CategoryDropdown from './components/main/CategoryDropdown';
 import SearchBar from './components/main/SearchBar';
@@ -258,8 +258,8 @@ const MainPage = () => {
   };
 
   const openDetailPageNewTab = (organization, category) => {
-    localStorage.setItem(`organizationData`, JSON.stringify(organization));
     localStorage.setItem(`categoryData`, category);
+    localStorage.setItem(`organizationData`, JSON.stringify(organization));
     window.open('#/organization', "_blank", "noreferrer");
   }
 

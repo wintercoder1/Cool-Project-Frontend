@@ -39,9 +39,9 @@ const OrganizationCard = ({
                     {!shouldHideContent && (
                     <>
                         <RatingSection 
-                        categoryData={categoryData}
-                        lean={organizationData.lean}
-                        rating={organizationData.rating}
+                            categoryData={categoryData}
+                            lean={organizationData.lean}
+                            rating={organizationData.rating}
                         />
 
                         <ContextSection context={context} />
@@ -54,19 +54,19 @@ const OrganizationCard = ({
                         />  */}
 
                         <CitationsSection 
-                        categoryData={categoryData}
-                        created_with_financial_contributions_info={organizationData.created_with_financial_contributions_info}
-                        topic={organizationData.topic}
-                        onFinancialContributionClick={onFinancialContributionClick}
+                            categoryData={categoryData}
+                            created_with_financial_contributions_info={organizationData.created_with_financial_contributions_info}
+                            topic={organizationData.topic}
+                            onFinancialContributionClick={onFinancialContributionClick}
                         />
 
                         <ChartsSection 
-                        isFinancialData={isFinancialData}
-                        categoryData={categoryData}
-                        topic={organizationData.topic}
-                        committee_id={committee_id}
-                        committee_name={committee_name}
-                        {...chartData}
+                            isFinancialData={isFinancialData}
+                            categoryData={categoryData}
+                            topic={organizationData.topic}
+                            committee_id={committee_id}
+                            committee_name={committee_name}
+                            {...chartData}
                         />
                     </>
                     )}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-// import networkManager from '../network/NetworkManager';
+import networkManager from '../network/NetworkManager';
 
 export const useChartData = (committee_id) => {
   const [contributionsData, setContributionsData] = useState(null);
