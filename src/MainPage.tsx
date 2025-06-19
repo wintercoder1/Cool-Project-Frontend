@@ -104,20 +104,21 @@ const MainPage = () => {
   };
  
   const fetchDataForCategory = async () => {
-    if (dataCache[`${category} p${currentPage}`] == null) {
-      setLoading(true);
+    const cacheKey = `${category} p${currentPage} ${sortBy} ${sortOrder}`;
+    if (dataCache[cacheKey] != null) {
+      // Data already cached for this category, page, sort, and order.
+      return;
     }
-    const offset = (currentPage - 1) * itemsPerPage;
-    
     try {
+      setLoading(true);
       console.log(`Fetching data for category: ${category}`);
-      
+      const offset = (currentPage - 1) * itemsPerPage;
       const jsonData = await networkManager.getSavedCategoryData(category, sortBy, sortOrder, itemsPerPage, offset);
       console.log('Data fetched:', jsonData);
       
       setDataCache(prevCache => ({
         ...prevCache,
-        [`${category} p${currentPage} ${sortBy} ${sortOrder}`]: jsonData
+        [cacheKey]: jsonData
       }));
     } catch (err) {
       setError(err.message);
