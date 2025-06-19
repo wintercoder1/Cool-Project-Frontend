@@ -320,7 +320,7 @@ const MainPage = () => {
         </div>
       </div>
     );
-  }
+  } 
 
   return (
     <div className="absolute top-2 w-screen mx-auto min-h-screen bg-white">
@@ -335,10 +335,8 @@ const MainPage = () => {
           onSelectCategory={handleSelectCategory}
         />
       </div>
-
-      <div className="p-4 mt-2 " > 
-        {/* bg-gray-100"> */}
-
+  
+      <div className="p-4 mt-2 pb-20"> {/* Added bottom padding to prevent overlap */}
         {/* Search Bar and Sort Controls */}
         <div className="flex justify-between items-center mb-4 px-4 bg-white">
           <SearchBar onKeyPress={handleSearchKeyPress} />
@@ -352,7 +350,7 @@ const MainPage = () => {
             onToggleSortOrder={handleToggleSortOrder}
           />
         </div>
-
+  
         <div className="py-0 bg-white"></div>
         
         <div className="py-0 bg-white">
@@ -363,24 +361,25 @@ const MainPage = () => {
             onItemClick={handleOrganizationClick}
             getCategoryValueLabel={getCategoryValueLabel}
           />
-
-          <PaginationControls 
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPrevPage={handlePrevPage}
-            onNextPage={handleNextPage}
-          />
         </div>
-
-        <FloatingActionButton onClick={handleNewQueryClick} />
-
+  
         <SearchPopup 
           isOpen={showSearchPopup}
           onClose={handleCloseSearchPopup}
         />
       </div>
+  
+      {/* Pagination Controls - Fixed to bottom with transparent background */}
+      <div className="fixed bottom-0 left-0 right-0 py-0">
+        <PaginationControls 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPrevPage={handlePrevPage}
+          onNextPage={handleNextPage}
+        /> 
+      </div>
+      <FloatingActionButton onClick={handleNewQueryClick} />
     </div>
-
   );
 };
 
