@@ -308,15 +308,24 @@ const MainPage = () => {
 
   if (error) {
     return (
-      <div className="w-full max-w-md mx-auto">
-        <div className="p-4">
-          <div className="text-red-500">Error loading data: {error}</div>
-          <button 
-            className="mt-2 px-4 py-2 bg-gray-200 rounded"
-            onClick={clearCache}
-          >
-            Clear Cache and Retry
-          </button>
+      <div className="absolute top-2 w-screen mx-auto min-h-screen bg-white">
+        {/* Header with Logo and Dropdown */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 px-8 bg-white">
+          <LogoHeader />
+        </div>
+         
+        <div className="flex justify-center items-center min-h-[calc(60vh-120px)] sm:min-h-[60vh] sm:mt-4">
+          <div className="w-full max-w-md mx-auto">
+            <div className="p-4 text-center">
+              <div className="text-gray-800">Error loading data: {error}</div>
+              <button 
+                className="mt-2 px-4 py-2 bg-gray-200 rounded"
+                onClick={clearCache}
+              >
+                Clear Cache and Retry
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
