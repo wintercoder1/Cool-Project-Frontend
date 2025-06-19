@@ -143,7 +143,7 @@ class NetworkManager {
    * @returns {Promise<any>} - The financial contributions data
    */
   async getOrCreateFinancialContributionsOverview(topic) {
-    const url = `${this.baseURL}/getOrCreateFinancialContributionsOverview/${encodeURIComponent(topic)}`;
+    const url = `${this.baseURL}/getFinancialContributionsOverview/${encodeURIComponent(topic)}`;
     console.log('Financial contributions overview URL:', url);
     return this.makeRequest(url);
   }
