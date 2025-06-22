@@ -25,12 +25,16 @@ const ChartsSection = ({
 
   return (
     <>
+      <hr className="border-gray-200" />
+
       <ContributionsByPartyChart 
         contributionsData={contributionsData}
         isLoading={isLoading}
         error={error}
       />
       
+      <hr className="border-gray-200" />
+
       <TopContributionRecipientsChart 
         recipientData={recipientData}
         isLoadingRecipients={isLoadingRecipients}
@@ -40,6 +44,8 @@ const ChartsSection = ({
         committee_name={committee_name}
       />
     
+      <hr className="border-gray-200" />
+      
       <LeadershipContributionsChart 
         leadershipData={leadershipData}
         isLoadingLeadership={isLoadingLeadership}

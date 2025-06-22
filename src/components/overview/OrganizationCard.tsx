@@ -44,7 +44,11 @@ const OrganizationCard = ({
                             rating={organizationData.rating}
                         />
 
+                        <hr className="border-gray-200" />
+
                         <ContextSection context={context} />
+                        
+                        
                         
                         {/* <LoadingStates 
                             categoryData={categoryData}
@@ -59,6 +63,7 @@ const OrganizationCard = ({
                             topic={organizationData.topic}
                             onFinancialContributionClick={onFinancialContributionClick}
                         />
+
 
                         <ChartsSection 
                             isFinancialData={isFinancialData}
