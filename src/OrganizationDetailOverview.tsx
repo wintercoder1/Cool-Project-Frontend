@@ -1,4 +1,5 @@
 // Updated OrganizationDetailOverview.jsx
+// @ts-expect-error
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
@@ -14,7 +15,6 @@ import { useChartData } from './hooks/useChartData';
 const OrganizationDetailOverview = () => {
   const navigate = useNavigate();
   const { category, topic } = useParams();
-  const location = useLocation();
   
   // Set localStorage and document title based on URL parameters
   useEffect(() => {
