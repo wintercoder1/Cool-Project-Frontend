@@ -8,6 +8,7 @@ import MainPage from './MainPage.tsx'
 import OrganizationDetailOverview  from '@/OrganizationDetailOverview.tsx'
 import OrganizationContributionTotals from '@/OrganizationContributionTotals.tsx'
 import OrganizationQuery from '@/OrganizationQuery.tsx'
+import OrganizationLeadershipContributionTotals from '@/OrganizationLeadershipContributionTotals.tsx'
 import WaitingPage  from '@/WaitingPage.tsx'
 
 export default function MainRouter() {
@@ -22,6 +23,8 @@ export default function MainRouter() {
                element={<OrganizationDetailOverview />} />
         <Route path="/organizationRecipientsTotals"
                element={<OrganizationContributionTotals/>} />
+        <Route path="/organizationLeadershipContributionTotals"
+               element={<OrganizationLeadershipContributionTotals/>} />
         <Route path="/query" 
                element={<OrganizationQuery />} />
         <Route path="/waiting" 

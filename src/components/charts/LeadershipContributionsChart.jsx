@@ -1,3 +1,4 @@
+
 export default function LeadershipContributionsChart({ 
   leadershipData, 
   isLoadingLeadership, 
@@ -43,7 +44,8 @@ export default function LeadershipContributionsChart({
       committeeId: committee_id
     }));
 
-    window.open('#/organizationLeadershipContributions', "_blank", "noreferrer");
+    // window.open('#/organizationRecipientsTotals', "_blank", "noreferrer");
+    window.open('#/organizationLeadershipContributionTotals', "_blank", "noreferrer");
   };
   
   // Calculate total amount for summary
@@ -107,5 +109,3 @@ export default function LeadershipContributionsChart({
     </div>
   );
 };
-
-// export default LeadershipContributionsChart;
