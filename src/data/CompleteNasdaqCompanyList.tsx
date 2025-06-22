@@ -3664,7 +3664,6 @@ export const completeNASDAQCompanyList = [
     "H&E Equipment Services, Inc.",
     "eBay Inc.",
     "SuRo Capital Corp.",
-    "Apple Inc.",
     "World Acceptance Corporation",
     "CeriBell, Inc.",
     "Rail Vision Ltd.",
