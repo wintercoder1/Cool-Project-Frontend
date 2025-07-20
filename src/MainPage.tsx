@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import networkManager from './network/NetworkManager';
 import LogoHeader from './components/LogoHeader.jsx';
+import Footer from './components/Footer';
 import CategoryDropdown from './components/main/CategoryDropdown';
 import SearchBar from './components/main/SearchBar';
 import SortControls from './components/SortControls.js';
@@ -345,9 +346,9 @@ const MainPage = () => {
         />
       </div>
   
-      <div className="p-4 mt-2 pb-20"> {/* Added bottom padding to prevent overlap */}
+      <div className="p-4 mt-2 pt-8 pb-5"> {/* Added bottom padding to prevent overlap */}
         {/* Search Bar and Sort Controls */}
-        <div className="flex justify-between items-center mb-4 px-4 bg-white">
+        <div className="flex justify-between items-center mb-4 px-4 pb-2 bg-white">
           <SearchBar onKeyPress={handleSearchKeyPress} />
           <SortControls 
             sortBy={sortBy}
@@ -379,15 +380,16 @@ const MainPage = () => {
       </div>
   
       {/* Pagination Controls - Fixed to bottom with transparent background */}
-      <div className="fixed bottom-0 left-0 right-0 py-0">
-        <PaginationControls 
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPrevPage={handlePrevPage}
-          onNextPage={handleNextPage}
-        /> 
-      </div>
+      {/* <div className="fixed bottom-0 left-0 right-0 py-10"> */}
+      <PaginationControls 
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPrevPage={handlePrevPage}
+        onNextPage={handleNextPage}
+      /> 
+      {/* </div> */}
       <FloatingActionButton onClick={handleNewQueryClick} />
+      <Footer />
     </div>
   );
 };

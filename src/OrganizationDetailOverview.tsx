@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 // Component imports
 import PageHeader from './components/overview/PageHeader';
 import OrganizationCard from './components/overview/OrganizationCard';
+import Footer from './components/Footer';
 
 // Hook imports
 import { useOrganizationData } from './hooks/useOrganizationData';
@@ -116,6 +117,8 @@ const OrganizationDetailOverview = () => {
           chartData={chartData}
         />
       </div>
+
+      <Footer />
     </div>
   );
 };
