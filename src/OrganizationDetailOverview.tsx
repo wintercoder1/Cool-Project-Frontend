@@ -89,7 +89,7 @@ const OrganizationDetailOverview = () => {
         className=""
         style={{
           position: 'absolute',
-          top: '65px', // Adjust to your header height
+          top: '48px', // Adjust to your header height
           left: '0',
           right: '0',
           zIndex: 1
