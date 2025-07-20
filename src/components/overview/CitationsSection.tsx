@@ -9,7 +9,9 @@ const CitationsSection = ({
     }
   
     return (
+      
       <div className="space-y-2">
+        <hr className="border-gray-200" />
         <br />
         <h3 className="text-lg font-semibold">Citations:</h3>
         <div className="text-base">

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import networkManager from './network/NetworkManager';
-import LogoHeader from './components/LogoHeader';
+import LogoHeader from './components/LogoHeader.jsx';
 import CategoryDropdown from './components/main/CategoryDropdown';
 import SearchBar from './components/main/SearchBar';
 import SortControls from './components/SortControls.js';
