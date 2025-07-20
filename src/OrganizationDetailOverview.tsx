@@ -90,35 +90,39 @@ const OrganizationDetailOverview = () => {
 
   return (
     <div className="bg-white">
+
       <PageHeader onLogoClick={handleLogoClick} />
       
-      {/* NUCLEAR APPROACH - Force everything to top */}
-      <div 
-        className="bg-white"
-        style={{
-          position: 'absolute',
-          top: '85px', // Adjust to your header height
-          left: '0',
-          right: '0',
-          zIndex: 1
-        }}
-      >
-        <OrganizationCard
-          organizationData={organizationData}
-          categoryData={effectiveCategoryData}
-          context={context}
-          isFinancialData={isFinancialData}
-          committee_id={committee_id}
-          committee_name={committee_name}
-          shouldFetchFinancialOverview={effectiveShouldFetchFinancialOverview}
-          isLoadingFinancialOverview={isLoadingFinancialOverview}
-          financialOverviewError={financialOverviewError}
-          onFinancialContributionClick={handleFinancialContributionClick}
-          chartData={chartData}
-        />
+        {/* NUCLEAR APPROACH - Force everything to top */}
+        <div 
+          className="bg-white"
+          style={{
+            position: 'absolute',
+            top: '65px', // Adjust to your header height
+            left: '0',
+            right: '0',
+            zIndex: 1
+          }}
+        >
+          <div className="border-t border-gray-300 mt-8 pt-10 pb-14">
+        
+          <OrganizationCard
+            organizationData={organizationData}
+            categoryData={effectiveCategoryData}
+            context={context}
+            isFinancialData={isFinancialData}
+            committee_id={committee_id}
+            committee_name={committee_name}
+            shouldFetchFinancialOverview={effectiveShouldFetchFinancialOverview}
+            isLoadingFinancialOverview={isLoadingFinancialOverview}
+            financialOverviewError={financialOverviewError}
+            onFinancialContributionClick={handleFinancialContributionClick}
+            chartData={chartData}
+          />
+        </div>
+        <Footer />
       </div>
-
-      <Footer />
+      
     </div>
   );
 };
