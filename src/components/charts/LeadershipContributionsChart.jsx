@@ -93,18 +93,18 @@ export default function LeadershipContributionsChart({
       </div>
       
       <div className="text-center space-y-2">
-        <div className="text-sm text-gray-500">
+        {/* <div className="text-sm text-gray-500">
           Showing {displayedLeadershipCount} of {sortedLeadership.length} total leadership contributors
-        </div>
+        </div> */}
         
-        <div className="flex justify-center gap-3">
+        {/* <div className="flex justify-center gap-3">
           <button
             onClick={handleViewAllLeadershipInNewTab}
             className="px-4 py-2 bg-gray-100 text-gray rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm font-medium"
           >
             View All Leadership Contributors
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
