@@ -9,6 +9,7 @@ import RatingSection from './RatingSection';
 import ContextSection from './ContextSection';
 import CitationsSection from './CitationsSection';
 import ChartsSection from './ChartsSection';
+import DataDisclaimer from "./DataDisclaimer";
 
 const OrganizationCard = ({
   organizationData,
@@ -48,15 +49,9 @@ const OrganizationCard = ({
 
                         <ContextSection context={context} />
                         
-                        
-                        
-                        {/* <LoadingStates 
-                            categoryData={categoryData}
-                            shouldFetchFinancialOverview={shouldFetchFinancialOverview}
-                            isLoadingFinancialOverview={isLoadingFinancialOverview}
-                            financialOverviewError={financialOverviewError}
-                        />  */}
+                        <DataDisclaimer categoryData={categoryData} />
 
+                         
                         <CitationsSection 
                             categoryData={categoryData}
                             created_with_financial_contributions_info={organizationData.created_with_financial_contributions_info}
