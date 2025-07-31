@@ -59,9 +59,8 @@ const OrganizationQuery = () => {
           zIndex: 1
         }}
       >
-        {/* <div className="border-t border-gray-300 bg-gray-50 mt-8 pt-10 pb-14"></div> */}
         {/* justify-center */}
-        <div className="flex justify-center border-t border-gray-300 bg-gray-50 mt-8 pt-14 pb-14">
+        <div className="flex justify-center border-t border-gray-300 bg-gray-100 mt-8 pt-14 pb-14">
           <Card className="w-full max-w-md mx-4">
             <CardContent className="pt-6 px-6 pb-8">
               <SearchForm

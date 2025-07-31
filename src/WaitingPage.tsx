@@ -169,7 +169,7 @@ const ErrorModal = ({ isOpen, onClose, onGoBack, message }) => {
           </p>
         </div>
         
-        <div className="px-6 py-4 bg-gray-50 rounded-b-lg">
+        <div className="px-6 py-4 bg-gray-100 rounded-b-lg">
           <div className="flex justify-end">
             <Button
               onClick={onGoBack}

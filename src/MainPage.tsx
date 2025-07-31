@@ -345,12 +345,12 @@ const MainPage = () => {
           onSelectCategory={handleSelectCategory}
         />
       </div>
-      <div className="border-t border-gray-300 bg-gray-50 mt-8 pt-6 pb-10">
+      <div className="border-t border-gray-300 bg-gray-100 mt-2 pt-6 pb-10">
         
         <div className="p-5 mt-2 pt-0 pb-5"> {/* Added bottom padding to prevent overlap */}
               
             {/* Search Bar and Sort Controls */}
-            <div className="flex justify-between items-center mb-4 px-4 pb-8 bg-white bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div className="flex justify-between items-center mb-4 px-4 pb-8 bg-white rounded-lg shadow-sm p-6 mb-6">
               <SearchBar onKeyPress={handleSearchKeyPress} />
               <SortControls 
                 sortBy={sortBy}
