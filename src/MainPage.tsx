@@ -345,42 +345,47 @@ const MainPage = () => {
           onSelectCategory={handleSelectCategory}
         />
       </div>
-  
-      <div className="p-4 mt-2 pt-8 pb-5"> {/* Added bottom padding to prevent overlap */}
-        {/* Search Bar and Sort Controls */}
-        <div className="flex justify-between items-center mb-4 px-4 pb-2 bg-white">
-          <SearchBar onKeyPress={handleSearchKeyPress} />
-          <SortControls 
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-            sortOptions={getSortOptions()}
-            sortDropdownOpen={sortDropdownOpen}
-            onToggleSortDropdown={handleToggleSortDropdown}
-            onSelectSortOption={handleSelectSortOption}
-            onToggleSortOrder={handleToggleSortOrder}
-          />
-        </div>
-  
-        <div className="py-0 bg-white"></div>
+      <div className="border-t border-gray-300 bg-gray-50 mt-8 pt-6 pb-10">
         
-        <div className="py-0 bg-white">
-          <CompanyList 
-            data={currentData}
-            loading={loading}
-            category={category}
-            onItemClick={handleOrganizationClick}
-            getCategoryValueLabel={getCategoryValueLabel}
-          />
-        </div>
-  
-        <SearchPopup 
-          isOpen={showSearchPopup}
-          onClose={handleCloseSearchPopup}
-        />
+        <div className="p-5 mt-2 pt-0 pb-5"> {/* Added bottom padding to prevent overlap */}
+              
+            {/* Search Bar and Sort Controls */}
+            <div className="flex justify-between items-center mb-4 px-4 pb-8 bg-white bg-white rounded-lg shadow-sm p-6 mb-6">
+              <SearchBar onKeyPress={handleSearchKeyPress} />
+              <SortControls 
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                sortOptions={getSortOptions()}
+                sortDropdownOpen={sortDropdownOpen}
+                onToggleSortDropdown={handleToggleSortDropdown}
+                onSelectSortOption={handleSelectSortOption}
+                onToggleSortOrder={handleToggleSortOrder}
+              />
+            </div>
+      
+            <div className="py-0 bg-white"></div>
+
+          
+            <div className="py-0 bg-white bg-white rounded-lg shadow-sm pt-5 p-4 pb-5 ">
+              <CompanyList 
+                data={currentData}
+                loading={loading}
+                category={category}
+                onItemClick={handleOrganizationClick}
+                getCategoryValueLabel={getCategoryValueLabel}
+              />
+            </div>
+      
+            <SearchPopup 
+              isOpen={showSearchPopup}
+              onClose={handleCloseSearchPopup}
+            />
+          </div>
       </div>
-  
+
       {/* Pagination Controls - Fixed to bottom with transparent background */}
       {/* <div className="fixed bottom-0 left-0 right-0 py-10"> */}
+      
       <PaginationControls 
         currentPage={currentPage}
         totalPages={totalPages}

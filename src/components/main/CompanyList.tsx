@@ -18,7 +18,7 @@ const CompanyList = ({
   }
 
   return (
-    <div className="space-y-2 px-4">
+    <div className="space-y-5 px-0 py-0">
       {data.map((item, index) => (
         <CompanyListItem
           key={index}

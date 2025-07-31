@@ -7,7 +7,7 @@ const PaginationControls = ({
   onNextPage 
 }) => {
   return (
-    <div className="flex justify-center items-center mt-6 mb-16">
+    <div className="flex justify-center items-center mt-8 mb-8">
       <button 
         onClick={onPrevPage}
         disabled={currentPage === 1}
