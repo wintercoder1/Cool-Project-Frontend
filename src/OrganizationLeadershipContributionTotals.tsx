@@ -275,6 +275,7 @@ export default function OrganizationLeadershipContributionTotals() {
               >
                 <option value="all">All Employers</option>
                 {employers.map(employer => (
+                  // @ts-expect-error
                   <option key={employer} value={employer}>{employer}</option>
                 ))}
               </select>
