@@ -8,8 +8,7 @@ export default function Footer({ className = "" }) {
     <footer className={`bg-white text-gray-900 border-t border-gray-200 mt-auto ${className}`}>
       <div className="mx-6 sm:mx-8 lg:mx-12 py-12">
         {/* Company Info */}
-        <div className="flex items-center gap-3 mb-4">
-          {/* <img src={tilt_logo} className="block" width="40" height="40" alt="Tilt AI Logo" /> */}
+        {/* <div className="flex items-center gap-3 mb-4">
           <h3 className="text-2xl font-bold text-gray-900">Tilt AI</h3>
         </div>
         <p className="text-gray-600 mb-4">
@@ -18,10 +17,10 @@ export default function Footer({ className = "" }) {
         </p>
         <p className="text-sm text-gray-500">
           A product of Correlation LLC
-        </p>
+        </p> */}
 
         {/* Divider */}
-        <div className="border-t border-gray-200 mt-8 pt-8">
+        {/* <div className="border-t border-gray-200 mt-8 pt-8"> */}
           <div className="flex flex-col md:flex-row justify-between items-center">
             
             {/* Copyright */}
@@ -55,7 +54,7 @@ export default function Footer({ className = "" }) {
             Tilt AI and Correlation LLC do not endorse any political candidates or organizations mentioned.
           </p>
         </div>
-      </div>
+      {/* </div> */}
     </footer>
   );
 }
