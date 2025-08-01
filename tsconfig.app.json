@@ -32,5 +32,6 @@
     }
 
   },
-  "include": ["src", "data"]
+  "include": ["src", "data", "src/**/*"],
+  "exclude": ["node_modules", ".vscode"]
 }
