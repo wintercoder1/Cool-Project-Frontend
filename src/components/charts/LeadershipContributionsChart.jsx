@@ -1,4 +1,5 @@
 
+
 export default function LeadershipContributionsChart({ 
   leadershipData, 
   isLoadingLeadership, 
@@ -56,7 +57,8 @@ export default function LeadershipContributionsChart({
   const larger = displayedLeadershipCount <= sortedLeadership.length ?  sortedLeadership.length : displayedLeadershipCount;
 
   return (
-    <div className="space-y-4 py-5 mt-8">
+    <div > 
+      {/* //className="space-y-4 py-5 mt-8"> */}
       <h3 className="text-xl font-semibold">Contributions from Company Leadership</h3>
       
       <div className="text-base mb-4">
@@ -101,14 +103,14 @@ export default function LeadershipContributionsChart({
           Showing {smaller} of {larger} total leadership contributors
         </div>
         
-        {/* <div className="flex justify-center gap-3">
+        <div className="flex justify-center gap-3">
           <button
             onClick={handleViewAllLeadershipInNewTab}
             className="px-4 py-2 bg-gray-100 text-gray rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm font-medium"
           >
             View All Leadership Contributors
           </button>
-        </div> */}
+        </div>
 
       </div>
 
