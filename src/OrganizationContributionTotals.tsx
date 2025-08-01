@@ -88,8 +88,8 @@ const OrganizationRecipientsTotals = () => {
   const { recipients, organizationName, committeeID, committeeName } = organizationRecipientsTotalsData;
 
   const filteredOrganizationRecipientsTotals = recipients.filter(recipient =>
-    recipient.recipient_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    recipient.recipient_id.toLowerCase().includes(searchTerm.toLowerCase())
+    (recipient && recipient.recipient_name && recipient.recipient_name.toLowerCase().includes(searchTerm.toLowerCase()) )||
+    (recipient && recipient.recipient_id && recipient.recipient_id.toLowerCase().includes(searchTerm.toLowerCase()) )
   );
  
   const sortedOrganizationRecipientsTotals = [...filteredOrganizationRecipientsTotals].sort((a, b) => {
@@ -156,8 +156,8 @@ const OrganizationRecipientsTotals = () => {
           zIndex: 1
         }}
       >
-        <div className="border-t border-gray-300 bg-gray-50 mt-8 pt-10 pb-10">    
-          <div className="bg-gray-50 w-screen mx-auto p-8 py-0 min-h-screen">
+        <div className="border-t border-gray-300 bg-gray-100 mt-8 pt-10 pb-10">    
+          <div className="bg-gray-100 w-screen mx-auto p-8 py-0 min-h-screen">
             
             {/* Header Section */}
             <div className="bg-white pb-8 bg-white rounded-lg shadow-sm p-6 mb-6">
@@ -180,7 +180,7 @@ const OrganizationRecipientsTotals = () => {
             
             <div className="space-y-0">
               {/* Summary Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-0 bg-gray-50 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-0 bg-gray-100 rounded-lg">
                 <div className="bg-white text-center bg-white rounded-lg shadow-sm p-6 mb-4">
                   <div className="text-2xl font-bold text-gray-900">{recipients.length}</div>
                   <div className="text-sm text-gray-600">Total Recipients</div>

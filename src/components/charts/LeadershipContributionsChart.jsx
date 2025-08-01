@@ -51,6 +51,10 @@ export default function LeadershipContributionsChart({
   // Calculate total amount for summary
   const totalLeadershipAmount = sortedLeadership.reduce((sum, contributor) => sum + contributor.total_amount, 0);
   
+  // This was a weird bug idk.
+  const smaller = displayedLeadershipCount <= sortedLeadership.length ?  displayedLeadershipCount  : sortedLeadership.length;
+  const larger = displayedLeadershipCount <= sortedLeadership.length ?  sortedLeadership.length : displayedLeadershipCount;
+
   return (
     <div className="space-y-4 py-5 mt-8">
       <h3 className="text-xl font-semibold">Contributions from Company Leadership</h3>
@@ -93,9 +97,9 @@ export default function LeadershipContributionsChart({
       </div>
       
       <div className="text-center space-y-2">
-        {/* <div className="text-sm text-gray-500">
-          Showing {displayedLeadershipCount} of {sortedLeadership.length} total leadership contributors
-        </div> */}
+        <div className="text-sm text-gray-500">
+          Showing {smaller} of {larger} total leadership contributors
+        </div>
         
         {/* <div className="flex justify-center gap-3">
           <button
@@ -105,7 +109,9 @@ export default function LeadershipContributionsChart({
             View All Leadership Contributors
           </button>
         </div> */}
+
       </div>
+
     </div>
   );
 };

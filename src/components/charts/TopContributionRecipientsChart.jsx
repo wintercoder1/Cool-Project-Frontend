@@ -40,6 +40,10 @@ export default function TopContributionRecipientsChart({
   
   const hasMoreRecipients = displayedRecipientsCount < recipients.length;
   
+  // This was a weird bug idk.
+  const smaller = displayedRecipientsCount <= sortedRecipients.length ?  displayedRecipientsCount  : sortedRecipients.length;
+  const larger = displayedRecipientsCount <= sortedRecipients.length ?  sortedRecipients.length : displayedRecipientsCount;
+
   return (
     <div className="space-y-4 py-5 mt-8">
       <h3 className="text-xl font-semibold">Top Contribution Recipients</h3>
@@ -66,19 +70,21 @@ export default function TopContributionRecipientsChart({
       </div>
       
       <div className="text-center space-y-2">
-        {/* <div className="text-sm text-gray-500">
-          Showing {displayedRecipientsCount} of {recipients.length} total recipients
-        </div> */}
+        <div className="text-sm text-gray-500">
+          Showing {smaller} of {larger} total recipients
+        </div> 
         
-        {/* <div className="flex justify-center gap-3">
+        <div className="flex justify-center gap-3">
           <button
             onClick={handleViewAllInNewTab}
             className="px-4 py-2 bg-gray-100 text-gray rounded-lg hover:bg-gray-200 transition-colors duration-200 text-sm font-medium"
           >
             View All Contribution Recipients
           </button>
-        </div> */}
+        </div>
+
       </div>
+
     </div>
   );
 };
