@@ -1,4 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+// @ts-expect-error
 import { Search, Download, DollarSign, Users, TrendingUp } from 'lucide-react';
 import Footer from './components/Footer';
 import PageHeader from './components/overview/PageHeader';
@@ -7,11 +9,13 @@ export default function OrganizationLeadershipContributionTotals() {
   // Get data from localStorage (set by your existing component)
   const [leadershipData, setLeadershipData] = useState(null);
   const [organizationName, setOrganizationName] = useState('');
+  // @ts-expect-error
   const [committeeId, setCommitteeId] = useState('');
+  const navigate = useNavigate();
 
   const handleLogoClick = (event) => {
     console.log(event);
-  //   navigate('/', {});
+    navigate('/', {});
   };
 
   useEffect(() => {
@@ -115,6 +119,31 @@ export default function OrganizationLeadershipContributionTotals() {
   const totalAmount = filteredAndSortedData.reduce((sum, contributor) => sum + contributor.total_amount, 0);
   const totalContributions = filteredAndSortedData.reduce((sum, contributor) => sum + contributor.contribution_count, 0);
 
+  // TODO:
+  // This could we worth including at a later time!!
+  // const handleExport = () => {
+  //   const csvContent = [
+  //     ['Name', 'Occupation', 'Employer', 'Total Amount', 'Contribution Count'],
+  //     ...filteredAndSortedData.map(contributor => [
+  //       contributor.name,
+  //       contributor.occupation,
+  //       contributor.employer,
+  //       contributor.total_amount,
+  //       contributor.contribution_count
+  //     ])
+  //   ].map(row => row.join(',')).join('\n');
+
+  //   const blob = new Blob([csvContent], { type: 'text/csv' });
+  //   const url = window.URL.createObjectURL(blob);
+  //   const a = document.createElement('a');
+  //   a.href = url;
+  //   a.download = 'leadership_contributors.csv';
+  //   document.body.appendChild(a);
+  //   a.click();
+  //   document.body.removeChild(a);
+  //   window.URL.revokeObjectURL(url);
+  // };
+
   // Show loading state if no data yet
   if (!leadershipData) {
     return (
@@ -126,19 +155,6 @@ export default function OrganizationLeadershipContributionTotals() {
     );
   }
 
-  // <div className="absolute top-2 w-screen mx-auto min-h-screen bg-white">
-  //     {/* Header with Logo and Dropdown */}
-  //     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 px-8 bg-white">
-  //       <LogoHeader />
-  //       <CategoryDropdown 
-  //         category={category}
-  //         availableCategories={availableCategories}
-  //         dropdownOpen={dropdownOpen}
-  //         onToggleDropdown={handleToggleDropdown}
-  //         onSelectCategory={handleSelectCategory}
-  //       />
-  //     </div>
-  //     <div className="border-t border-gray-300 bg-gray-100 mt-2 pt-6 pb-10">
   return (
     <div className="absolute top-0 w-screen mx-auto min-h-screen bg-white">
 
@@ -160,27 +176,24 @@ export default function OrganizationLeadershipContributionTotals() {
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">
-                  {organizationName ? `${organizationName} - Leadership Contributors` : 'Company Leadership Contributors'}
+                  {organizationName ? `${organizationName} - Contributions From Company Leadership ` : 'Company Leadership Contributors'}
                 </h1>
                 <p className="text-gray-600 mt-2">Complete list of leadership political contributions</p>
               </div>
+              {/* TODO: Put this feature back in. */}
+              {/* This feature is great but we will keep it out for now. */}
+              {/* <button
+                onClick={handleExport}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <Download size={20} />
+                Export CSV
+              </button> */}
             </div>
           </div>
 
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Total Amount</p>
-                  <p className="text-2xl font-bold text-gray-900">${totalAmount.toLocaleString()}</p>
-                </div>
-                <div className="p-3 bg-green-100 rounded-full">
-                  <DollarSign className="h-6 w-6 text-green-600" />
-                </div>
-              </div>
-            </div>
-            
             <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -192,7 +205,17 @@ export default function OrganizationLeadershipContributionTotals() {
                 </div>
               </div>
             </div>
-          
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Total Amount</p>
+                  <p className="text-2xl font-bold text-gray-900">${totalAmount.toLocaleString()}</p>
+                </div>
+                <div className="p-3 bg-green-100 rounded-full">
+                  <DollarSign className="h-6 w-6 text-green-600" />
+                </div>
+              </div>
+            </div>
             <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -204,6 +227,7 @@ export default function OrganizationLeadershipContributionTotals() {
                 </div>
               </div>
             </div>
+
           </div> 
 
           {/* Filters and Search */}
@@ -329,6 +353,7 @@ export default function OrganizationLeadershipContributionTotals() {
                     <option value={100}>100 per page</option>
                   </select>
                 </div>
+
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
@@ -348,6 +373,7 @@ export default function OrganizationLeadershipContributionTotals() {
                     Next
                   </button>
                 </div>
+                
               </div>
             </div>
 

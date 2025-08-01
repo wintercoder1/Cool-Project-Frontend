@@ -46,7 +46,7 @@ export default function TopContributionRecipientsChart({
 
   return (
     <div className="space-y-4 py-5 mt-8">
-      <h3 className="text-xl font-semibold">Top Contribution Recipients</h3>
+      <h3 className="text-xl font-semibold">Top Contribution Politicians/PACs</h3>
       
       <div className="space-y-3">
         {displayedRecipients.map((recipient) => {

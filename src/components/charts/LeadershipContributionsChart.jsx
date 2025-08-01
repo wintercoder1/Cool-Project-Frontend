@@ -1,5 +1,4 @@
 
-
 export default function LeadershipContributionsChart({ 
   leadershipData, 
   isLoadingLeadership, 
@@ -51,21 +50,18 @@ export default function LeadershipContributionsChart({
   
   // Calculate total amount for summary
   const totalLeadershipAmount = sortedLeadership.reduce((sum, contributor) => sum + contributor.total_amount, 0);
-  
-  // This was a weird bug idk.
   const smaller = displayedLeadershipCount <= sortedLeadership.length ?  displayedLeadershipCount  : sortedLeadership.length;
   const larger = displayedLeadershipCount <= sortedLeadership.length ?  sortedLeadership.length : displayedLeadershipCount;
 
   return (
-    <div > 
-      {/* //className="space-y-4 py-5 mt-8"> */}
+    <div className="space-y-4 py-5 mt-8">
       <h3 className="text-xl font-semibold">Contributions from Company Leadership</h3>
       
-      <div className="text-base mb-4">
-        <div>Total from Leadership: ${totalLeadershipAmount.toLocaleString()}</div>
+      <div className="text-base mb-6">
+        {/* <div>Total from Leadership: ${totalLeadershipAmount.toLocaleString()}</div>
         <div className="text-sm text-gray-600">
           {sortedLeadership.length} leadership contributor{sortedLeadership.length !== 1 ? 's' : ''}
-        </div>
+        </div> */}
       </div>
       
       <div className="space-y-3">
@@ -111,9 +107,7 @@ export default function LeadershipContributionsChart({
             View All Leadership Contributors
           </button>
         </div>
-
       </div>
-
     </div>
   );
 };
