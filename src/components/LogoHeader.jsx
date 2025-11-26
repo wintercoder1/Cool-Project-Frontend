@@ -1,6 +1,6 @@
 // @ts-expect-error
 import { useLocation } from 'react-router-dom';
-import tilt_logo from '../assets/tilt_ai_logo.jpeg';
+import compass_logo from '../assets/compass_logo.png';
 
 export default function LogoHeader({ onClick, className = "" }) {
   const location = useLocation();
@@ -54,9 +54,9 @@ export default function LogoHeader({ onClick, className = "" }) {
         }
       } : undefined}
     >
-      <img src={tilt_logo} className="block" width="55" height="55" alt="tilt_logo" />
+      <img src={compass_logo} className="block" width="55" height="55" alt="compass_logo" />
       <h1 className={`text-4xl font-bold text-black ${shouldBeClickable ? '' : 'opacity-75'}`}>
-        Tilt AI
+        Compass AI
       </h1>
     </div>
   );
