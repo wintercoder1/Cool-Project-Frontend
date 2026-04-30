@@ -19,7 +19,9 @@ export default function MainRouter() {
                element={<MainPage />} />
         <Route path="/organization" 
                element={<OrganizationDetailOverview />} />
-        <Route path="/organization/:category/:topic" 
+        <Route path="/organization/:category/:topic"
+               element={<OrganizationDetailOverview />} />
+        <Route path="/organization/:category/:topic/edit"
                element={<OrganizationDetailOverview />} />
         <Route path="/organizationRecipientsTotals"
                element={<OrganizationContributionTotals/>} />

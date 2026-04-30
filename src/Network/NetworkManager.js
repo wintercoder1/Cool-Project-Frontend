@@ -184,13 +184,7 @@ class NetworkManager {
     return this.makeRequest(url);
   }
 
-  /**
-   * Search persisted answers for a category and search term
-   * @param {string} category - The category name (e.g. 'Political Leaning')
-   * @param {string} searchTerm - The search term
-   * @returns {Promise<any>} - The search results
-   */
-  async searchPersistedAnswers(category, searchTerm) {
+  categoryToApiKey(category) {
     const categoryMap = {
       'Political Leaning': 'POLITICAL_LEANING',
       'DEI Friendliness': 'DEI_FRIENDLINESS',
@@ -200,12 +194,39 @@ class NetworkManager {
       'Technology Innovation': 'TECHNOLOGY_INNOVATION',
       'Financial Contributions': 'FINANCIAL_CONTRIBUTIONS'
     };
+    return categoryMap[category] || null;
+  }
 
-    const categoryKey = categoryMap[category];
-    if (!categoryKey) {
-      throw new Error(`Unknown category: ${category}`);
-    }
+  async deletePersistedAnswer(category, id) {
+    const categoryKey = this.categoryToApiKey(category);
+    if (!categoryKey) throw new Error(`Unknown category: ${category}`);
+    const url = `${this.baseURL}/deletePersistedAnswer/${categoryKey}/${id}`;
+    return this.makeRequest(url, { method: 'DELETE' });
+  }
 
+  async upvote(category, id) {
+    const categoryKey = this.categoryToApiKey(category);
+    if (!categoryKey) throw new Error(`Unknown category: ${category}`);
+    const url = `${this.baseURL}/upvote/${categoryKey}/${id}`;
+    return this.makeRequest(url, { method: 'POST' });
+  }
+
+  async downvote(category, id) {
+    const categoryKey = this.categoryToApiKey(category);
+    if (!categoryKey) throw new Error(`Unknown category: ${category}`);
+    const url = `${this.baseURL}/downvote/${categoryKey}/${id}`;
+    return this.makeRequest(url, { method: 'POST' });
+  }
+
+  /**
+   * Search persisted answers for a category and search term
+   * @param {string} category - The category name (e.g. 'Political Leaning')
+   * @param {string} searchTerm - The search term
+   * @returns {Promise<any>} - The search results
+   */
+  async searchPersistedAnswers(category, searchTerm) {
+    const categoryKey = this.categoryToApiKey(category);
+    if (!categoryKey) throw new Error(`Unknown category: ${category}`);
     const url = `${this.baseURL}/searchPersistedAnswers/${categoryKey}/${encodeURIComponent(searchTerm)}`;
     return this.makeRequest(url);
   }

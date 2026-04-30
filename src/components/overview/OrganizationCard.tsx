@@ -7,6 +7,7 @@ import OverviewHeader from './OverviewHeader';
 import LoadingStates from './LoadingStates';
 import RatingSection from './RatingSection';
 import ContextSection from './ContextSection';
+import VoteSection from './VoteSection';
 import CitationsSection from './CitationsSection';
 import ChartsSection from './ChartsSection';
 import DataDisclaimer from "./DataDisclaimer";
@@ -22,11 +23,14 @@ const OrganizationCard = ({
   isLoadingFinancialOverview,
   financialOverviewError,
   onFinancialContributionClick,
-  chartData
+  chartData,
+  isLoading = false
 }) => {
-  const shouldHideContent = categoryData === 'Financial Contributions' && 
-    shouldFetchFinancialOverview && 
-    (isLoadingFinancialOverview || financialOverviewError);
+  const shouldHideContent = isLoading || (
+    categoryData === 'Financial Contributions' &&
+    shouldFetchFinancialOverview &&
+    (isLoadingFinancialOverview || financialOverviewError)
+  );
     
   return (
     <div className="px-4 lg:px-20 flex justify-center">
@@ -48,8 +52,10 @@ const OrganizationCard = ({
                         <hr className="border-gray-200" />
 
                         <ContextSection context={context} />
-                        
+
                         <DataDisclaimer categoryData={categoryData} />
+
+                        <VoteSection organizationData={organizationData} categoryData={categoryData} />
 
                          
                         <CitationsSection 

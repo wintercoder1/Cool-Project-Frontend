@@ -1,7 +1,6 @@
-// Updated OrganizationDetailOverview.jsx
-// @ts-expect-error
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import networkManager from './network/NetworkManager';
 
 // Component imports
 import PageHeader from './components/overview/PageHeader';
@@ -13,38 +12,91 @@ import { useOrganizationData } from './hooks/useOrganizationData';
 import { useFinancialData } from './hooks/useFinancialData';
 import { useChartData } from './hooks/useChartData';
 
+const CATEGORY_SLUG_MAP: Record<string, string> = {
+  'political_leaning': 'Political Leaning',
+  'dei_friendliness': 'DEI Friendliness',
+  'wokeness': 'Wokeness',
+  'environmental_impact': 'Environmental Impact',
+  'immigration_support': 'Immigration Support',
+  'technology_innovation': 'Technology Innovation',
+  'financial_contributions': 'Financial Contributions',
+  'financial-contributions': 'Financial Contributions',
+};
+
+const normalize = (s: string) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
 const OrganizationDetailOverview = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { category, topic } = useParams();
-  
-  // Set localStorage and document title based on URL parameters
-  useEffect(() => {
-    if (category === 'financial-contributions') {
-      localStorage.setItem("categoryData", "Financial Contributions");
-      localStorage.setItem("shouldFetchFinancialOverview", "true");
-    }
-    if (topic) {
-      // Decode the topic from URL (in case it has special characters)
-      const decodedTopic = decodeURIComponent(topic);
-      localStorage.setItem("organizationTopic", decodedTopic);
-      
-      // Update document title
-      const categoryTitle = category === 'financial-contributions' ? 'Financial Contributions' : 'Overview';
-      document.title = `${decodedTopic} - ${categoryTitle}`;
-    }
-  }, [category, topic]);
+  const isEditMode = location.pathname.endsWith('/edit');
+
+  const [fetchedOrgData, setFetchedOrgData] = useState(null);
+  const [isFetchingOrgData, setIsFetchingOrgData] = useState(false);
 
   // @ts-expect-error
   const { organizationData, categoryData, location: hookLocation } = useOrganizationData();
 
-  // Override categoryData if coming from URL
-  const effectiveCategoryData = category === 'financial-contributions' ? 'Financial Contributions' : categoryData;
-  
-  // Use topic from URL if available, otherwise fall back to organizationData.topic
+  // Capture topic before mutation to detect mismatches (URL topic vs localStorage topic)
+  const originalOrgTopic = organizationData.topic;
+
+  const effectiveCategoryData = category
+    ? (CATEGORY_SLUG_MAP[category] || categoryData)
+    : categoryData;
+
   const effectiveTopic = topic ? decodeURIComponent(topic) : organizationData.topic;
   if (organizationData.topic !== effectiveTopic) {
     organizationData.topic = effectiveTopic;
   }
+
+  // True when the URL points to a different topic than what's in localStorage
+  const topicIsMismatch = !!topic && normalize(originalOrgTopic) !== normalize(effectiveTopic);
+  const needsFetch = topicIsMismatch &&
+    effectiveCategoryData !== 'Financial Contributions' &&
+    !fetchedOrgData;
+
+  // Set localStorage + document title from URL params
+  useEffect(() => {
+    if (category) {
+      const displayCategory = CATEGORY_SLUG_MAP[category];
+      if (displayCategory) {
+        localStorage.setItem('categoryData', displayCategory);
+      }
+      if (displayCategory === 'Financial Contributions') {
+        localStorage.setItem('shouldFetchFinancialOverview', 'true');
+      }
+    }
+    if (topic) {
+      const decodedTopic = decodeURIComponent(topic);
+      localStorage.setItem('organizationTopic', decodedTopic);
+      const displayCategory = category ? CATEGORY_SLUG_MAP[category] : categoryData;
+      document.title = `${decodedTopic} - ${displayCategory || 'Overview'}`;
+    }
+  }, [category, topic]);
+
+  // Fetch org data when navigating via a shared URL without matching localStorage data
+  useEffect(() => {
+    if (!needsFetch || !effectiveCategoryData || !effectiveTopic) return;
+    let cancelled = false;
+    const fetchOrgData = async () => {
+      setIsFetchingOrgData(true);
+      try {
+        const data = await networkManager.getTopicAnalysis(effectiveCategoryData, effectiveTopic);
+        if (!cancelled) {
+          setFetchedOrgData(data);
+          localStorage.setItem('organizationData', JSON.stringify(data));
+        }
+      } catch (err) {
+        console.error('Failed to fetch organization data from URL:', err);
+      } finally {
+        if (!cancelled) setIsFetchingOrgData(false);
+      }
+    };
+    fetchOrgData();
+    return () => { cancelled = true; };
+  }, [needsFetch, effectiveCategoryData, effectiveTopic]);
+
+  const effectiveOrgData = fetchedOrgData || organizationData;
 
   const {
     isFinancialData,
@@ -56,10 +108,12 @@ const OrganizationDetailOverview = () => {
     isLoadingFinancialOverview,
     financialOverviewError,
     shouldFetchFinancialOverview
-  } = useFinancialData(effectiveCategoryData, effectiveTopic, organizationData);
+  } = useFinancialData(effectiveCategoryData, effectiveTopic, effectiveOrgData);
 
-  // Override shouldFetchFinancialOverview if coming from URL
-  const effectiveShouldFetchFinancialOverview = category === 'financial-contributions' ? true : shouldFetchFinancialOverview;
+  const effectiveShouldFetchFinancialOverview =
+    category && CATEGORY_SLUG_MAP[category] === 'Financial Contributions'
+      ? true
+      : shouldFetchFinancialOverview;
 
   const chartData = useChartData(committee_id);
 
@@ -69,27 +123,38 @@ const OrganizationDetailOverview = () => {
   };
 
   const handleFinancialContributionClick = () => {
-    localStorage.setItem("categoryData", "Financial Contributions");
-    localStorage.setItem("shouldFetchFinancialOverview", "true");
+    localStorage.setItem('categoryData', 'Financial Contributions');
+    localStorage.setItem('shouldFetchFinancialOverview', 'true');
     openFinancialContributionPageNewTab();
   };
 
+  const handleDelete = async () => {
+    if (!effectiveOrgData.id || !effectiveCategoryData) return;
+    if (!window.confirm(`Delete the answer for "${effectiveOrgData.topic}"? This cannot be undone.`)) return;
+    try {
+      await networkManager.deletePersistedAnswer(effectiveCategoryData, effectiveOrgData.id);
+      navigate('/');
+    } catch (err) {
+      console.error('Delete failed:', err);
+    }
+  };
+
   const openFinancialContributionPageNewTab = () => {
-    const currentTopic = effectiveTopic || organizationData.topic;
+    const currentTopic = effectiveTopic || effectiveOrgData.topic;
     const encodedTopic = encodeURIComponent(currentTopic);
-    window.open(`#/organization/financial-contributions/${encodedTopic}`, "_blank", "noreferrer");
+    window.open(`#/organization/financial_contributions/${encodedTopic}`, '_blank', 'noreferrer');
   };
 
   return (
     <div className="bg-white">
       <PageHeader onLogoClick={handleLogoClick} />
-      
+
       {/* NUCLEAR APPROACH - Force everything to top with light gray background */}
-      <div 
+      <div
         className=""
         style={{
           position: 'absolute',
-          top: '48px', // Adjust to your header height
+          top: '48px',
           left: '0',
           right: '0',
           zIndex: 1
@@ -97,7 +162,7 @@ const OrganizationDetailOverview = () => {
       >
         <div className="border-t border-gray-300 bg-gray-100 mt-8 pt-10 pb-14">
           <OrganizationCard
-            organizationData={organizationData}
+            organizationData={effectiveOrgData}
             categoryData={effectiveCategoryData}
             context={context}
             isFinancialData={isFinancialData}
@@ -108,7 +173,20 @@ const OrganizationDetailOverview = () => {
             financialOverviewError={financialOverviewError}
             onFinancialContributionClick={handleFinancialContributionClick}
             chartData={chartData}
+            isLoading={isFetchingOrgData}
           />
+          {isEditMode && (
+            <div className="px-4 lg:px-20 flex justify-center mt-6">
+              <div className="w-full max-w-3xl">
+                <button
+                  onClick={handleDelete}
+                  className="w-full py-4 bg-red-600 hover:bg-red-700 text-white text-lg font-semibold rounded-lg transition-colors"
+                >
+                  Delete Answer
+                </button>
+              </div>
+            </div>
+          )}
         </div>
         <Footer />
       </div>
@@ -117,134 +195,3 @@ const OrganizationDetailOverview = () => {
 };
 
 export default OrganizationDetailOverview;
-
-// // Updated OrganizationDetailOverview.jsx
-// // @ts-expect-error
-// import { useNavigate, useParams, useLocation } from 'react-router-dom';
-// import { useEffect } from 'react';
-
-// // Component imports
-// import PageHeader from './components/overview/PageHeader';
-// import OrganizationCard from './components/overview/OrganizationCard';
-// import Footer from './components/Footer';
-
-// // Hook imports
-// import { useOrganizationData } from './hooks/useOrganizationData';
-// import { useFinancialData } from './hooks/useFinancialData';
-// import { useChartData } from './hooks/useChartData';
-
-// const OrganizationDetailOverview = () => {
-//   const navigate = useNavigate();
-//   const { category, topic } = useParams();
-  
-//   // Set localStorage and document title based on URL parameters
-//   useEffect(() => {
-//     if (category === 'financial-contributions') {
-//       localStorage.setItem("categoryData", "Financial Contributions");
-//       localStorage.setItem("shouldFetchFinancialOverview", "true");
-//     }
-//     if (topic) {
-//       // Decode the topic from URL (in case it has special characters)
-//       const decodedTopic = decodeURIComponent(topic);
-//       localStorage.setItem("organizationTopic", decodedTopic);
-      
-//       // Update document title
-//       const categoryTitle = category === 'financial-contributions' ? 'Financial Contributions' : 'Overview';
-//       document.title = `${decodedTopic} - ${categoryTitle}`;
-//     }
-//   }, [category, topic]);
-
-//   // @ts-expect-error
-//   const { organizationData, categoryData, location: hookLocation } = useOrganizationData();
-
-//   // Override categoryData if coming from URL
-//   const effectiveCategoryData = category === 'financial-contributions' ? 'Financial Contributions' : categoryData;
-  
-//   // Use topic from URL if available, otherwise fall back to organizationData.topic
-//   const effectiveTopic = topic ? decodeURIComponent(topic) : organizationData.topic;
-//   if (organizationData.topic !== effectiveTopic) {
-//     organizationData.topic = effectiveTopic;
-//   }
-
-//   const {
-//     isFinancialData,
-//     committee_id,
-//     committee_name,
-//     context,
-//     // @ts-expect-error
-//     financialOverviewData,
-//     isLoadingFinancialOverview,
-//     financialOverviewError,
-//     shouldFetchFinancialOverview
-//   } = useFinancialData(effectiveCategoryData, effectiveTopic, organizationData);
-
-//   // Override shouldFetchFinancialOverview if coming from URL
-//   const effectiveShouldFetchFinancialOverview = category === 'financial-contributions' ? true : shouldFetchFinancialOverview;
-
-//   const chartData = useChartData(committee_id);
-
-//   const handleLogoClick = (event) => {
-//     console.log(event);
-//     navigate('/', {});
-//   };
-
-//   const handleFinancialContributionClick = () => {
-//     localStorage.setItem("categoryData", "Financial Contributions");
-//     localStorage.setItem("shouldFetchFinancialOverview", "true");
-//     openFinancialContributionPageNewTab();
-//   };
-
-//   const openFinancialContributionPageNewTab = () => {
-//     const currentTopic = effectiveTopic || organizationData.topic;
-//     const encodedTopic = encodeURIComponent(currentTopic);
-//     window.open(`#/organization/financial-contributions/${encodedTopic}`, "_blank", "noreferrer");
-//   };
-
-//   // const openFinancialContributionPageSameTab = (updatedOrganizationData) => {
-//   //   navigate(location.pathname, { 
-//   //     state: updatedOrganizationData,
-//   //     replace: true 
-//   //   });
-//   //   window.location.reload();
-//   // };
-
-//   return (
-//     <div className="bg-white">
-
-//       <PageHeader onLogoClick={handleLogoClick} />
-      
-//         {/* NUCLEAR APPROACH - Force everything to top */}
-//         <div 
-//           className="bg-white"
-//           style={{
-//             position: 'absolute',
-//             top: '65px', // Adjust to your header height
-//             left: '0',
-//             right: '0',
-//             zIndex: 1
-//           }}
-//         >
-//           <div className="border-t border-gray-300 mt-8 pt-10 pb-14">
-        
-//           <OrganizationCard
-//             organizationData={organizationData}
-//             categoryData={effectiveCategoryData}
-//             context={context}
-//             isFinancialData={isFinancialData}
-//             committee_id={committee_id}
-//             committee_name={committee_name}
-//             shouldFetchFinancialOverview={effectiveShouldFetchFinancialOverview}
-//             isLoadingFinancialOverview={isLoadingFinancialOverview}
-//             financialOverviewError={financialOverviewError}
-//             onFinancialContributionClick={handleFinancialContributionClick}
-//             chartData={chartData}
-//           />
-//         </div>
-//         <Footer />
-//       </div>
-      
-//     </div>
-//   );
-// };
-
-// export default OrganizationDetailOverview;
