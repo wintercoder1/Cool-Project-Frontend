@@ -185,6 +185,32 @@ class NetworkManager {
   }
 
   /**
+   * Search persisted answers for a category and search term
+   * @param {string} category - The category name (e.g. 'Political Leaning')
+   * @param {string} searchTerm - The search term
+   * @returns {Promise<any>} - The search results
+   */
+  async searchPersistedAnswers(category, searchTerm) {
+    const categoryMap = {
+      'Political Leaning': 'POLITICAL_LEANING',
+      'DEI Friendliness': 'DEI_FRIENDLINESS',
+      'Wokeness': 'WOKENESS',
+      'Environmental Impact': 'ENVIRONMENTAL_IMPACT',
+      'Immigration Support': 'IMMIGRATION_SUPPORT',
+      'Technology Innovation': 'TECHNOLOGY_INNOVATION',
+      'Financial Contributions': 'FINANCIAL_CONTRIBUTIONS'
+    };
+
+    const categoryKey = categoryMap[category];
+    if (!categoryKey) {
+      throw new Error(`Unknown category: ${category}`);
+    }
+
+    const url = `${this.baseURL}/searchPersistedAnswers/${categoryKey}/${encodeURIComponent(searchTerm)}`;
+    return this.makeRequest(url);
+  }
+
+  /**
    * Generic method to get data by category and topic (for WaitingPage)
    * @param {string} category - The category name
    * @param {string} topic - The topic to analyze

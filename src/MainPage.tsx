@@ -1,6 +1,4 @@
-// TODO: Make search work.
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import networkManager from './network/NetworkManager';
 import LogoHeader from './components/LogoHeader.jsx';
@@ -11,7 +9,6 @@ import SortControls from './components/SortControls.js';
 import CompanyList from './components/main/CompanyList';
 import PaginationControls from './components/PaginationControls.js';
 import FloatingActionButton from './components/main/FloatingActionButton';
-import SearchPopup from './components/main/SearchPopup';
 
 const MainPage = () => {
   const itemsPerPage = 10;
@@ -45,8 +42,12 @@ const MainPage = () => {
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
-  const [showSearchPopup, setShowSearchPopup] = useState(false);
-  
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const searchTimeoutRef = useRef(null);
+
   const navigate = useNavigate();
 
   // Available categories for the dropdown
@@ -272,17 +273,41 @@ const MainPage = () => {
   };
 
   // Search handlers
-  const handleSearchKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      setShowSearchPopup(true);
-      setTimeout(() => {
-        setShowSearchPopup(false);
-      }, 3000);
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
     }
+
+    if (value.trim() === '') {
+      setSearchResults(null);
+      setSearchLoading(false);
+      return;
+    }
+
+    setSearchLoading(true);
+    searchTimeoutRef.current = setTimeout(async () => {
+      try {
+        const data = await networkManager.searchPersistedAnswers(category, value.trim());
+        setSearchResults(data.results);
+      } catch (err) {
+        console.error('Search error:', err);
+        setSearchResults([]);
+      } finally {
+        setSearchLoading(false);
+      }
+    }, 400);
   };
 
-  const handleCloseSearchPopup = () => {
-    setShowSearchPopup(false);
+  const handleSearchClear = () => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    setSearchQuery('');
+    setSearchResults(null);
+    setSearchLoading(false);
   };
 
   // Pagination handlers
@@ -303,6 +328,10 @@ const MainPage = () => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const cacheKey = `${category} p${currentPage} ${sortBy} ${sortOrder}`;
   const currentData = dataCache[cacheKey] || [];
+
+  const isSearchMode = searchQuery.trim().length > 0;
+  const displayData = isSearchMode ? (searchResults || []) : currentData;
+  const displayLoading = isSearchMode ? searchLoading : loading;
   
   console.log('Rendering with:', { cacheKey, dataLength: currentData.length, currentData });
   console.log('   DataCache:', { dataCache });
@@ -351,47 +380,50 @@ const MainPage = () => {
               
             {/* Search Bar and Sort Controls */}
             <div className="flex justify-between items-center mb-4 px-4 pb-8 bg-white rounded-lg shadow-sm p-6 mb-6">
-              <SearchBar onKeyPress={handleSearchKeyPress} />
-              <SortControls 
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-                sortOptions={getSortOptions()}
-                sortDropdownOpen={sortDropdownOpen}
-                onToggleSortDropdown={handleToggleSortDropdown}
-                onSelectSortOption={handleSelectSortOption}
-                onToggleSortOrder={handleToggleSortOrder}
+              <SearchBar
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onClear={handleSearchClear}
               />
+              {!isSearchMode && (
+                <SortControls
+                  sortBy={sortBy}
+                  sortOrder={sortOrder}
+                  sortOptions={getSortOptions()}
+                  sortDropdownOpen={sortDropdownOpen}
+                  onToggleSortDropdown={handleToggleSortDropdown}
+                  onSelectSortOption={handleSelectSortOption}
+                  onToggleSortOrder={handleToggleSortOrder}
+                />
+              )}
             </div>
-      
+
             <div className="py-0 bg-white"></div>
 
-          
+
             <div className="py-0 bg-white bg-white rounded-lg shadow-sm pt-5 p-4 pb-5 ">
-              <CompanyList 
-                data={currentData}
-                loading={loading}
+              <CompanyList
+                data={displayData}
+                loading={displayLoading}
                 category={category}
                 onItemClick={handleOrganizationClick}
                 getCategoryValueLabel={getCategoryValueLabel}
               />
             </div>
-      
-            <SearchPopup 
-              isOpen={showSearchPopup}
-              onClose={handleCloseSearchPopup}
-            />
           </div>
       </div>
 
       {/* Pagination Controls - Fixed to bottom with transparent background */}
       {/* <div className="fixed bottom-0 left-0 right-0 py-10"> */}
-      
-      <PaginationControls 
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPrevPage={handlePrevPage}
-        onNextPage={handleNextPage}
-      /> 
+
+      {!isSearchMode && (
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPrevPage={handlePrevPage}
+          onNextPage={handleNextPage}
+        />
+      )}
       {/* </div> */}
       <FloatingActionButton onClick={handleNewQueryClick} />
       <Footer />
