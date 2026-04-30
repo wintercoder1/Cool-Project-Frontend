@@ -12,7 +12,7 @@ const SearchBar = ({ value, onChange, onClear }) => {
         <button
           onClick={onClear}
           aria-label="Clear search"
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm leading-none"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm leading-none bg-transparent"
         >
           ×
         </button>
