@@ -109,6 +109,7 @@ const MainPage = () => {
     const cacheKey = `${category} p${currentPage} ${sortBy} ${sortOrder}`;
     if (dataCache[cacheKey] != null) {
       // Data already cached for this category, page, sort, and order.
+      prefetchAdjacentPage(currentPage + 1, category, sortBy, sortOrder);
       return;
     }
     try {
@@ -117,16 +118,33 @@ const MainPage = () => {
       const offset = (currentPage - 1) * itemsPerPage;
       const jsonData = await networkManager.getSavedCategoryData(category, sortBy, sortOrder, itemsPerPage, offset);
       console.log('Data fetched:', jsonData);
-      
+
       setDataCache(prevCache => ({
         ...prevCache,
         [cacheKey]: jsonData
       }));
+
+      prefetchAdjacentPage(currentPage + 1, category, sortBy, sortOrder);
     } catch (err) {
       setError(err.message);
       console.error('Error fetching data:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const prefetchAdjacentPage = async (page, cat, sort, order) => {
+    const prefetchKey = `${cat} p${page} ${sort} ${order}`;
+    if (dataCache[prefetchKey] != null) return;
+    try {
+      const offset = (page - 1) * itemsPerPage;
+      const jsonData = await networkManager.getSavedCategoryData(cat, sort, order, itemsPerPage, offset);
+      setDataCache(prevCache => ({
+        ...prevCache,
+        [prefetchKey]: jsonData
+      }));
+    } catch {
+      // Prefetch failure is silent — main fetch will handle it on navigation
     }
   };
 
