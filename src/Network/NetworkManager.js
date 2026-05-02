@@ -270,6 +270,7 @@ class NetworkManager {
       'Wokeness': () => this.getWokenessScore(topic),
       'Environmental Impact': () => this.getEnvironmentalImpactScore(topic), 
       'Immigration': () => this.getImmigrationSupportScore(topic), 
+      'Technology Innovation': () => this.getTechnologyInnovationScore(topic), 
       'Financial Contributions': () => this.getOrCreateFinancialContributionsOverview(topic)
     };
 
