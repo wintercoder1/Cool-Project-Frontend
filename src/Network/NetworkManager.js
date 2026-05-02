@@ -136,6 +136,32 @@ class NetworkManager {
     const url = `${this.baseURL}/getWokenessScore/${encodeURIComponent(topic)}`;
     return this.makeRequest(url);
   }
+  /**
+   * Get Environmental Impact score for a topic
+   * @param {string} topic - The topic to analyze
+   * @returns {Promise<any>} - The wokeness score data
+   */
+  async getEnvironmentalImpactScore(topic) {
+    const url = `${this.baseURL}/getEnvironmentalImpactScore/${encodeURIComponent(topic)}`;
+    return this.makeRequest(url);
+  }
+  /**
+   * Get Immigration Support score for a topic
+   * @param {string} topic - The topic to analyze
+   * @returns {Promise<any>} - The wokeness score data
+   */
+  async getImmigrationSupportScore(topic) {
+    const url = `${this.baseURL}/getImmigrationSupportScore/${encodeURIComponent(topic)}`;
+    return this.makeRequest(url);
+  }/**
+   * Get Technology Innovation score for a topic
+   * @param {string} topic - The topic to analyze
+   * @returns {Promise<any>} - The wokeness score data
+   */
+  async getTechnologyInnovationScore(topic) {
+    const url = `${this.baseURL}/getTechnologyInnovationScore/${encodeURIComponent(topic)}`;
+    return this.makeRequest(url);
+  }
 
   /**
    * Get financial contributions overview for a topic
@@ -242,8 +268,8 @@ class NetworkManager {
       'Political Leaning': () => this.getPoliticalLeaning(topic),
       'DEI Friendliness': () => this.getDEIFriendlinessScore(topic),
       'Wokeness': () => this.getWokenessScore(topic),
-      'Environmental Impact': () => this.getWokenessScore(topic), // Uses same endpoint
-      'Immigration': () => this.getWokenessScore(topic), // Uses same endpoint
+      'Environmental Impact': () => this.getEnvironmentalImpactScore(topic), 
+      'Immigration': () => this.getImmigrationSupportScore(topic), 
       'Financial Contributions': () => this.getOrCreateFinancialContributionsOverview(topic)
     };
 
