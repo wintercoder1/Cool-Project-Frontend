@@ -1,6 +1,6 @@
 // @ts-expect-error
 import { useLocation } from 'react-router-dom';
-import compass_logo from '../assets/compass_logo.png';
+import { APP_NAME, APP_LOGO } from '../config';
 
 export default function LogoHeader({ onClick, className = "" }) {
   const location = useLocation();
@@ -42,7 +42,7 @@ export default function LogoHeader({ onClick, className = "" }) {
   
   return (
     <div 
-      className={`flex items-center gap-2 justify-center sm:justify-start ${className} ${shouldBeClickable ? 'hover:opacity-80 transition-opacity' : ''}`}
+      className={`flex items-center gap-5 justify-center sm:justify-start ${className} ${shouldBeClickable ? 'hover:opacity-80 transition-opacity' : ''}`}
       onClick={shouldBeClickable ? onClick : undefined}
       role={shouldBeClickable ? "button" : undefined}
       tabIndex={shouldBeClickable ? 0 : undefined}
@@ -54,9 +54,9 @@ export default function LogoHeader({ onClick, className = "" }) {
         }
       } : undefined}
     >
-      <img src={compass_logo} className="block" width="55" height="55" alt="compass_logo" />
+      <img src={APP_LOGO} className="block" width="55" height="55" alt={APP_NAME} />
       <h1 className={`text-4xl font-bold text-black ${shouldBeClickable ? '' : 'opacity-75'}`}>
-        Compass AI
+        {APP_NAME}
       </h1>
     </div>
   );

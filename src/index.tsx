@@ -1,7 +1,14 @@
-// Updated routing file
-// @ts-expect-error
 import './index.css'
 import ReactDOM from "react-dom/client";
+import { APP_LOGO } from './config';
+
+const favicon = document.querySelector("link[rel~='icon']") as HTMLLinkElement ?? (() => {
+  const el = document.createElement('link');
+  el.rel = 'icon';
+  document.head.appendChild(el);
+  return el;
+})();
+favicon.href = APP_LOGO;
 import { StrictMode } from 'react'
 import { HashRouter, Routes, Route } from "react-router-dom";
 import MainPage from './MainPage.tsx'

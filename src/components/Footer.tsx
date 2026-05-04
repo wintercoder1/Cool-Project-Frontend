@@ -1,5 +1,4 @@
-// @ts-expect-error
-import compass_logo from '../assets/compass_logo.png';
+import { APP_NAME } from '../config';
 
 export default function Footer({ className = "" }) {
   const currentYear = new Date().getFullYear();
@@ -50,8 +49,8 @@ export default function Footer({ className = "" }) {
         {/* Disclaimer */}
         <div className="mt-6 text-xs text-gray-500 text-center">
           <p>
-            This website provides information derived from publicly available data. 
-            Compass AI and Covariant Apps LLC do not endorse any political candidates or organizations mentioned.
+            This website provides information derived from publicly available data.  
+            {APP_NAME} and Covariant Apps LLC do not endorse any political candidates or organizations mentioned.
           </p>
         </div>
       {/* </div> */}
