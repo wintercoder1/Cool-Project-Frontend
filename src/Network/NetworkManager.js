@@ -223,6 +223,17 @@ class NetworkManager {
     return categoryMap[category] || null;
   }
 
+  async submitFeedback(category, id, feedbackText, topic) {
+    // Stub — replace with real API call when backend is ready:
+    // const categoryKey = this.categoryToApiKey(category);
+    // return this.makeRequest(`${this.baseURL}/submitFeedback`, {
+    //   method: 'POST',
+    //   body: JSON.stringify({ category: categoryKey, answer_id: id, topic, feedback: feedbackText })
+    // });
+    console.log('Feedback stub:', { category, id, topic, feedbackText });
+    return new Promise(resolve => setTimeout(resolve, 800));
+  }
+
   async deletePersistedAnswer(category, id) {
     const categoryKey = this.categoryToApiKey(category);
     if (!categoryKey) throw new Error(`Unknown category: ${category}`);

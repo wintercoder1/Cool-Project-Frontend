@@ -8,6 +8,7 @@ import LoadingStates from './LoadingStates';
 import RatingSection from './RatingSection';
 import ContextSection from './ContextSection';
 import VoteSection from './VoteSection';
+import FeedbackSection from './FeedbackSection';
 import CitationsSection from './CitationsSection';
 import ChartsSection from './ChartsSection';
 import DataDisclaimer from "./DataDisclaimer";
@@ -56,6 +57,8 @@ const OrganizationCard = ({
                         <DataDisclaimer categoryData={categoryData} />
 
                         <VoteSection organizationData={organizationData} categoryData={categoryData} />
+
+                        <FeedbackSection organizationData={organizationData} categoryData={categoryData} />
 
                          
                         <CitationsSection 
