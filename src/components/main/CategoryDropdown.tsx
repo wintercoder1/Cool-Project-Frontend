@@ -17,17 +17,20 @@ const CategoryDropdown = ({
       </button>
       
       {dropdownOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-10">
-          {availableCategories.map((cat) => (
-            <div 
-              key={cat} 
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => onSelectCategory(cat)}
-            >
-              {cat}
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="fixed inset-0 z-0" onClick={onToggleDropdown} />
+          <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-10">
+            {availableCategories.map((cat) => (
+              <div
+                key={cat}
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                onClick={() => onSelectCategory(cat)}
+              >
+                {cat}
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

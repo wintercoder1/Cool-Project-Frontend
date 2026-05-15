@@ -49,7 +49,8 @@ export default function Footer({ className = "" }) {
         {/* Disclaimer */}
         <div className="mt-6 text-xs text-gray-500 text-center">
           <p>
-            This website provides information derived from publicly available data.  {APP_NAME} and Covariant Apps LLC do not endorse any political candidates or organizations mentioned.
+            This website provides information derived from publicly available data.
+            {APP_NAME} and Covariant Apps LLC do not endorse any political candidates or organizations mentioned.
           </p>
         </div>
       {/* </div> */}

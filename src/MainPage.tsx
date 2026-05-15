@@ -278,10 +278,22 @@ const MainPage = () => {
     openDetailPageNewTab(organization, category);
   };
 
+  const CATEGORY_TO_SLUG = {
+    'Political Leaning': 'political_leaning',
+    'DEI Friendliness': 'dei_friendliness',
+    'Wokeness': 'wokeness',
+    'Environmental Impact': 'environmental_impact',
+    'Immigration Support': 'immigration_support',
+    'Technology Innovation': 'technology_innovation',
+    'Financial Contributions': 'financial_contributions',
+  };
+
   const openDetailPageNewTab = (organization, category) => {
     localStorage.setItem(`categoryData`, category);
     localStorage.setItem(`organizationData`, JSON.stringify(organization));
-    window.open('#/organization', "_blank", "noreferrer");
+    const slug = CATEGORY_TO_SLUG[category] ?? category.toLowerCase().replace(/\s+/g, '_');
+    const topic = encodeURIComponent(organization.topic);
+    window.open(`#/organization/${slug}/${topic}`, "_blank", "noreferrer");
   }
 
   const handleNewQueryClick = () => {
