@@ -41,12 +41,15 @@ const MainPage = () => {
   const [sortBy, setSortBy] = useState('Name');
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState('asc');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(() => {
+    return parseInt(localStorage.getItem('compassAICurrentPage') || '1', 10);
+  });
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
   const searchTimeoutRef = useRef(null);
+  const isMountRef = useRef(true);
 
   const navigate = useNavigate();
 
@@ -72,18 +75,25 @@ const MainPage = () => {
     return ['Name', 'Rating'];
   };
 
+  useEffect(() => {
+    localStorage.setItem('compassAICurrentPage', String(currentPage));
+  }, [currentPage]);
+
   // Save last selected category and fetch initial data
   useEffect(() => {
     localStorage.setItem('compassAILastCategory', category);
-    
-    // Fetch the total count for the new category
+
     console.log('Category is now:', category);
     if (totalItemsForCategoryCache[category] == 0 || totalItemsForCategoryCache[category] == null) {
       fetchTotalItems(category);
     }
-    // Reset to page 1 when category changes
+
+    // On initial mount, keep the restored page; only reset when the user changes category
+    if (isMountRef.current) {
+      isMountRef.current = false;
+      return;
+    }
     setCurrentPage(1);
-    // Reset sort parameters when category changes
     setSortBy('Name');
     setSortOrder('asc');
   }, [category]);
@@ -158,6 +168,7 @@ const MainPage = () => {
     localStorage.removeItem('compassAIDataCache');
     localStorage.removeItem('compassAILastCategory');
     localStorage.removeItem('compassAITotalItemsForCategory');
+    localStorage.removeItem('compassAICurrentPage');
     setDataCache({});
     setTotalItemsForCategoryCache({
       'Political Leaning': 0,

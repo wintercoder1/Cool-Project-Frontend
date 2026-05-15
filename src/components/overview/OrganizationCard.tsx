@@ -25,26 +25,33 @@ const OrganizationCard = ({
   financialOverviewError,
   onFinancialContributionClick,
   chartData,
-  isLoading = false
+  isLoading = false,
+  isEditing = false,
+  editedContext = '',
+  onEditedContextChange = (_: string) => {},
+  onSave = () => {},
+  onCancel = () => {},
+  isSaving = false,
+  saveError = null as string | null,
 }) => {
   const shouldHideContent = isLoading || (
     categoryData === 'Financial Contributions' &&
     shouldFetchFinancialOverview &&
     (isLoadingFinancialOverview || financialOverviewError)
   );
-    
+
   return (
     <div className="px-4 lg:px-20 flex justify-center">
         <div className="w-full max-w-3xl">
-            
+
             <Card className="w-full max-w-3xl bg-white ">
                 <OverviewHeader categoryData={categoryData} topic={organizationData.topic} />
-                
+
                 <CardContent className="space-y-6">
-                    
+
                     {!shouldHideContent && (
                     <>
-                        <RatingSection 
+                        <RatingSection
                             categoryData={categoryData}
                             lean={organizationData.lean}
                             rating={organizationData.rating}
@@ -52,7 +59,37 @@ const OrganizationCard = ({
 
                         <hr className="border-gray-200" />
 
-                        <ContextSection context={context} />
+                        {isEditing ? (
+                          <div className="space-y-3">
+                            <textarea
+                              className="w-full min-h-[200px] p-3 border border-gray-300 rounded-md text-base text-gray-800 bg-white resize-y focus:outline-none focus:ring-2 focus:ring-gray-400"
+                              value={editedContext}
+                              onChange={(e) => onEditedContextChange(e.target.value)}
+                              disabled={isSaving}
+                            />
+                            {saveError && (
+                              <p className="text-sm text-red-600">{saveError}</p>
+                            )}
+                            <div className="flex gap-3">
+                              <button
+                                onClick={onSave}
+                                disabled={isSaving}
+                                className="px-4 py-2 bg-gray-800 text-white text-sm font-medium rounded-md hover:bg-gray-700 disabled:opacity-50 transition-colors"
+                              >
+                                {isSaving ? 'Saving…' : 'Save'}
+                              </button>
+                              <button
+                                onClick={onCancel}
+                                disabled={isSaving}
+                                className="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-50 disabled:opacity-50 transition-colors"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <ContextSection context={context} />
+                        )}
 
                         <DataDisclaimer categoryData={categoryData} />
 
@@ -60,8 +97,8 @@ const OrganizationCard = ({
 
                         <FeedbackSection organizationData={organizationData} categoryData={categoryData} />
 
-                         
-                        <CitationsSection 
+
+                        <CitationsSection
                             categoryData={categoryData}
                             created_with_financial_contributions_info={organizationData.created_with_financial_contributions_info}
                             topic={organizationData.topic}
@@ -69,7 +106,7 @@ const OrganizationCard = ({
                         />
 
 
-                        <ChartsSection 
+                        <ChartsSection
                             isFinancialData={isFinancialData}
                             categoryData={categoryData}
                             topic={organizationData.topic}
@@ -79,7 +116,7 @@ const OrganizationCard = ({
                         />
                     </>
                     )}
-                </CardContent> 
+                </CardContent>
 
             </Card>
         </div>

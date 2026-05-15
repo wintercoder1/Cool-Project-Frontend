@@ -1,8 +1,8 @@
 class NetworkManager {
   constructor() {
     // @ts-expect-error
-    this.baseURL = import.meta.env.VITE_BASE_URL;
-    // this.baseURL = 'http://127.0.0.1:8000';
+    // this.baseURL = import.meta.env.VITE_BASE_URL;
+    this.baseURL = 'http://127.0.0.1:8000';
     this.defaultOptions = {
       headers: {
         'Content-Type': 'application/json',
@@ -223,15 +223,18 @@ class NetworkManager {
     return categoryMap[category] || null;
   }
 
-  async submitFeedback(category, id, feedbackText, topic) {
-    // Stub — replace with real API call when backend is ready:
-    // const categoryKey = this.categoryToApiKey(category);
-    // return this.makeRequest(`${this.baseURL}/submitFeedback`, {
-    //   method: 'POST',
-    //   body: JSON.stringify({ category: categoryKey, answer_id: id, topic, feedback: feedbackText })
-    // });
-    console.log('Feedback stub:', { category, id, topic, feedbackText });
-    return new Promise(resolve => setTimeout(resolve, 800));
+  async submitFeedback(category, id, feedbackText) {
+    const categoryKey = this.categoryToApiKey(category);
+    if (!categoryKey) throw new Error(`Unknown category: ${category}`);
+    const url = `${this.baseURL}/addComment/${categoryKey}/${id}?comment=${encodeURIComponent(feedbackText)}`;
+    return this.makeRequest(url, { method: 'POST' });
+  }
+
+  async manualEditPersistedAnswer(category, id, contextText) {
+    const categoryKey = this.categoryToApiKey(category);
+    if (!categoryKey) throw new Error(`Unknown category: ${category}`);
+    const url = `${this.baseURL}/manualEditPersistedAnswer/${categoryKey}/${id}?new_text=${encodeURIComponent(contextText)}`;
+    return this.makeRequest(url, { method: 'POST' });
   }
 
   async deletePersistedAnswer(category, id) {

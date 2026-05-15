@@ -40,9 +40,8 @@ export default function TopContributionRecipientsChart({
   
   const hasMoreRecipients = displayedRecipientsCount < recipients.length;
   
-  // This was a weird bug idk.
-  const smaller = displayedRecipientsCount <= sortedRecipients.length ?  displayedRecipientsCount  : sortedRecipients.length;
-  const larger = displayedRecipientsCount <= sortedRecipients.length ?  sortedRecipients.length : displayedRecipientsCount;
+  const smaller = displayedRecipients.length;
+  const larger = sortedRecipients.length;
 
   return (
     <div className="space-y-4 py-5 mt-8">

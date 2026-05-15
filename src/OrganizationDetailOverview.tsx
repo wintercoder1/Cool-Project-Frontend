@@ -34,6 +34,12 @@ const OrganizationDetailOverview = () => {
   const [fetchedOrgData, setFetchedOrgData] = useState(null);
   const [isFetchingOrgData, setIsFetchingOrgData] = useState(false);
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContext, setEditedContext] = useState('');
+  const [savedContext, setSavedContext] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
   // @ts-expect-error
   const { organizationData, categoryData, location: hookLocation } = useOrganizationData();
 
@@ -102,13 +108,42 @@ const OrganizationDetailOverview = () => {
     isFinancialData,
     committee_id,
     committee_name,
-    context,
+    context: hookContext,
     // @ts-expect-error
     financialOverviewData,
     isLoadingFinancialOverview,
     financialOverviewError,
     shouldFetchFinancialOverview
   } = useFinancialData(effectiveCategoryData, effectiveTopic, effectiveOrgData);
+
+  const displayContext = savedContext ?? hookContext;
+
+  const handleStartEdit = () => {
+    setEditedContext(displayContext || '');
+    setSaveError(null);
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setSaveError(null);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!effectiveOrgData.id || !effectiveCategoryData) return;
+    setIsSaving(true);
+    setSaveError(null);
+    try {
+      await networkManager.manualEditPersistedAnswer(effectiveCategoryData, effectiveOrgData.id, editedContext);
+      setSavedContext(editedContext);
+      setIsEditing(false);
+    } catch (err) {
+      setSaveError('Failed to save. Please try again.');
+      console.error('Save failed:', err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const effectiveShouldFetchFinancialOverview =
     category && CATEGORY_SLUG_MAP[category] === 'Financial Contributions'
@@ -164,7 +199,7 @@ const OrganizationDetailOverview = () => {
           <OrganizationCard
             organizationData={effectiveOrgData}
             categoryData={effectiveCategoryData}
-            context={context}
+            context={displayContext}
             isFinancialData={isFinancialData}
             committee_id={committee_id}
             committee_name={committee_name}
@@ -174,10 +209,24 @@ const OrganizationDetailOverview = () => {
             onFinancialContributionClick={handleFinancialContributionClick}
             chartData={chartData}
             isLoading={isFetchingOrgData}
+            isEditing={isEditing}
+            editedContext={editedContext}
+            onEditedContextChange={setEditedContext}
+            onSave={handleSaveEdit}
+            onCancel={handleCancelEdit}
+            isSaving={isSaving}
+            saveError={saveError}
           />
           {isEditMode && (
             <div className="px-4 lg:px-20 flex justify-center mt-6">
-              <div className="w-full max-w-3xl">
+              <div className="w-full max-w-3xl space-y-3">
+                <button
+                  onClick={handleStartEdit}
+                  disabled={isEditing}
+                  className="w-full py-4 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 text-white text-lg font-semibold rounded-lg transition-colors"
+                >
+                  Edit Text
+                </button>
                 <button
                   onClick={handleDelete}
                   className="w-full py-4 bg-red-600 hover:bg-red-700 text-white text-lg font-semibold rounded-lg transition-colors"
