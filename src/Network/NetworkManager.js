@@ -223,6 +223,13 @@ class NetworkManager {
     return categoryMap[category] || null;
   }
 
+  async getRecommendations(category, topicName) {
+    const categoryKey = this.categoryToApiKey(category);
+    if (!categoryKey) throw new Error(`Unknown category: ${category}`);
+    const url = `${this.baseURL}/getRecommendations/${categoryKey}/${encodeURIComponent(topicName)}`;
+    return this.makeRequest(url);
+  }
+
   async submitFeedback(category, id, feedbackText) {
     const categoryKey = this.categoryToApiKey(category);
     if (!categoryKey) throw new Error(`Unknown category: ${category}`);

@@ -97,7 +97,6 @@ const OrganizationCard = ({
 
                         <FeedbackSection organizationData={organizationData} categoryData={categoryData} />
 
-
                         <CitationsSection
                             categoryData={categoryData}
                             created_with_financial_contributions_info={organizationData.created_with_financial_contributions_info}

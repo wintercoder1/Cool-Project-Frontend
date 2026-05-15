@@ -5,6 +5,7 @@ import networkManager from './network/NetworkManager';
 // Component imports
 import PageHeader from './components/overview/PageHeader';
 import OrganizationCard from './components/overview/OrganizationCard';
+import RecommendationsSection from './components/overview/RecommendationsSection';
 import Footer from './components/Footer';
 
 // Hook imports
@@ -217,6 +218,12 @@ const OrganizationDetailOverview = () => {
             isSaving={isSaving}
             saveError={saveError}
           />
+          <div className="px-4 lg:px-20 flex justify-center mt-6">
+            <div className="w-full max-w-3xl">
+              <RecommendationsSection organizationData={effectiveOrgData} categoryData={effectiveCategoryData} />
+            </div>
+          </div>
+
           {isEditMode && (
             <div className="px-4 lg:px-20 flex justify-center mt-6">
               <div className="w-full max-w-3xl space-y-3">
