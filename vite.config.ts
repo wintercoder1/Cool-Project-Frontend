@@ -18,5 +18,5 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: '/Cool-Project-Frontend', 
+  base: process.env.VITE_BASE_PATH ?? '/',
 })
