@@ -1,8 +1,8 @@
 class NetworkManager {
   constructor() {
     // @ts-expect-error
-    // this.baseURL = import.meta.env.VITE_BASE_URL;
-    this.baseURL = 'http://127.0.0.1:8000';
+    this.baseURL = import.meta.env.VITE_BASE_URL;
+    // this.baseURL = 'http://127.0.0.1:8000';
     this.defaultOptions = {
       headers: {
         'Content-Type': 'application/json',

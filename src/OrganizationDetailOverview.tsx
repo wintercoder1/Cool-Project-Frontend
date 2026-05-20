@@ -209,7 +209,7 @@ const OrganizationDetailOverview = () => {
             financialOverviewError={financialOverviewError}
             onFinancialContributionClick={handleFinancialContributionClick}
             chartData={chartData}
-            isLoading={isFetchingOrgData}
+            isLoading={isFetchingOrgData || needsFetch}
             isEditing={isEditing}
             editedContext={editedContext}
             onEditedContextChange={setEditedContext}

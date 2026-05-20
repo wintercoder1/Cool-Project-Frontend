@@ -11,9 +11,9 @@ export default function LogoHeader({ onClick, className = "" }) {
     
     // Make header non-clickable for specific routes
     // Example: non-clickable when on organization detail pages with category/topic
-    if (path.includes('/organization/') && path.split('/').length > 3) {
-      return false;
-    }
+    // if (path.includes('/organization/') && path.split('/').length > 3) {
+    //   return false;
+    // }
     
     // You can add more conditions here based on your needs:
     // - Check for specific URL parameters
@@ -21,13 +21,15 @@ export default function LogoHeader({ onClick, className = "" }) {
     // - Check location.search for query parameters
     
     // Example: Check for a specific query parameter
-    const searchParams = new URLSearchParams(location.search);
-    if (searchParams.get('internal_test') === 'true') {
-      return true;
-    }
+    // const searchParams = new URLSearchParams(location.search);
+    // if (searchParams.get('internal_test') === 'true') {
+    //   return true;
+    // }
     
-    // Default to not clickable.
-    return false;
+    // // Default to not clickable.
+    // return false;
+    // Default to is clickable.
+    return true;
 
     // const searchParams = new URLSearchParams(location.search);
     // if (searchParams.get('disable_nav') === 'true') {

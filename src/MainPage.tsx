@@ -9,6 +9,7 @@ import SortControls from './components/SortControls.js';
 import CompanyList from './components/main/CompanyList';
 import PaginationControls from './components/PaginationControls.js';
 import FloatingActionButton from './components/main/FloatingActionButton';
+import AdBanner from './components/AdBanner';
 
 const MainPage = () => {
   const itemsPerPage = 10;
@@ -415,6 +416,7 @@ const MainPage = () => {
           onSelectCategory={handleSelectCategory}
         />
       </div>
+      <AdBanner />
       <div className="border-t border-gray-300 bg-gray-100 mt-2 pt-6 pb-10">
         
         <div className="p-5 mt-2 pt-0 pb-5"> {/* Added bottom padding to prevent overlap */}

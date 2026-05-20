@@ -10,7 +10,7 @@ const favicon = document.querySelector("link[rel~='icon']") as HTMLLinkElement ?
 })();
 favicon.href = APP_LOGO;
 import { StrictMode } from 'react'
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route, useParams } from "react-router-dom";
 import MainPage from './MainPage.tsx'
 import OrganizationDetailOverview  from '@/OrganizationDetailOverview.tsx'
 import OrganizationContributionTotals from '@/OrganizationContributionTotals.tsx'
@@ -18,25 +18,32 @@ import OrganizationQuery from '@/OrganizationQuery.tsx'
 import OrganizationLeadershipContributionTotals from '@/OrganizationLeadershipContributionTotals.tsx'
 import WaitingPage  from '@/WaitingPage.tsx'
 
+// Forces a full remount of OrganizationDetailOverview when category or topic changes,
+// so all state (fetched data, edits, etc.) resets cleanly for the new entity.
+function KeyedOrganizationDetail() {
+  const { category, topic } = useParams();
+  return <OrganizationDetailOverview key={`${category}/${topic}`} />;
+}
+
 export default function MainRouter() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" 
+        <Route path="/"
                element={<MainPage />} />
-        <Route path="/organization" 
+        <Route path="/organization"
                element={<OrganizationDetailOverview />} />
         <Route path="/organization/:category/:topic"
-               element={<OrganizationDetailOverview />} />
+               element={<KeyedOrganizationDetail />} />
         <Route path="/organization/:category/:topic/edit"
-               element={<OrganizationDetailOverview />} />
+               element={<KeyedOrganizationDetail />} />
         <Route path="/organizationRecipientsTotals"
                element={<OrganizationContributionTotals/>} />
         <Route path="/organizationLeadershipContributionTotals"
                element={<OrganizationLeadershipContributionTotals/>} />
-        <Route path="/query" 
+        <Route path="/query"
                element={<OrganizationQuery />} />
-        <Route path="/waiting" 
+        <Route path="/waiting"
                element={<WaitingPage />} />
       </Routes>
     </HashRouter>
