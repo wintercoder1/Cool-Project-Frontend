@@ -35,7 +35,7 @@ export default function TopContributionRecipientsChart({
       committeeName: committee_name
     }));
 
-    window.open('#/organizationRecipientsTotals', "_blank", "noreferrer");
+    window.open('/organizationRecipientsTotals', "_blank", "noreferrer");
   };
   
   const hasMoreRecipients = displayedRecipientsCount < recipients.length;

@@ -178,7 +178,7 @@ const OrganizationDetailOverview = () => {
   const openFinancialContributionPageNewTab = () => {
     const currentTopic = effectiveTopic || effectiveOrgData.topic;
     const encodedTopic = encodeURIComponent(currentTopic);
-    window.open(`#/organization/financial_contributions/${encodedTopic}`, '_blank', 'noreferrer');
+    window.open(`/organization/financial_contributions/${encodedTopic}`, '_blank', 'noreferrer');
   };
 
   return (

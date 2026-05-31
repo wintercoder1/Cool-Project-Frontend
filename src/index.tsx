@@ -10,7 +10,7 @@ const favicon = document.querySelector("link[rel~='icon']") as HTMLLinkElement ?
 })();
 favicon.href = APP_LOGO;
 import { StrictMode } from 'react'
-import { HashRouter, Routes, Route, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import MainPage from './MainPage.tsx'
 import OrganizationDetailOverview  from '@/OrganizationDetailOverview.tsx'
 import OrganizationContributionTotals from '@/OrganizationContributionTotals.tsx'
@@ -27,7 +27,7 @@ function KeyedOrganizationDetail() {
 
 export default function MainRouter() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         <Route path="/"
                element={<MainPage />} />
@@ -46,7 +46,7 @@ export default function MainRouter() {
         <Route path="/waiting"
                element={<WaitingPage />} />
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }
 

@@ -26,7 +26,7 @@ const RecommendationCard = ({ rec, categoryData }: { rec: any; categoryData: str
     const slug = CATEGORY_TO_SLUG[categoryData] ?? categoryData.toLowerCase().replace(/\s+/g, '_');
     localStorage.setItem('categoryData', categoryData);
     localStorage.setItem('organizationData', JSON.stringify(rec));
-    window.open(`#/organization/${slug}/${encodeURIComponent(rec.topic)}`, '_blank', 'noreferrer');
+    window.open(`/organization/${slug}/${encodeURIComponent(rec.topic)}`, '_blank', 'noreferrer');
   };
 
   const ratingLabel = getRatingLabel(rec, categoryData);

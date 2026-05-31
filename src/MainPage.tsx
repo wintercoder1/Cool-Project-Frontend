@@ -305,7 +305,7 @@ const MainPage = () => {
     localStorage.setItem(`organizationData`, JSON.stringify(organization));
     const slug = CATEGORY_TO_SLUG[category] ?? category.toLowerCase().replace(/\s+/g, '_');
     const topic = encodeURIComponent(organization.topic);
-    window.open(`#/organization/${slug}/${topic}`, "_blank", "noreferrer");
+    window.open(`/organization/${slug}/${topic}`, "_blank", "noreferrer");
   }
 
   const handleNewQueryClick = () => {

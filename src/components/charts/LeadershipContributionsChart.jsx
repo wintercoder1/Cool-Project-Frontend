@@ -45,7 +45,7 @@ export default function LeadershipContributionsChart({
     }));
 
     // window.open('#/organizationRecipientsTotals', "_blank", "noreferrer");
-    window.open('#/organizationLeadershipContributionTotals', "_blank", "noreferrer");
+    window.open('/organizationLeadershipContributionTotals', "_blank", "noreferrer");
   };
   
   // Calculate total amount for summary
