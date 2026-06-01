@@ -289,8 +289,8 @@ class NetworkManager {
       'Political Leaning': () => this.getPoliticalLeaning(topic),
       'DEI Friendliness': () => this.getDEIFriendlinessScore(topic),
       'Wokeness': () => this.getWokenessScore(topic),
-      'Environmental Impact': () => this.getEnvironmentalImpactScore(topic), 
-      'Immigration': () => this.getImmigrationSupportScore(topic), 
+      'Environmental Impact': () => this.getEnvironmentalImpactScore(topic),
+      'Immigration Support': () => this.getImmigrationSupportScore(topic),
       'Technology Innovation': () => this.getTechnologyInnovationScore(topic), 
       'Financial Contributions': () => this.getOrCreateFinancialContributionsOverview(topic)
     };
