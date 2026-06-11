@@ -17,6 +17,8 @@ import OrganizationContributionTotals from '@/OrganizationContributionTotals.tsx
 import OrganizationQuery from '@/OrganizationQuery.tsx'
 import OrganizationLeadershipContributionTotals from '@/OrganizationLeadershipContributionTotals.tsx'
 import WaitingPage  from '@/WaitingPage.tsx'
+import PaymentSignup from '@/PaymentSignup.tsx'
+import PaymentLogin from '@/PaymentLogin.tsx'
 
 // Forces a full remount of OrganizationDetailOverview when category or topic changes,
 // so all state (fetched data, edits, etc.) resets cleanly for the new entity.
@@ -45,6 +47,10 @@ export default function MainRouter() {
                element={<OrganizationQuery />} />
         <Route path="/waiting"
                element={<WaitingPage />} />
+        <Route path="/payment/signup"
+               element={<PaymentSignup />} />
+        <Route path="/payment/login"
+               element={<PaymentLogin />} />
       </Routes>
     </BrowserRouter>
   );
