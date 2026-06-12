@@ -72,7 +72,7 @@ const VoteSection = ({ organizationData, categoryData, showCounts = false, color
 
   const handleCopyLink = () => {
     const slug = CATEGORY_TO_SLUG[categoryData] ?? categoryData?.toLowerCase().replace(/\s+/g, '_');
-    const url = `${window.location.origin}/organization/${slug}/${encodeURIComponent(organizationData?.topic ?? '')}`;
+    const url = `${window.location.origin}/organization/${slug}/${encodeURIComponent(organizationData?.topic ?? '')}?id=${organizationData?.id}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);

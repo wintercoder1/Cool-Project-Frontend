@@ -435,10 +435,10 @@ class NetworkManager {
   async getPersistedAnswerById(queryType, rowId, includeComments = false) {
     const qt = encodeURIComponent(queryType);
     const id = encodeURIComponent(String(rowId));
-    const url = `${this.baseUrl}/getPersistedAnswerById/${qt}/${id}?include_comments=${includeComments}`;
+    const url = `${this.baseURL}/getPersistedAnswerById/${qt}/${id}?include_comments=${includeComments}`;
     const response = await fetch(url, {
       method: 'GET',
-      headers: this.defaultHeaders, // whatever your other GETs use
+      headers: this.defaultOptions.headers,
     });
     if (!response.ok) {
       throw new Error(`getPersistedAnswerById failed: ${response.status}`);
