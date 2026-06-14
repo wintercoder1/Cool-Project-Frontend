@@ -274,8 +274,8 @@ const OrganizationDetailOverview = () => {
     const currentTopic = effectiveTopic || effectiveOrgData.topic;
     const encodedTopic = encodeURIComponent(currentTopic);
     // Include ?id=<id> only when the org has an id; otherwise leave it off.
-    const idQuery = buildIdQuery(effectiveOrgData?.id);
-    window.open(`/organization/financial_contributions/${encodedTopic}${idQuery}`, '_blank', 'noreferrer');
+    // const idQuery = buildIdQuery(effectiveOrgData?.id);
+    window.open(`/organization/financial_contributions/${encodedTopic}`, '_blank', 'noreferrer');
   };
 
   return (
