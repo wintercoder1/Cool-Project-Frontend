@@ -72,6 +72,7 @@ const VoteSection = ({ organizationData, categoryData, showCounts = false, color
 
   const handleCopyLink = () => {
     const slug = CATEGORY_TO_SLUG[categoryData] ?? categoryData?.toLowerCase().replace(/\s+/g, '_');
+    // Include ?id=<id> only when the org has an id; otherwise leave it off.
     const url = `${window.location.origin}/organization/${slug}/${encodeURIComponent(organizationData?.topic ?? '')}?id=${organizationData?.id}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
