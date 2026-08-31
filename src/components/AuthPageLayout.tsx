@@ -17,7 +17,12 @@ export default function AuthPageLayout({ children }: AuthPageLayoutProps) {
 
   return (
     <div className="w-full min-h-screen bg-gray-50 flex flex-col">
-      <div className="bg-white border-b border-gray-200 px-8 py-2">
+      {/* Same 2px black rule that closes the header on every other page (see
+          AuthNavBar). These pages have no auth nav row of their own — showing
+          Log in / Sign up on the login page would be circular — so the rule
+          sits directly under the logo, keeping the header boundary continuous
+          when you navigate here from the rest of the site. */}
+      <div className="bg-white border-b-2 border-b-black px-8 py-2">
         <LogoHeader onClick={() => navigate('/')} />
       </div>
 

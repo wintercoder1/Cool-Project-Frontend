@@ -408,7 +408,17 @@ const MainPage = () => {
     localStorage.setItem(`organizationData`, JSON.stringify(organization));
     const slug = CATEGORY_TO_SLUG[category] ?? category.toLowerCase().replace(/\s+/g, '_');
     const topic = encodeURIComponent(organization.topic);
-    window.open(`/organization/${slug}/${topic}`, "_blank", "noreferrer");
+    // Pass the row id along: the detail page treats ?id= as authoritative and
+    // fetches by it directly. Without it, it falls back to matching the topic
+    // against the `organizationData` key written just above — and because every
+    // click opens a NEW TAB while sharing that single localStorage key, opening
+    // several organizations lets a later click overwrite what an earlier tab is
+    // still reading, landing that tab on the wrong organization. The id closes
+    // that race. Omitted when the row has no id, so we never emit ?id=undefined.
+    const idParam = organization?.id != null
+      ? `?id=${encodeURIComponent(organization.id)}`
+      : '';
+    window.open(`/organization/${slug}/${topic}${idParam}`, "_blank", "noreferrer");
   }
 
   const handleNewQueryClick = () => {
