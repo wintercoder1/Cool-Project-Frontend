@@ -1,20 +1,15 @@
-import { useNavigate } from 'react-router-dom';
 import LogoHeader from './LogoHeader';
+import AuthNavBar from './AuthNavBar';
 
 // ─── Toggle this to show or hide the auth nav row ───────────────────────────
-const SHOW_AUTH_NAV = false; //true;
+const SHOW_AUTH_NAV = true;
 // ────────────────────────────────────────────────────────────────────────────
-
-// Replace with real auth state once backend is wired up
-const isLoggedIn = false;
 
 interface SiteHeaderProps {
   children?: React.ReactNode; // right-side slot (e.g. CategoryDropdown)
 }
 
 export default function SiteHeader({ children }: SiteHeaderProps) {
-  const navigate = useNavigate();
-
   return (
     <div className="bg-white">
       {/* Main row: logo + right-side content */}
@@ -24,33 +19,7 @@ export default function SiteHeader({ children }: SiteHeaderProps) {
       </div>
 
       {/* Auth nav row */}
-      {SHOW_AUTH_NAV && (
-        <div className="border-t border-gray-100 px-8 py-1.5 flex justify-end items-center gap-3">
-          {isLoggedIn ? (
-            <button
-              onClick={() => navigate('/payment/login')}
-              className="text-sm font-medium text-gray-700 hover:text-black transition-colors px-3 py-1 rounded-md hover:bg-gray-100"
-            >
-              Account
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={() => navigate('/payment/login')}
-                className="text-sm font-medium text-gray-600 hover:text-black transition-colors px-3 py-1 rounded-md hover:bg-gray-100"
-              >
-                Log in
-              </button>
-              <button
-                onClick={() => navigate('/payment/signup')}
-                className="text-sm font-medium text-white bg-black hover:bg-gray-800 transition-colors px-3 py-1 rounded-md"
-              >
-                Sign up
-              </button>
-            </>
-          )}
-        </div>
-      )}
+      {SHOW_AUTH_NAV && <AuthNavBar className="mt-2" />}
     </div>
   );
 }

@@ -44,7 +44,7 @@ export default function LogoHeader({ onClick, className = "" }) {
   
   return (
     <div 
-      className={`flex items-center gap-5 justify-center sm:justify-start ${className} ${shouldBeClickable ? 'hover:opacity-80 transition-opacity' : ''}`}
+      className={`flex items-center gap-4 justify-center sm:justify-start ${className} ${shouldBeClickable ? 'hover:opacity-80 transition-opacity' : ''}`}
       onClick={shouldBeClickable ? onClick : undefined}
       role={shouldBeClickable ? "button" : undefined}
       tabIndex={shouldBeClickable ? 0 : undefined}
@@ -56,8 +56,8 @@ export default function LogoHeader({ onClick, className = "" }) {
         }
       } : undefined}
     >
-      <img src={APP_LOGO} className="block" width="55" height="55" alt={APP_NAME} />
-      <h1 className={`text-4xl font-bold text-black ${shouldBeClickable ? '' : 'opacity-75'}`}>
+      <img src={APP_LOGO} className="block" width="44" height="44" alt={APP_NAME} />
+      <h1 className={`text-3xl font-bold text-black ${shouldBeClickable ? '' : 'opacity-75'}`}>
         {APP_NAME}
       </h1>
     </div>

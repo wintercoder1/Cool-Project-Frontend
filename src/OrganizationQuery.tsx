@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useNavigate, useLocation } from 'react-router-dom';
 import Footer from './components/Footer';
 import organizationSuggestions from "./data/OrganizationSuggestions";
-import PageHeader from './components/overview/PageHeader';
+import PageHeader, { PAGE_CONTENT_TOP } from './components/overview/PageHeader';
 import SearchForm from './components/query/SearchForm';
 
 const OrganizationQuery = () => {
@@ -53,14 +53,14 @@ const OrganizationQuery = () => {
         className=""
         style={{
           position: 'absolute',
-          top: '48px', // Adjust to your header height
+          top: PAGE_CONTENT_TOP,
           left: '0',
           right: '0',
           zIndex: 1
         }}
       >
         {/* justify-center */}
-        <div className="flex justify-center border-t border-gray-300 bg-gray-100 mt-8 pt-14 pb-14">
+        <div className="flex justify-center bg-gray-100 mt-8 pt-14 pb-14">
           <Card className="w-full max-w-md mx-4">
             <CardContent className="pt-6 px-6 pb-8">
               <SearchForm

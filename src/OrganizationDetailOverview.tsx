@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import networkManager from './network/NetworkManager';
 
 // Component imports
-import PageHeader from './components/overview/PageHeader';
+import PageHeader, { PAGE_CONTENT_TOP } from './components/overview/PageHeader';
 import OrganizationCard from './components/overview/OrganizationCard';
 import RecommendationsSection from './components/overview/RecommendationsSection';
 import Footer from './components/Footer';
@@ -25,11 +25,6 @@ const CATEGORY_SLUG_MAP: Record<string, string> = {
 };
 
 const normalize = (s: string) => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-
-// Builds a `?id=<id>` suffix when an id is present, otherwise an empty string
-// so the URL is left unchanged. Handles numeric or string ids.
-// const buildIdQuery = (id: unknown): string =>
-  // id != null && id !== '' ? `?id=${encodeURIComponent(String(id))}` : '';
 
 // Turns the URL slug into the backend query-type token, e.g.
 // 'financial_contributions' / 'financial-contributions' -> 'FINANCIAL_CONTRIBUTIONS'.
@@ -285,13 +280,13 @@ const OrganizationDetailOverview = () => {
         className=""
         style={{
           position: 'absolute',
-          top: '48px',
+          top: PAGE_CONTENT_TOP,
           left: '0',
           right: '0',
           zIndex: 1
         }}
       >
-        <div className="border-t border-gray-300 bg-gray-100 mt-8 pt-10 pb-14">
+        <div className="bg-gray-100 mt-8 pt-10 pb-14">
           <OrganizationCard
             organizationData={effectiveOrgData}
             categoryData={effectiveCategoryData}

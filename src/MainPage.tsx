@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import networkManager from './network/NetworkManager';
 import LogoHeader from './components/LogoHeader.jsx';
+import AuthNavBar from './components/AuthNavBar';
 import Footer from './components/Footer';
 import CategoryDropdown from './components/main/CategoryDropdown';
 import SearchBar from './components/main/SearchBar';
@@ -493,6 +494,7 @@ const MainPage = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 px-8 bg-white">
           <LogoHeader />
         </div>
+        <AuthNavBar className="mt-2" />
 
         <div className="flex justify-center items-center min-h-[calc(60vh-120px)] sm:min-h-[60vh] sm:mt-4">
           <div className="w-full max-w-md mx-auto">
@@ -524,7 +526,8 @@ const MainPage = () => {
           onSelectCategory={handleSelectCategory}
         />
       </div>
-      <div className="border-t border-gray-300 bg-gray-100 mt-2 pt-6 pb-10">
+      <AuthNavBar className="mt-2" />
+      <div className="bg-gray-100 pt-6 pb-10">
 
         <div className="p-5 mt-2 pt-0 pb-5"> {/* Added bottom padding to prevent overlap */}
 

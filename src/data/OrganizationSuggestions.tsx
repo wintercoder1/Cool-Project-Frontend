@@ -1,4 +1,4 @@
-import { completeNASDAQCompanyList } from "./CompleteNasdaqCompanyList";
+import { chosenInternationalCompanyList, completeNASDAQCompanyList } from "./CompleteNasdaqCompanyList";
 
 // @ts-expect-error
 const usNASDAQTop100 = [
@@ -63,6 +63,8 @@ const miscOrgsInternational = ['Sony', 'Nintendo', 'Toyota', 'Honda', 'BMW', 'Me
 
 
 // const organizationSuggestions = [...usNASDAQTop100WithoutIncOrCompanySufffix, ...miscOrgs, ...miscOrgsInternational];
-const organizationSuggestions = [ ...miscOrgs, ...miscOrgsInternational, ...completeNASDAQCompanyList];
+// const organizationSuggestions = [ ...miscOrgs, ...miscOrgsInternational, ...completeNASDAQCompanyList];
+
+const organizationSuggestions = [ ...miscOrgs, ...chosenInternationalCompanyList, ...completeNASDAQCompanyList];
 
 export default organizationSuggestions;

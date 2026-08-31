@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DollarSign, Lectern, TrendingUp  } from 'lucide-react';
-import PageHeader from './components/overview/PageHeader';
+import PageHeader, { PAGE_CONTENT_TOP } from './components/overview/PageHeader';
 import Footer from './components/Footer';
 
 const OrganizationRecipientsTotals = () => {
@@ -92,13 +92,13 @@ const OrganizationRecipientsTotals = () => {
         className=""
         style={{
           position: 'absolute',
-          top: '48px', // Adjust to your header height
+          top: PAGE_CONTENT_TOP,
           left: '2',
           right: '0',
           zIndex: 1
         }}
       >
-        <div className="border-t border-gray-300 bg-gray-100 mt-8 pt-8 pb-10">    
+        <div className="bg-gray-100 mt-8 pt-8 pb-10">
           <div className="bg-gray-100 w-screen mx-auto p-5 py-0 min-h-screen">
             
             {/* Header Section */}
