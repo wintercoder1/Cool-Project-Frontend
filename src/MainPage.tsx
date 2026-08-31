@@ -10,6 +10,47 @@ import SortControls from './components/SortControls.js';
 import CompanyList from './components/main/CompanyList';
 import PaginationControls from './components/PaginationControls.js';
 import FloatingActionButton from './components/main/FloatingActionButton';
+import { isDebugMode } from './lib/debugMode';
+
+// Zero-width and bidi control characters. Some stored topics begin with an
+// invisible U+200E, which gives them a different normalized_topic_name while
+// rendering identically — so they read as duplicates on screen even though the
+// database considers them distinct rows.
+const INVISIBLE_CHARS = /[​-‏‪-‮⁠-⁤﻿]/g;
+
+// The identity two search rows are considered duplicates under.
+const dedupeKey = (row) =>
+  String(row?.normalized_topic_name ?? row?.topic ?? '')
+    .replace(INVISIBLE_CHARS, '')
+    .trim()
+    .toLowerCase();
+
+// Newer of two rows: latest timestamp wins, larger id breaks ties (and covers
+// rows with a missing or unparseable timestamp).
+const isNewer = (row, than) => {
+  const a = Date.parse(row?.timestamp);
+  const b = Date.parse(than?.timestamp);
+  if (Number.isFinite(a) && Number.isFinite(b) && a !== b) return a > b;
+  return Number(row?.id ?? 0) > Number(than?.id ?? 0);
+};
+
+// Rows are versioned — one per (topic, timestamp) — so a topic that has been
+// re-analysed has several. Browsing never shows them because the backend list
+// query is `SELECT DISTINCT ON (normalized_topic_name) ... ORDER BY timestamp
+// DESC`; the search endpoint has no such clause and returns every version,
+// which is why the two views disagree. This collapses search down to the same
+// thing browsing shows: the newest row per topic, keeping the order the API
+// sent them in (a topic holds the position of its first occurrence).
+const dedupeSearchResults = (rows) => {
+  if (!Array.isArray(rows)) return rows;
+  const newestByKey = new Map();
+  for (const row of rows) {
+    const key = dedupeKey(row);
+    const existing = newestByKey.get(key);
+    if (!existing || isNewer(row, existing)) newestByKey.set(key, row);
+  }
+  return Array.from(newestByKey.values());
+};
 
 // Pulls a usable number out of whatever getCategoryItemCount returns. The
 // endpoint returns the count wrapped in a single-element array, e.g. [167],
@@ -446,7 +487,12 @@ const MainPage = () => {
     searchTimeoutRef.current = setTimeout(async () => {
       try {
         const data = await networkManager.searchPersistedAnswers(category, value.trim());
-        setSearchResults(data.results);
+        // Debug/admin sees every stored version; everyone else sees one row per
+        // topic, matching what browsing shows. Read per search rather than once
+        // at mount so toggling ?debug takes effect on the next query.
+        setSearchResults(
+          isDebugMode() ? data.results : dedupeSearchResults(data.results)
+        );
       } catch (err) {
         console.error('Search error:', err);
         setSearchResults([]);
