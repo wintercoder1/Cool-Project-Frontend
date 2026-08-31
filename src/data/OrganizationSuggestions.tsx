@@ -59,7 +59,7 @@ const miscOrgs = ['Google', 'Meta', 'Tesla', 'Facebook', 'Instagram', 'YouTube',
     'PayPal', 'Square', 'Robinhood', 'Coinbase', 'Binance']
 
 // These ones could potential need a different source than fec.gov for finanical contributions.
-const miscOrgsInternational = ['Sony', 'Nintendo', 'Toyota', 'Honda', 'BMW', 'Mercedes-Benz', 'Audi']
+// const miscOrgsInternational = ['Sony', 'Nintendo', 'Toyota', 'Honda', 'BMW', 'Mercedes-Benz', 'Audi']
 
 
 // const organizationSuggestions = [...usNASDAQTop100WithoutIncOrCompanySufffix, ...miscOrgs, ...miscOrgsInternational];
