@@ -21,6 +21,7 @@ import WaitingPage  from '@/WaitingPage.tsx'
 import Login from '@/Login.tsx'
 import Signup from '@/Signup.tsx'
 import ProCheckout from '@/ProCheckout.tsx'
+import Favorites from '@/Favorites.tsx'
 import NotFound from '@/NotFound.tsx'
 import { PRO_ENABLED } from '@/config'
 
@@ -105,6 +106,11 @@ export default function MainRouter() {
                element={<Login />} />
         <Route path="/signup/*"
                element={<Signup />} />
+
+        {/* Saved answers. Registered for everyone; the page itself prompts for
+            sign-in, so the nav link works signed-out. */}
+        <Route path="/favorites"
+               element={<Favorites />} />
 
         {/* Paid tier — deliberately not registered while PRO_ENABLED is false,
             so the Paddle checkout can't be reached at all (a stale link or

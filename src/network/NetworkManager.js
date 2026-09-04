@@ -1,6 +1,7 @@
 class NetworkManager {
   constructor() {
     this.baseURL = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000';
+    // this.baseURL = 'http://127.0.0.1:8000';
 
     this.defaultOptions = {
       headers: {
@@ -78,11 +79,19 @@ class NetworkManager {
           // Ignore body parsing failure.
         }
 
-        throw new Error(
+        // The message is left exactly as it was so existing callers that
+        // surface or log it keep behaving the same; the status rides along as a
+        // property. Without it the only way to tell a 401 (session no good)
+        // from a 500 (auth not configured server-side) or a 503 (auth provider
+        // unreachable, worth retrying) is to string-match the message.
+        const error = new Error(
           `HTTP error! Status: ${response.status}${
             errorBody ? ` Body: ${errorBody}` : ''
           }`
         );
+        error.status = response.status;
+        error.body = errorBody;
+        throw error;
       }
 
       const text = await response.text();
@@ -385,16 +394,33 @@ class NetworkManager {
     return this.makeRequest(url, { method: 'POST' });
   }
 
-  async searchPersistedAnswers(category, searchTerm) {
+  /**
+   * Search cached answers.
+   *
+   * `allowDuplicates` maps to the endpoint's allow_duplicates param, which
+   * defaults to TRUE server-side — that default is why search shows every
+   * stored version of a topic while browsing (which uses DISTINCT ON) shows
+   * one. Passing false makes the server collapse them, so the filtering
+   * happens before pagination rather than after.
+   *
+   * It is not a complete fix on its own: the server groups by
+   * normalized_topic_name, so rows whose topic carries an invisible character
+   * get a different normalized name and survive as visually identical
+   * duplicates. MainPage still runs its own pass over the result for those.
+   */
+  async searchPersistedAnswers(category, searchTerm, { allowDuplicates } = {}) {
     const categoryKey = this.categoryToApiKey(category);
 
     if (!categoryKey) {
       throw new Error(`Unknown category: ${category}`);
     }
 
-    const url = `${this.baseURL}/searchPersistedAnswers/${categoryKey}/${encodeURIComponent(
+    const base = `${this.baseURL}/searchPersistedAnswers/${categoryKey}/${encodeURIComponent(
       searchTerm
     )}`;
+    const url = allowDuplicates === undefined
+      ? base
+      : `${base}?allow_duplicates=${allowDuplicates ? 'true' : 'false'}`;
 
     return this.makeRequest(url);
   }
@@ -444,6 +470,57 @@ class NetworkManager {
       throw new Error(`getPersistedAnswerById failed: ${response.status}`);
     }
     return await response.json(); // { success, answer }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Favorites
+  //
+  // These are the only endpoints here that require a signed-in user. Clerk's
+  // session token lives ~60s and its SDK refreshes it, so callers must pass a
+  // freshly-awaited getToken() per call rather than holding one — see
+  // useFavoriteToken(). A missing token means a 401, so callers check first.
+  // ---------------------------------------------------------------------------
+
+  authHeaders(token) {
+    return { Authorization: `Bearer ${token}` };
+  }
+
+  /** True/false for one answer. Requires auth. */
+  async isFavorited(queryType, answerId, token) {
+    const url = `${this.baseURL}/isFavorited/${encodeURIComponent(
+      queryType
+    )}/${encodeURIComponent(answerId)}`;
+    return this.makeRequest(url, { headers: this.authHeaders(token) });
+  }
+
+  /** Idempotent — re-saving returns the existing row. Requires auth. */
+  async addFavorite(queryType, answerId, token) {
+    const url = `${this.baseURL}/addFavorite/${encodeURIComponent(
+      queryType
+    )}/${encodeURIComponent(answerId)}`;
+    return this.makeRequest(url, {
+      method: 'POST',
+      headers: this.authHeaders(token),
+    });
+  }
+
+  /** Removing something unsaved is a 200 with rows_deleted: 0. Requires auth. */
+  async removeFavorite(queryType, answerId, token) {
+    const url = `${this.baseURL}/removeFavorite/${encodeURIComponent(
+      queryType
+    )}/${encodeURIComponent(answerId)}`;
+    return this.makeRequest(url, {
+      method: 'DELETE',
+      headers: this.authHeaders(token),
+    });
+  }
+
+  /** Full listing, newest first, enriched with each answer's display topic. */
+  async getFavorites(token, { limit = 50, offset = 0, queryType } = {}) {
+    const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+    if (queryType) params.set('query_type', queryType);
+    const url = `${this.baseURL}/getFavorites?${params.toString()}`;
+    return this.makeRequest(url, { headers: this.authHeaders(token) });
   }
 }
 

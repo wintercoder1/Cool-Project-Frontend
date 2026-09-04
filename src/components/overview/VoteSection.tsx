@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ThumbsUp, ThumbsDown, Link2 } from 'lucide-react';
 import networkManager from '../../network/NetworkManager';
+import FavoriteButton from '../FavoriteButton';
 
 const VOTES_COOKIE = 'compassAIVotes';
 
@@ -139,11 +140,16 @@ const VoteSection = ({ organizationData, categoryData, showCounts = false, color
         <ThumbsDown size={14} />
         {showCounts && <span>{downvotes}</span>}
       </button>
+      {/* Favorite sits immediately left of the copy-link button. It carries the
+          ml-auto that used to be on that button, so the pair is pushed to the
+          right of the row together. categoryKey/id are already resolved above,
+          which is why this needs nothing threaded down from the page. */}
+      <FavoriteButton queryType={categoryKey} answerId={id} className="ml-auto" />
       <button
         onClick={handleCopyLink}
         aria-label="Copy shareable link"
         title={copied ? 'Copied!' : 'Copy link'}
-        className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors bg-transparent border border-gray-200 text-gray-400 hover:border-gray-800 hover:text-gray-700"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-colors bg-transparent border border-gray-200 text-gray-400 hover:border-gray-800 hover:text-gray-700"
       >
         {copied ? <span className="text-xs text-gray-800 font-medium">Link copied!</span> : <Link2 size={14} />}
       </button>

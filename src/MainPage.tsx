@@ -486,12 +486,22 @@ const MainPage = () => {
     setSearchLoading(true);
     searchTimeoutRef.current = setTimeout(async () => {
       try {
-        const data = await networkManager.searchPersistedAnswers(category, value.trim());
         // Debug/admin sees every stored version; everyone else sees one row per
         // topic, matching what browsing shows. Read per search rather than once
         // at mount so toggling ?debug takes effect on the next query.
+        const debug = isDebugMode();
+        // Ask the server to collapse duplicates (allow_duplicates defaults to
+        // true, which is why search disagrees with browsing) so the filtering
+        // happens before pagination. The local pass after it is still needed:
+        // the server groups on normalized_topic_name, which treats a topic
+        // carrying an invisible character as a separate row.
+        const data = await networkManager.searchPersistedAnswers(
+          category,
+          value.trim(),
+          { allowDuplicates: debug }
+        );
         setSearchResults(
-          isDebugMode() ? data.results : dedupeSearchResults(data.results)
+          debug ? data.results : dedupeSearchResults(data.results)
         );
       } catch (err) {
         console.error('Search error:', err);

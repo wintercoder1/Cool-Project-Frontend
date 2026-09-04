@@ -37,7 +37,20 @@ export default function AuthNavBar({ className = '' }: AuthNavBarProps) {
           against a fixed-height bar (see PageHeader.tsx), so that would flash
           a gap. 36px = 24px of content + the 12px of py-1.5: box-sizing is
           border-box here, so min-height has to include the padding. */}
-      <div className="flex justify-end items-center gap-1.5 px-8 py-1.5 min-h-[36px]">
+      <div className="flex justify-between items-center gap-1.5 px-8 py-1.5 min-h-[36px]">
+        {/* Left: Favorites. Shown to everyone rather than only when signed in,
+            so the feature is discoverable — /favorites prompts for sign-in
+            itself. Keeping it always-present also stops the row's contents
+            shifting sideways as the session resolves. */}
+        <Link
+          to="/favorites"
+          className="text-xs font-medium text-gray-700 hover:text-black hover:bg-gray-200 transition-colors px-2.5 py-1 rounded-md"
+        >
+          Favorites
+        </Link>
+
+        {/* Right: auth controls. */}
+        <div className="flex items-center gap-1.5">
         <Show when="signed-out">
           <Link
             to="/login"
@@ -60,6 +73,7 @@ export default function AuthNavBar({ className = '' }: AuthNavBarProps) {
             appearance={{ elements: { avatarBox: 'w-6 h-6' } }}
           />
         </Show>
+        </div>
       </div>
     </div>
   );
