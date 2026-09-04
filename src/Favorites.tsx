@@ -5,6 +5,7 @@ import LogoHeader from './components/LogoHeader';
 import AuthNavBar from './components/AuthNavBar';
 import Footer from './components/Footer';
 import networkManager from './network/NetworkManager';
+import SignInOptions from './components/SignInOptions';
 import { answerDetailPath, queryTypeToLabel } from './lib/queryTypes';
 
 interface FavoriteRow {
@@ -89,14 +90,17 @@ export default function Favorites() {
               Loading…
             </div>
           ) : !isSignedIn ? (
+            // Same wording and the same two buttons as the dialog the nav link
+            // opens, so arriving here directly — a bookmark, a new tab, a
+            // shared URL — is not a lesser experience than being prompted.
             <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-              <p className="text-gray-700">Sign in to see the answers you&apos;ve saved.</p>
-              <Link
-                to="/login?redirect_url=%2Ffavorites"
-                className="inline-block mt-4 bg-black text-white font-semibold px-5 py-2.5 rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                Sign in
-              </Link>
+              <h2 className="text-lg font-bold text-gray-900">
+                Sign in to view your favorites
+              </h2>
+              <p className="text-gray-500 text-sm mt-1">
+                You need to be signed in to see the queries you&apos;ve saved.
+              </p>
+              <SignInOptions className="justify-center mt-5" />
             </div>
           ) : error ? (
             <div className="bg-white rounded-lg shadow-sm p-8 text-center text-gray-700">

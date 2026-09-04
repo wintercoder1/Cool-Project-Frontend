@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Show, UserButton } from '@clerk/react';
+import { Show, UserButton, useAuth } from '@clerk/react';
+import SignInPromptDialog from './SignInPromptDialog';
 
 interface AuthNavBarProps {
   className?: string;
@@ -20,6 +22,23 @@ interface AuthNavBarProps {
  * modals, because those routes mount <SignIn />/<SignUp /> as full pages.
  */
 export default function AuthNavBar({ className = '' }: AuthNavBarProps) {
+  const { isLoaded, isSignedIn } = useAuth();
+  const [promptOpen, setPromptOpen] = useState(false);
+
+  // Explain the gate instead of letting a signed-out visitor land on a page
+  // that can only tell them to sign in. Left as a real <Link> so it still keeps
+  // its href for middle-click and open-in-new-tab; those bypass this handler
+  // and hit /favorites directly, where the page's own signed-out state catches
+  // them. Only intercept once Clerk has resolved — while isLoaded is false we
+  // don't yet know whether they're signed in, and wrongly showing this to a
+  // signed-in user is worse than letting the navigation through.
+  const handleFavoritesClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isLoaded && !isSignedIn) {
+      event.preventDefault();
+      setPromptOpen(true);
+    }
+  };
+
   return (
     // Side-specific border colors on purpose: plain `border-gray-300 border-black`
     // would each set all four sides, and the later utility would paint both
@@ -44,6 +63,7 @@ export default function AuthNavBar({ className = '' }: AuthNavBarProps) {
             shifting sideways as the session resolves. */}
         <Link
           to="/favorites"
+          onClick={handleFavoritesClick}
           className="text-xs font-medium text-gray-700 hover:text-black hover:bg-gray-200 transition-colors px-2.5 py-1 rounded-md"
         >
           Favorites
@@ -75,6 +95,13 @@ export default function AuthNavBar({ className = '' }: AuthNavBarProps) {
         </Show>
         </div>
       </div>
+
+      <SignInPromptDialog
+        open={promptOpen}
+        onOpenChange={setPromptOpen}
+        title="Sign in to view your favorites"
+        description="You need to be signed in to see the queries you've saved."
+      />
     </div>
   );
 }
