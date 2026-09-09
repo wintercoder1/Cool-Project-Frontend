@@ -1,8 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { useAuth } from '@clerk/react';
 import networkManager from '../network/NetworkManager';
+import SignInPromptDialog from './SignInPromptDialog';
+
+const SIGNED_OUT_REASON =
+  'You need to be signed in to save queries to your favorites.';
+// A 401 on a session we thought was good means it lapsed mid-visit, which is a
+// different situation to explain than never having signed in.
+const SESSION_EXPIRED_REASON =
+  'Your session has expired. Sign in again to save this to your favorites.';
 
 /** HTTP status off an error thrown by NetworkManager.makeRequest, if it has one. */
 const httpStatusOf = (err: unknown): number | undefined =>
@@ -37,7 +44,6 @@ export default function FavoriteButton({
   answerId,
   className = '',
 }: FavoriteButtonProps) {
-  const navigate = useNavigate();
   const { isLoaded, isSignedIn, getToken } = useAuth();
 
   const [favorited, setFavorited] = useState(false);
@@ -47,6 +53,8 @@ export default function FavoriteButton({
   // Set when the failure was a 401, so the error offers signing in rather than
   // a retry that would re-send the same rejected token.
   const [needsSignIn, setNeedsSignIn] = useState(false);
+  const [promptOpen, setPromptOpen] = useState(false);
+  const [promptReason, setPromptReason] = useState(SIGNED_OUT_REASON);
 
   // Only meaningful once we know which answer row we're looking at; the detail
   // page renders before its data resolves.
@@ -85,16 +93,11 @@ export default function FavoriteButton({
     };
   }, [isLoaded, isSignedIn, addressable, queryType, answerId, getToken]);
 
-  // Send them to sign in and come back to this answer.
-  const goToLogin = useCallback(() => {
-    const here = window.location.pathname + window.location.search;
-    navigate(`/login?redirect_url=${encodeURIComponent(here)}`);
-  }, [navigate]);
-
   const handleClick = useCallback(async () => {
     if (!isSignedIn) {
-      // Gate rather than fail.
-      goToLogin();
+      // Explain the gate before moving them anywhere.
+      setPromptReason(SIGNED_OUT_REASON);
+      setPromptOpen(true);
       return;
     }
     if (!addressable || saving) return;
@@ -131,7 +134,15 @@ export default function FavoriteButton({
     } finally {
       setSaving(false);
     }
-  }, [isSignedIn, addressable, saving, favorited, getToken, queryType, answerId, goToLogin]);
+  }, [isSignedIn, addressable, saving, favorited, getToken, queryType, answerId]);
+
+  // Both auth failures — never signed in, and signed in but lapsed — route
+  // through the same dialog, so "you need an account for this" always looks the
+  // same wherever you hit it.
+  const openSessionExpiredPrompt = useCallback(() => {
+    setPromptReason(SESSION_EXPIRED_REASON);
+    setPromptOpen(true);
+  }, []);
 
   // Nothing to save yet — keep the row from jumping once data lands.
   if (!addressable) return null;
@@ -146,7 +157,7 @@ export default function FavoriteButton({
           {needsSignIn && (
             <button
               type="button"
-              onClick={goToLogin}
+              onClick={openSessionExpiredPrompt}
               className="ml-1 underline font-medium hover:text-red-600"
             >
               Sign in
@@ -175,6 +186,12 @@ export default function FavoriteButton({
         <Heart size={14} fill={favorited ? 'currentColor' : 'none'} />
         <span>{favorited ? 'Saved' : 'Save'}</span>
       </button>
+
+      <SignInPromptDialog
+        open={promptOpen}
+        onOpenChange={setPromptOpen}
+        description={promptReason}
+      />
     </div>
   );
 }

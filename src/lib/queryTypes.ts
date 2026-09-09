@@ -17,6 +17,7 @@ export const QUERY_TYPE_LABELS: Record<string, string> = {
   IMMIGRATION_SUPPORT: 'Immigration Support',
   TECHNOLOGY_INNOVATION: 'Technology Innovation',
   FINANCIAL_CONTRIBUTIONS: 'Financial Contributions',
+  LEADERSHIP_DEMOGRAPHICS: 'Leadership Demographics',
 };
 
 /** 'political_leaning' -> 'POLITICAL_LEANING'. Also tolerates hyphens. */

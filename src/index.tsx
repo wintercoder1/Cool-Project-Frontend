@@ -21,6 +21,7 @@ import WaitingPage  from '@/WaitingPage.tsx'
 import Login from '@/Login.tsx'
 import Signup from '@/Signup.tsx'
 import ProCheckout from '@/ProCheckout.tsx'
+import LeadershipDetail from '@/LeadershipDetail.tsx'
 import Favorites from '@/Favorites.tsx'
 import NotFound from '@/NotFound.tsx'
 import { PRO_ENABLED } from '@/config'
@@ -29,6 +30,12 @@ import { PRO_ENABLED } from '@/config'
 // so all state (fetched data, edits, etc.) resets cleanly for the new entity.
 function KeyedOrganizationDetail() {
   const { category, topic } = useParams();
+  // Leadership Demographics has its own page: the payload is a roster plus an
+  // aggregate, not the lean/rating/context answer OrganizationDetailOverview
+  // and OrganizationCard are built around.
+  if (category === 'leadership_demographics') {
+    return <LeadershipDetail key={`${category}/${topic}`} />;
+  }
   return <OrganizationDetailOverview key={`${category}/${topic}`} />;
 }
 

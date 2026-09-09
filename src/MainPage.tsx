@@ -153,14 +153,28 @@ const MainPage = () => {
   const navigate = useNavigate();
 
   // Available categories for the dropdown
-  const availableCategories = [
-    'Political Leaning',
-    'DEI Friendliness', 
-    'Wokeness',
-    'Environmental Impact',
-    'Immigration Support',
-    'Technology Innovation',
-    'Financial Contributions'
+  // Grouped for the dropdown. The two sourced from authoritative datasets (FEC
+  // and SEC) lead; the LLM-judgement categories follow. Order within each group
+  // is unchanged from before.
+  const categoryGroups = [
+    {
+      title: 'Important Analyses',
+      categories: [
+        'Financial Contributions',
+        'Leadership Demographics',
+      ],
+    },
+    {
+      title: 'For Fun Analyses',
+      categories: [
+        'Political Leaning',
+        'DEI Friendliness',
+        'Wokeness',
+        'Environmental Impact',
+        'Immigration Support',
+        'Technology Innovation',
+      ],
+    },
   ];
 
   // Dynamic sort options based on category
@@ -170,6 +184,10 @@ const MainPage = () => {
     }
     if (category === 'Financial Contributions') {
       return ['Name'];
+    }
+    // Leadership's own allowlist — no rating to sort by; Size is officer count.
+    if (category === 'Leadership Demographics') {
+      return ['Name', 'Size'];
     }
     return ['Name', 'Rating'];
   };
@@ -423,6 +441,14 @@ const MainPage = () => {
         return (item) => `${item.rating}/5`;
       case 'Financial Contributions':
         return () => ``;
+      // Leadership rows carry officer_count (the rosters themselves are omitted
+      // from list responses), so the column shows team size rather than a
+      // rating this query type doesn't have.
+      case 'Leadership Demographics':
+        return (item) =>
+          item?.officer_count
+            ? `${item.officer_count} officer${item.officer_count === 1 ? '' : 's'}`
+            : ``;
       default:
         return (item) => `${item.rating}`;
     }
@@ -442,6 +468,7 @@ const MainPage = () => {
     'Immigration Support': 'immigration_support',
     'Technology Innovation': 'technology_innovation',
     'Financial Contributions': 'financial_contributions',
+    'Leadership Demographics': 'leadership_demographics',
   };
 
   const openDetailPageNewTab = (organization, category) => {
@@ -586,7 +613,7 @@ const MainPage = () => {
         <LogoHeader />
         <CategoryDropdown 
           category={category}
-          availableCategories={availableCategories}
+          categoryGroups={categoryGroups}
           dropdownOpen={dropdownOpen}
           onToggleDropdown={handleToggleDropdown}
           onSelectCategory={handleSelectCategory}

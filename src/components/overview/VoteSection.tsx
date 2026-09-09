@@ -13,6 +13,9 @@ const CATEGORY_MAP = {
   'Immigration Support': 'IMMIGRATION_SUPPORT',
   'Technology Innovation': 'TECHNOLOGY_INNOVATION',
   'Financial Contributions': 'FINANCIAL_CONTRIBUTIONS',
+  // Backend query type is LEADERSHIP; the UI label is longer. Without this the
+  // component bails early (no categoryKey) and the whole row disappears.
+  'Leadership Demographics': 'LEADERSHIP',
 };
 
 const CATEGORY_TO_SLUG = {
@@ -23,6 +26,7 @@ const CATEGORY_TO_SLUG = {
   'Immigration Support': 'immigration_support',
   'Technology Innovation': 'technology_innovation',
   'Financial Contributions': 'financial_contributions',
+  'Leadership Demographics': 'leadership_demographics',
 };
 
 function getCookie(name: string): string | null {

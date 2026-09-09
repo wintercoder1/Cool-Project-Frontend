@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Loader2, X} from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -13,7 +13,8 @@ const WaitingPage = () => {
 
   const [_, setSearchTerm] = useState('');
   const [__, setCategory] = useState('');
-  const [fetchComplete, setFetchComplete] = useState(false);
+  const [, setFetchComplete] = useState(false);
+  const timeoutRef = useRef(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,15 +40,35 @@ const WaitingPage = () => {
       fetchData(searchTerm, category);
     }
 
-    // Make the timeout a bit longer for finincial contributions queries. At least for now.
-    // TODO: Load the financial contrubtions first, go to page and then create the LLM generated text.
-    const TIME_OUT = category == 'Financial Contributions' ?  25500 : 15500
-    if (!fetchComplete) {
-      setTimeout(() => {
-        showErrorDialog('Request timed out.');
-      }, TIME_OUT);
-    }
+    // Per-category budgets. Leadership is the slow one: a cold lookup queries
+    // SEC EDGAR (~8s) and then Wikidata for biographies (~20s more), so the old
+    // 15.5s ceiling timed out every first-time company while the request was
+    // still progressing normally.
+    const TIME_OUT =
+      category === 'Leadership Demographics' ? 45000 :
+      category === 'Financial Contributions' ? 25500 :
+      15500;
+
+    // Kept in a ref and cleared when the fetch settles. The previous
+    // `if (!fetchComplete)` guard read the value captured at mount, so it was
+    // always false — the timer was scheduled every time and its callback fired
+    // unconditionally, showing "Request timed out" even after a request had
+    // already succeeded or failed.
+    timeoutRef.current = setTimeout(() => {
+      showErrorDialog('Request timed out.');
+    }, TIME_OUT);
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, []);
+
+  const cancelTimeout = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  };
 
   const fetchData = async (query_topic, category) => {
     try {
@@ -56,6 +77,7 @@ const WaitingPage = () => {
       const jsonData = await networkManager.getTopicAnalysis(category, query_topic);
       console.log('Data fetched:', jsonData);
       setFetchComplete(true)
+      cancelTimeout();
 
       // Check if the response contains an error
       if (jsonData.error) { 
@@ -71,12 +93,26 @@ const WaitingPage = () => {
 
     } catch (err) {
       console.error('Error fetching data:', err);
+      cancelTimeout();
       showErrorDialog('Something went wrong. Please check your connection and try again.');
     }
   };
 
   const openDetailPageCurrentTab = (organization, category) => {
     localStorage.setItem(`categoryData`, category);
+
+    // Leadership has its own page, which reads the topic from the URL. The bare
+    // /organization route renders OrganizationDetailOverview, which is built
+    // around a lean/rating answer and cannot display a roster. ?id= points at
+    // the exact row that was just created.
+    if (category === 'Leadership Demographics') {
+      const topicParam = encodeURIComponent(organization?.topic ?? '');
+      const idParam =
+        organization?.id != null ? `?id=${encodeURIComponent(organization.id)}` : '';
+      navigate(`/organization/leadership_demographics/${topicParam}${idParam}`);
+      return;
+    }
+
     navigate('/organization', { 
       state: { 
         ...organization, 

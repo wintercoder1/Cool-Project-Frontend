@@ -1,7 +1,7 @@
 class NetworkManager {
   constructor() {
-    this.baseURL = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000';
-    // this.baseURL = 'http://127.0.0.1:8000';
+    // this.baseURL = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000';
+    this.baseURL = 'http://127.0.0.1:8000';
 
     this.defaultOptions = {
       headers: {
@@ -134,6 +134,7 @@ class NetworkManager {
       'Immigration Support': '/getCachedWokenessScores',
       'Technology Innovation': '/getCachedWokenessScores',
       'Financial Contributions': '/getCachedFinancialContributions',
+      'Leadership Demographics': '/getCachedLeadership',
     };
 
     const endpoint = endpoints[category];
@@ -161,6 +162,12 @@ class NetworkManager {
     }
 
     let orderByParam = orderBy;
+
+    // Leadership has no rating, so it keeps its own allowlist: name, topic,
+    // time, id, size (officer count). 'number' would sort by name silently.
+    if (category === 'Leadership Demographics') {
+      orderByParam = normalizedOrderBy === 'size' ? 'size' : 'name';
+    }
 
     if (category === 'Political Leaning' && orderBy === 'number') {
       orderByParam = 'political_number';
@@ -198,17 +205,34 @@ class NetworkManager {
 
     console.log('The request:', url);
 
-    return this.makeRequest(url);
+    const data = await this.makeRequest(url);
+
+    // The cached-list endpoints disagree on shape: the older ones return a bare
+    // array, while /getCachedLeadership returns
+    // { success, results, total_count, limit, offset }. Callers map over the
+    // rows, so unwrap here rather than making every list view know which
+    // endpoint it came from. (total_count is dropped: pagination takes its
+    // count from getNumberOfTopics, and mixing the two sources would be worse
+    // than the small disagreement between them.)
+    if (data && !Array.isArray(data) && Array.isArray(data.results)) {
+      return data.results;
+    }
+
+    return data;
   }
 
   /**
    * Get total number of items for a category.
    */
   async getCategoryItemCount(category) {
-    const categoryUpper = category.toUpperCase();
+    // getNumberOfTopics parses strictly now: an unrecognised value is a 400,
+    // not a silent fall-through to political leaning. Uppercasing the display
+    // label happens to work for the score categories (the parser tolerates
+    // spaces) but not for ones whose label differs from their query type.
+    const queryType = this.categoryToApiKey(category) ?? category.toUpperCase();
 
     const url = `${this.baseURL}/getNumberOfTopics?queryType=${encodeURIComponent(
-      categoryUpper
+      queryType
     )}`;
 
     const data = await this.makeRequest(url);
@@ -307,6 +331,11 @@ class NetworkManager {
       'Immigration Support': 'IMMIGRATION_SUPPORT',
       'Technology Innovation': 'TECHNOLOGY_INNOVATION',
       'Financial Contributions': 'FINANCIAL_CONTRIBUTIONS',
+      // The backend's query type is LEADERSHIP; the UI label is longer. Without
+      // this mapping the count call sent "LEADERSHIP DEMOGRAPHICS", which the
+      // API now rejects with a 400 rather than silently reading political
+      // leaning as it used to.
+      'Leadership Demographics': 'LEADERSHIP',
     };
 
     return categoryMap[category] || null;
@@ -445,6 +474,7 @@ class NetworkManager {
         this.getTechnologyInnovationScore(cleanTopic),
       'Financial Contributions': () =>
         this.getOrCreateFinancialContributionsOverview(cleanTopic),
+      'Leadership Demographics': () => this.getLeadership(cleanTopic),
     };
 
     const method = categoryMethods[category];
@@ -470,6 +500,22 @@ class NetworkManager {
       throw new Error(`getPersistedAnswerById failed: ${response.status}`);
     }
     return await response.json(); // { success, answer }
+  }
+
+  /**
+   * C-suite roster plus aggregate demographics for one company.
+   *
+   * Per-topic only: there is no getCachedLeadership* list endpoint, and passing
+   * LEADERSHIP to getNumberOfTopics/searchPersistedAnswers silently returns
+   * POLITICAL_LEANING rows (CoreLogic._parseQueryTypeStr defaults rather than
+   * rejecting), so neither can back this category.
+   *
+   * A cache miss runs the full SEC/Wikidata lookup, so this can be slow.
+   */
+  async getLeadership(topic, { overrideCache } = {}) {
+    const base = `${this.baseURL}/getLeadership/${encodeURIComponent(topic)}`;
+    const url = overrideCache ? `${base}?overrideCache=true` : base;
+    return this.makeRequest(url);
   }
 
   // ---------------------------------------------------------------------------

@@ -9,12 +9,14 @@ const CategoryPrompt = ({ category }) => {
         return "What organization do you want to find the wokeness score of?";
       case 'Environmental Impact':
         return "What organization do you want to find the environmental impact score of?";
-      case 'Immigration':
+      case 'Immigration Support':
         return "What organization do you want to find the immigration friendliness score of?";
       case 'Technology Innovation':
         return "What organization do you want to find the technology innovation score of?";
       case 'Financial Contributions':
         return "What organization do you want to find the financial contribution information for?";
+      case 'Leadership Demographics':
+        return "What organization do you want to find the leadership demographics of?";
       default:
         return "What organization would you like to search for?";
     }
