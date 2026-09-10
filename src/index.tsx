@@ -22,6 +22,7 @@ import Login from '@/Login.tsx'
 import Signup from '@/Signup.tsx'
 import ProCheckout from '@/ProCheckout.tsx'
 import LeadershipDetail from '@/LeadershipDetail.tsx'
+import About from '@/About.tsx'
 import Favorites from '@/Favorites.tsx'
 import NotFound from '@/NotFound.tsx'
 import { PRO_ENABLED } from '@/config'
@@ -113,6 +114,9 @@ export default function MainRouter() {
                element={<Login />} />
         <Route path="/signup/*"
                element={<Signup />} />
+
+        <Route path="/about"
+               element={<About />} />
 
         {/* Saved answers. Registered for everyone; the page itself prompts for
             sign-in, so the nav link works signed-out. */}

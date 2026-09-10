@@ -57,17 +57,25 @@ export default function AuthNavBar({ className = '' }: AuthNavBarProps) {
           a gap. 36px = 24px of content + the 12px of py-1.5: box-sizing is
           border-box here, so min-height has to include the padding. */}
       <div className="flex justify-between items-center gap-1.5 px-8 py-1.5 min-h-[36px]">
-        {/* Left: Favorites. Shown to everyone rather than only when signed in,
-            so the feature is discoverable — /favorites prompts for sign-in
-            itself. Keeping it always-present also stops the row's contents
-            shifting sideways as the session resolves. */}
-        <Link
-          to="/favorites"
-          onClick={handleFavoritesClick}
-          className="text-xs font-medium text-gray-700 hover:text-black hover:bg-gray-200 transition-colors px-2.5 py-1 rounded-md"
-        >
-          Favorites
-        </Link>
+        {/* Left: About, then Favorites. Both shown to everyone rather than only
+            when signed in, so the features are discoverable — /favorites
+            prompts for sign-in itself. Keeping them always-present also stops
+            the row's contents shifting sideways as the session resolves. */}
+        <div className="flex items-center gap-1.5">
+          <Link
+            to="/about"
+            className="text-xs font-medium text-gray-700 hover:text-black hover:bg-gray-200 transition-colors px-2.5 py-1 rounded-md"
+          >
+            About
+          </Link>
+          <Link
+            to="/favorites"
+            onClick={handleFavoritesClick}
+            className="text-xs font-medium text-gray-700 hover:text-black hover:bg-gray-200 transition-colors px-2.5 py-1 rounded-md"
+          >
+            Favorites
+          </Link>
+        </div>
 
         {/* Right: auth controls. */}
         <div className="flex items-center gap-1.5">
