@@ -9,7 +9,11 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-xl border bg-card text-card-foreground shadow",
+      // rounded-lg (= var(--radius), 0.5rem/8px) to match the Chrome
+      // extension's popup card, which uses border-radius: 8px. rounded-xl was
+      // Tailwind's un-overridden 12px and made the site's card visibly rounder
+      // than the extension showing the same answer.
+      "rounded-lg border bg-card text-card-foreground shadow",
       className
     )}
     {...props}
