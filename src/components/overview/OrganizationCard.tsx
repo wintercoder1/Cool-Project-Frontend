@@ -33,6 +33,9 @@ const OrganizationCard = ({
   onCancel = () => {},
   isSaving = false,
   saveError = null as string | null,
+  // Rendered instead of the write-up when the API reports no contributions
+  // data to show. See lib/financialContributions.
+  unavailableNotice = null as React.ReactNode,
 }) => {
   const shouldHideContent = isLoading || (
     categoryData === 'Financial Contributions' &&
@@ -87,6 +90,8 @@ const OrganizationCard = ({
                               </button>
                             </div>
                           </div>
+                        ) : unavailableNotice ? (
+                          unavailableNotice
                         ) : (
                           <ContextSection context={context} />
                         )}

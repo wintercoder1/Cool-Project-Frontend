@@ -12,6 +12,8 @@ import Footer from './components/Footer';
 import { useOrganizationData } from './hooks/useOrganizationData';
 import { useFinancialData } from './hooks/useFinancialData';
 import { useChartData } from './hooks/useChartData';
+import { readContributionsAbsence } from './lib/financialContributions';
+import ContributionsUnavailable from './components/overview/ContributionsUnavailable';
 
 const CATEGORY_SLUG_MAP: Record<string, string> = {
   'political_leaning': 'Political Leaning',
@@ -200,7 +202,8 @@ const OrganizationDetailOverview = () => {
     committee_id,
     committee_name,
     context: hookContext,
-    // @ts-expect-error
+    // Now consumed (see contributionsAbsence below); it was previously unused,
+    // which is what the @ts-expect-error here was suppressing.
     financialOverviewData,
     isLoadingFinancialOverview,
     financialOverviewError,
@@ -208,6 +211,14 @@ const OrganizationDetailOverview = () => {
   } = useFinancialData(effectiveCategoryData, effectiveTopic, effectiveOrgData);
 
   const displayContext = savedContext ?? hookContext;
+
+  // The API now reports "no committee" as a normal answer (error: false plus a
+  // committee_status), so nothing upstream treats it as a failure and the card
+  // would otherwise render an empty write-up. Read whichever payload is live.
+  const contributionsAbsence =
+    effectiveCategoryData === 'Financial Contributions'
+      ? readContributionsAbsence(financialOverviewData ?? effectiveOrgData)
+      : null;
 
   const handleStartEdit = () => {
     setEditedContext(displayContext || '');
@@ -291,6 +302,11 @@ const OrganizationDetailOverview = () => {
             organizationData={effectiveOrgData}
             categoryData={effectiveCategoryData}
             context={displayContext}
+            unavailableNotice={
+              contributionsAbsence ? (
+                <ContributionsUnavailable absence={contributionsAbsence} />
+              ) : null
+            }
             isFinancialData={isFinancialData}
             committee_id={committee_id}
             committee_name={committee_name}
