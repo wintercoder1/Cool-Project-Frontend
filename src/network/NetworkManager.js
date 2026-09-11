@@ -288,6 +288,22 @@ class NetworkManager {
     return this.makeNormalizedRequest(url);
   }
 
+  /**
+   * Party split only, straight from the knowledge graph — ~0.15s, no row fetch.
+   *
+   * Used to resolve what a bare /organization/financial_contributions/<topic>
+   * URL should do, because one call answers three questions: whether a full
+   * answer exists (`full_answer_available`), its id (`id`), and whether there
+   * is a committee at all (`committee_status`). That last one matters: a
+   * company with no PAC has nothing to generate.
+   */
+  async getFinancialContributionsPercentContributionsOnly(topic) {
+    const url = `${this.baseURL}/getFinancialContributionsPercentContributionsOnly/${encodeURIComponent(
+      topic
+    )}`;
+    return this.makeRequest(url);
+  }
+
   async getFinancialContributionsOverviewTextOnly(topic) {
     const url = `${this.baseURL}/getFinancialContributionsOverviewTextOnly/${encodeURIComponent(
       topic

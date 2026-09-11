@@ -9,6 +9,7 @@ const CATEGORY_TO_SLUG: Record<string, string> = {
   'Immigration Support': 'immigration_support',
   'Technology Innovation': 'technology_innovation',
   'Financial Contributions': 'financial_contributions',
+  'Leadership Demographics': 'leadership_demographics',
 };
 
 const getRatingLabel = (rec: any, categoryData: string): string | null => {
@@ -26,7 +27,18 @@ const RecommendationCard = ({ rec, categoryData }: { rec: any; categoryData: str
     const slug = CATEGORY_TO_SLUG[categoryData] ?? categoryData.toLowerCase().replace(/\s+/g, '_');
     localStorage.setItem('categoryData', categoryData);
     localStorage.setItem('organizationData', JSON.stringify(rec));
-    window.open(`/organization/${slug}/${encodeURIComponent(rec.topic)}`, '_blank', 'noreferrer');
+
+    // Carry the row id. Without it the new tab had only the localStorage write
+    // above to go on, and since every tab shares one key, opening a second
+    // recommendation overwrote what the first was still reading — so a tab
+    // could land on the wrong answer, or on none at all. The id makes the
+    // destination resolve itself instead of trusting shared browser state.
+    const idParam = rec?.id != null ? `?id=${encodeURIComponent(rec.id)}` : '';
+    window.open(
+      `/organization/${slug}/${encodeURIComponent(rec.topic)}${idParam}`,
+      '_blank',
+      'noreferrer'
+    );
   };
 
   const ratingLabel = getRatingLabel(rec, categoryData);
