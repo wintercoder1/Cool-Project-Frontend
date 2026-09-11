@@ -120,7 +120,16 @@ const OrganizationDetailOverview = () => {
     topicIsMismatch &&
     effectiveCategoryData !== 'Financial Contributions';
 
-  const needsFetch = needsIdFetch || needsTopicFetch;
+  // Runs once per topic. Without the ref the generate branch could fire again
+  // on any re-render before its result lands.
+  const contributionsResolveDoneRef = useRef<string | null>(null);
+  const needsContributionsResolve =
+    !fetchedOrgData &&
+    !idFetchKey &&
+    effectiveCategoryData === 'Financial Contributions' &&
+    contributionsResolveDoneRef.current !== effectiveTopic;
+
+  const needsFetch = needsIdFetch || needsTopicFetch || needsContributionsResolve;
 
   // Set localStorage + document title from URL params
   useEffect(() => {
@@ -173,6 +182,59 @@ const OrganizationDetailOverview = () => {
         return;
       }
 
+      // Tier 1.5: a financial-contributions URL with no ?id=. This is how the
+      // Chrome extension links in when it only had the cheap preview, and how
+      // any hand-typed or shared URL arrives.
+      //
+      // Resolve it here rather than inferring intent from the missing id: one
+      // ~0.15s call answers all three questions at once — is there a committee
+      // at all, does a full answer exist, and what is its id. Trusting "no id
+      // means generate" would let any visitor trigger a multi-second
+      // generation, and would generate for companies that have no PAC to
+      // analyse in the first place.
+      if (needsContributionsResolve && effectiveTopic) {
+        contributionsResolveDoneRef.current = effectiveTopic;
+        setIsFetchingOrgData(true);
+        try {
+          const probe = await networkManager.getFinancialContributionsPercentContributionsOnly(
+            effectiveTopic
+          );
+
+          // No committee: nothing to generate. Hand the payload straight to the
+          // page so the absence notice renders with its message and citation.
+          if (readContributionsAbsence(probe)) {
+            if (!cancelled) setFetchedOrgData(probe);
+            return;
+          }
+
+          const fullId = parseId(probe?.id != null ? String(probe.id) : null);
+          if (probe?.full_answer_available && fullId != null) {
+            // A full answer exists after all — same authoritative path as ?id=.
+            const answer = await fetchAnswerById('FINANCIAL_CONTRIBUTIONS', fullId);
+            if (!cancelled && answer) {
+              setFetchedOrgData(answer);
+              localStorage.setItem('organizationData', JSON.stringify(answer));
+            }
+            return;
+          }
+
+          // Nothing cached: generate it. This is the slow path (~3s plus the
+          // model) and the only branch that should reach it.
+          const generated = await networkManager.getOrCreateFinancialContributionsOverview(
+            effectiveTopic
+          );
+          if (!cancelled && generated) {
+            setFetchedOrgData(generated);
+            localStorage.setItem('organizationData', JSON.stringify(generated));
+          }
+        } catch (err) {
+          console.error('Failed to resolve financial contributions for URL:', err);
+        } finally {
+          if (!cancelled) setIsFetchingOrgData(false);
+        }
+        return;
+      }
+
       // Tier 2: legacy topic-analysis fetch (no id in the URL).
       if (needsTopicFetch && effectiveCategoryData && effectiveTopic) {
         setIsFetchingOrgData(true);
@@ -193,6 +255,11 @@ const OrganizationDetailOverview = () => {
     run();
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // needsContributionsResolve is deliberately NOT a dependency. It is a latch
+    // derived from a ref that the effect sets before awaiting, so listing it
+    // here made the effect re-run the moment it flipped false — cancelling its
+    // own in-flight probe, so the result was discarded and the card rendered
+    // empty. The real inputs are the topic, category and id below.
   }, [idFetchKey, needsTopicFetch, queryType, urlId, effectiveCategoryData, effectiveTopic]);
 
   const effectiveOrgData = fetchedOrgData || organizationData;
@@ -215,9 +282,15 @@ const OrganizationDetailOverview = () => {
   // The API now reports "no committee" as a normal answer (error: false plus a
   // committee_status), so nothing upstream treats it as a failure and the card
   // would otherwise render an empty write-up. Read whichever payload is live.
+  // Check both payloads, rather than preferring one. The text-only endpoint
+  // the hook calls carries no committee_status by design (it makes no graph
+  // call), so `financialOverviewData ?? effectiveOrgData` let an absent payload
+  // mask a real absence sitting on the row — the card then rendered empty,
+  // with neither a write-up nor the notice explaining why there isn't one.
   const contributionsAbsence =
     effectiveCategoryData === 'Financial Contributions'
-      ? readContributionsAbsence(financialOverviewData ?? effectiveOrgData)
+      ? readContributionsAbsence(financialOverviewData) ??
+        readContributionsAbsence(effectiveOrgData)
       : null;
 
   const handleStartEdit = () => {
