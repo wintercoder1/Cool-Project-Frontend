@@ -6,6 +6,7 @@ import AuthNavBar from './components/AuthNavBar';
 import Footer from './components/Footer';
 import CategoryDropdown from './components/main/CategoryDropdown';
 import SearchBar from './components/main/SearchBar';
+import QuizPrompt from './components/main/QuizPrompt';
 import SortControls from './components/SortControls.js';
 import CompanyList from './components/main/CompanyList';
 import PaginationControls from './components/PaginationControls.js';
@@ -643,6 +644,8 @@ const MainPage = () => {
                 />
               )}
             </div>
+
+            {!isSearchMode && <QuizPrompt />}
 
             <div className="py-0 bg-white"></div>
 

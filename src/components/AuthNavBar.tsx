@@ -49,24 +49,44 @@ export default function AuthNavBar({ className = '' }: AuthNavBarProps) {
       {/* px-8 matches the page gutter on the header row above, so it stays put
           while the bar's own vertical rhythm scales down.
 
-          min-h-[36px] keeps this row — and so the whole 39px bar — exactly the
-          same height in all three auth states. <Show> renders nothing while
-          Clerk resolves the session, so without it the bar would collapse on
-          load and then pop back; the overview pages position their content
-          against a fixed-height bar (see PageHeader.tsx), so that would flash
-          a gap. 36px = 24px of content + the 12px of py-1.5: box-sizing is
-          border-box here, so min-height has to include the padding. */}
-      <div className="flex justify-between items-center gap-1.5 px-8 py-1.5 min-h-[36px]">
-        {/* Left: About, then Favorites. Both shown to everyone rather than only
-            when signed in, so the features are discoverable — /favorites
-            prompts for sign-in itself. Keeping them always-present also stops
-            the row's contents shifting sideways as the session resolves. */}
-        <div className="flex items-center gap-1.5">
+          Below sm the bar becomes two levels — nav on top, auth underneath —
+          rather than one row that has to fit five items. Five of them want
+          ~379px and a 375px screen leaves 311px inside that gutter, so on one
+          line "Log in" and "Sign up" wrapped mid-label and the bar grew to an
+          accidental 55px. Two deliberate levels read better than one crowded
+          one, and they leave room for a fourth nav item later.
+
+          The min-heights pin every level in all three auth states. <Show>
+          renders nothing while Clerk resolves the session, so without them the
+          auth level would collapse on load and then pop back — and because the
+          overview pages position their content against this bar's height (see
+          PageHeader.tsx), that would drag their whole content band with it.
+          24px is one link's line-height plus its py-1; 36px adds the py-1.5
+          around it, since box-sizing is border-box here. */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1.5 px-8 py-1.5 min-h-[36px]">
+        {/* Left: About, Quiz, Favorites. All three shown to everyone rather
+            than only when signed in, so the features are discoverable —
+            /favorites prompts for sign-in itself and the quiz needs no account
+            at all. Keeping them always-present also stops the row's contents
+            shifting sideways as the session resolves.
+
+            Quiz sits in the middle so About and Favorites keep the positions
+            people already know. This strip is deliberately recessive, though,
+            so it is the returning route rather than the discovery one — the
+            prompt above the list on the main page is what actually invites a
+            first run. */}
+        <div className="flex items-center gap-1.5 min-h-[24px]">
           <Link
             to="/about"
             className="text-xs font-medium text-gray-700 hover:text-black hover:bg-gray-200 transition-colors px-2.5 py-1 rounded-md"
           >
             About
+          </Link>
+          <Link
+            to="/quiz"
+            className="text-xs font-medium text-gray-700 hover:text-black hover:bg-gray-200 transition-colors px-2.5 py-1 rounded-md"
+          >
+            Quiz
           </Link>
           <Link
             to="/favorites"
@@ -77,8 +97,9 @@ export default function AuthNavBar({ className = '' }: AuthNavBarProps) {
           </Link>
         </div>
 
-        {/* Right: auth controls. */}
-        <div className="flex items-center gap-1.5">
+        {/* Auth controls: the lower level on a phone, the right-hand end
+            of the row from sm up. */}
+        <div className="flex items-center gap-1.5 min-h-[24px]">
         <Show when="signed-out">
           <Link
             to="/login"

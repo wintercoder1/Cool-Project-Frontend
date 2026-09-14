@@ -23,6 +23,8 @@ import Signup from '@/Signup.tsx'
 import ProCheckout from '@/ProCheckout.tsx'
 import LeadershipDetail from '@/LeadershipDetail.tsx'
 import About from '@/About.tsx'
+import Quiz from '@/Quiz.tsx'
+import QuizResult from '@/QuizResult.tsx'
 import Favorites from '@/Favorites.tsx'
 import NotFound from '@/NotFound.tsx'
 import { PRO_ENABLED } from '@/config'
@@ -117,6 +119,15 @@ export default function MainRouter() {
 
         <Route path="/about"
                element={<About />} />
+
+        {/* Compass Match. Anonymous by design — the quiz endpoints take no
+            auth, and nothing about a run is stored server-side, so there is
+            nothing to gate. /quiz/result re-scores the answers carried in the
+            ?a= token rather than looking a saved result up. */}
+        <Route path="/quiz"
+               element={<Quiz />} />
+        <Route path="/quiz/result"
+               element={<QuizResult />} />
 
         {/* Saved answers. Registered for everyone; the page itself prompts for
             sign-in, so the nav link works signed-out. */}

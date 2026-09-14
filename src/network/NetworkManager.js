@@ -584,6 +584,56 @@ class NetworkManager {
     const url = `${this.baseURL}/getFavorites?${params.toString()}`;
     return this.makeRequest(url, { headers: this.authHeaders(token) });
   }
+
+  // ---------------------------------------------------------------------------
+  // Compass Match — the values quiz
+  //
+  // All three are anonymous and stay that way: no Authorization header, and
+  // nothing about a run is stored server-side. The share token IS the answers,
+  // compressed — there is no record to look up. Shapes live in src/lib/quiz.ts.
+  // ---------------------------------------------------------------------------
+
+  /**
+   * The questions, plus a live company count per shopping category.
+   *
+   * Fetch per session rather than caching across releases: quiz_version and the
+   * category counts both move server-side, and a stale definition posted at a
+   * retuned scorer is refused with a 400 rather than silently mis-scored.
+   */
+  async getQuizDefinition() {
+    return this.makeRequest(`${this.baseURL}/getQuizDefinition`);
+  }
+
+  /**
+   * Answers in, ranking out.
+   *
+   * POST with the answers in the body rather than a query string on purpose —
+   * a primary run then keeps someone's stated political positions out of
+   * server logs and browser history. The share link is the one place they
+   * necessarily become visible, which is what share_warning is for.
+   *
+   * Send answers, never a computed score. Scoring stays on the server where it
+   * is versioned and tested; there is no endpoint that accepts a match value.
+   */
+  async submitQuiz(submission) {
+    return this.makeRequest(`${this.baseURL}/submitQuiz`, {
+      method: 'POST',
+      body: JSON.stringify(submission),
+    });
+  }
+
+  /**
+   * Re-scores a shared link. Same response shape as submitQuiz.
+   *
+   * The result is recomputed rather than retrieved, and reproduces the original
+   * ranking because as_of is pinned inside the token itself.
+   */
+  async getQuizResult(shareToken) {
+    const url = `${this.baseURL}/getQuizResult?a=${encodeURIComponent(
+      shareToken
+    )}`;
+    return this.makeRequest(url);
+  }
 }
 
 const networkManager = new NetworkManager();

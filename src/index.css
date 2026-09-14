@@ -52,12 +52,28 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
+/*
+ * Both of the rules that used to live here came from the Vite React starter
+ * and were never removed. They applied to every <button> in the app.
+ *
+ * `button:hover { border-color: #646cff }` turned the border of every button
+ * indigo on hover, including the quiz's unselected answers, which otherwise
+ * carry border-gray-300 and set no hover border of their own.
+ *
+ * `button:focus { outline: 4px auto -webkit-focus-ring-color }` was the bigger
+ * problem. -webkit-focus-ring-color resolves to the viewer's macOS accent
+ * colour, so the ring was orange, or pink, or whatever that person had chosen
+ * — untestable, and never the app's palette. Worse, it was on :focus rather
+ * than :focus-visible, so it fired on mouse clicks and left a thick ring
+ * sitting on the last answer someone tapped.
+ *
+ * Keyboard users still need a visible ring, so this keeps one — in the app's
+ * accent blue, on :focus-visible only, which is what browsers use for keyboard
+ * focus and skip for pointer clicks.
+ */
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
 }
 
 @media (prefers-color-scheme: light) {
@@ -135,5 +151,25 @@ button:focus-visible {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/*
+ * Where the overview pages park their absolutely positioned content.
+ *
+ * A CSS variable rather than a number in JS because the value depends on a
+ * breakpoint: AuthNavBar is one 39px row from sm up, but two levels (69px) on a
+ * phone, where five items will not fit a single line. The four pages that
+ * consume this pass it straight into style={{ top }}, so making it responsive
+ * here keeps all of them unchanged — see PAGE_CONTENT_TOP in
+ * components/overview/PageHeader.tsx for the arithmetic.
+ */
+:root {
+  --page-content-top: 106px;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --page-content-top: 76px;
   }
 }

@@ -4,15 +4,22 @@ import AuthNavBar from "../AuthNavBar";
 // The logo floats above the page and each consumer absolutely positions its own
 // content below the header, so the two have to be kept in sync by hand.
 // The logo sits at top-4 (16px) and is 44px tall, so it ends at 60px; the auth
-// row starts just below it and measures 39px tall (1px top rule + 36px row +
-// 2px bottom rule), so it ends at 108px. AuthNavBar pins that row height so it
-// stays 39px whether signed in, signed out, or still loading.
+// bar starts just below it. AuthNavBar pins its own height so it does not move
+// between signed in, signed out, and still loading.
 const AUTH_BAR_TOP = 69;
 
 // Where consumers should park their absolutely positioned content. Their first
 // child carries mt-8 (32px), so this lands the gray band flush under the auth
-// row at 108px.
-export const PAGE_CONTENT_TOP = '76px';
+// bar.
+//
+// It is a CSS variable because the auth bar is not one height: from sm up it is
+// a single 39px row and ends at 108px, so content goes at 76px. On a phone it
+// is two levels (69px: 1px rule + 24px + 6px gap + 24px + 12px padding + 2px
+// rule) and ends at 138px, so content goes at 106px. A constant here would put
+// the content band underneath the bar on every phone. The value lives in
+// index.css, which is the only place that can answer a media query; consumers
+// pass it into style={{ top }} unchanged.
+export const PAGE_CONTENT_TOP = 'var(--page-content-top)';
 
 const PageHeader = ({ onLogoClick }) => {
     return (
