@@ -48,18 +48,18 @@ export default function ScopeScreen({
                   !option.available
                     ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
                     : selected
-                      ? 'bg-blue-600 text-white border-blue-600 font-medium'
+                      ? 'bg-brand text-white border-brand font-medium'
                       : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
               >
                 <span className="block">{option.label}</span>
-                {/* blue-50 rather than blue-100 on the selected card: at 12px
-                    this is normal-size text, and blue-100 on blue-600 comes to
-                    4.24:1, under the 4.5:1 AA floor. blue-50 clears it at
-                    4.75:1 and still reads as secondary. */}
+                {/* brand-tint on the selected card: at 12px this counts as
+                    normal-size text, so it needs 4.5:1 against the fill behind
+                    it. brand-tint on brand is 5.57:1 and still reads as
+                    secondary; a mid tint would look right and fail. */}
                 <span
                   className={`block text-xs mt-0.5 ${
-                    selected && option.available ? 'text-blue-50' : 'text-gray-500'
+                    selected && option.available ? 'text-brand-tint' : 'text-gray-500'
                   }`}
                 >
                   {option.available
@@ -102,7 +102,7 @@ export default function ScopeScreen({
                   blocked
                     ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
                     : selected
-                      ? 'bg-blue-600 text-white border-blue-600 font-medium'
+                      ? 'bg-brand text-white border-brand font-medium'
                       : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
               >
@@ -139,7 +139,7 @@ export default function ScopeScreen({
                 onClick={() => onChangeRequireVerified(option.value)}
                 className={`w-full text-left text-sm px-4 py-3 rounded-md border transition-colors ${
                   selected
-                    ? 'bg-blue-600 text-white border-blue-600 font-medium'
+                    ? 'bg-brand text-white border-brand font-medium'
                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
               >

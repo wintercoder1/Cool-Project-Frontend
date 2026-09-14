@@ -109,7 +109,7 @@ export default function AuthNavBar({ className = '' }: AuthNavBarProps) {
           </Link>
           <Link
             to="/signup"
-            className="text-xs font-medium text-white bg-black hover:bg-blue-700 transition-colors px-3 py-1 rounded-md"
+            className="text-xs font-medium text-white bg-black hover:bg-brand transition-colors px-3 py-1 rounded-md"
           >
             Sign up
           </Link>

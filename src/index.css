@@ -35,7 +35,7 @@
  */
 a {
   font-weight: 500;
-  color: #2563eb;
+  color: #0369a1;
   text-decoration: inherit;
 }
 
@@ -85,7 +85,7 @@ button {
  * focus and skip for pointer clicks.
  */
 button:focus-visible {
-  outline: 2px solid #2563eb;
+  outline: 2px solid #0369a1;
   outline-offset: 2px;
 }
 

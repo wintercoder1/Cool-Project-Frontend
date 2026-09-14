@@ -114,7 +114,7 @@ export default function Favorites() {
               </p>
               <Link
                 to="/"
-                className="inline-block mt-4 bg-black text-white font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
+                className="inline-block mt-4 bg-black text-white font-semibold px-5 py-2.5 rounded-lg hover:bg-brand transition-colors"
               >
                 Browse organizations
               </Link>

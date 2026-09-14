@@ -176,7 +176,20 @@ export default function Quiz() {
     }
   };
 
-  const handleRetake = () => {
+  // "Change an answer" after an empty category. The answers are kept and the
+  // quiz reopens on the last screen, which is where the dealbreakers and the
+  // verification setting live — the only things that can empty a category, and
+  // so the only things worth changing. Wiping the run instead would make
+  // someone re-enter five weights and their directions to flip one toggle,
+  // and would break the promise the button's own label makes.
+  const handleEditAnswers = () => {
+    setResult(null);
+    setSubmitErrors([]);
+    setStep(2);
+    window.scrollTo({ top: 0 });
+  };
+
+  const handleRestart = () => {
     setAnswers(emptyAnswers());
     setResult(null);
     setSubmitErrors([]);
@@ -202,7 +215,7 @@ export default function Quiz() {
           <button
             type="button"
             onClick={loadDefinition}
-            className="mt-4 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
+            className="mt-4 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-brand transition-colors"
           >
             Try again
           </button>
@@ -228,7 +241,11 @@ export default function Quiz() {
   if (result) {
     return (
       <QuizLayout>
-        <QuizResults result={result} onRetake={handleRetake} />
+        <QuizResults
+          result={result}
+          onEditAnswers={handleEditAnswers}
+          onRestart={handleRestart}
+        />
       </QuizLayout>
     );
   }
@@ -296,7 +313,7 @@ export default function Quiz() {
               type="button"
               onClick={() => setStep((current) => current + 1)}
               disabled={!canAdvance}
-              className="bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-brand transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               Next
             </button>
@@ -305,7 +322,7 @@ export default function Quiz() {
               type="button"
               onClick={handleSubmit}
               disabled={!canAdvance || submitting}
-              className="bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-brand transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               {submitting ? 'Scoring…' : 'See my matches'}
             </button>

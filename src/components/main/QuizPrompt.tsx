@@ -26,7 +26,7 @@ export default function QuizPrompt() {
 
       <Link
         to="/quiz"
-        className="flex-shrink-0 self-start sm:self-auto bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
+        className="flex-shrink-0 self-start sm:self-auto bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-brand transition-colors"
       >
         Take the quiz
       </Link>

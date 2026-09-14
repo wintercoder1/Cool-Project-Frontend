@@ -10,9 +10,16 @@ import {
 
 interface QuizResultsProps {
   result: QuizResultResponse;
-  /** Offered wherever the results suggest changing an answer would help. */
-  onRetake: () => void;
-  retakeLabel?: string;
+  /**
+   * Back into the quiz with the existing answers intact, landing on the screen
+   * that holds the rules. Kept separate from onRestart because the two are
+   * different promises: "Change an answer" says the answers still exist.
+   */
+  onEditAnswers: () => void;
+  editLabel?: string;
+  /** Clear everything and begin again from the first screen. */
+  onRestart: () => void;
+  restartLabel?: string;
 }
 
 /**
@@ -28,10 +35,12 @@ const companyPagePath = (topic: string): string =>
 
 function CategoryBlock({
   categoryResult,
-  onRetake,
+  onEditAnswers,
+  editLabel,
 }: {
   categoryResult: QuizCategoryResult;
-  onRetake: () => void;
+  onEditAnswers: () => void;
+  editLabel: string;
 }) {
   const { recommendations, alternatives, excluded } = categoryResult;
   const nothingRated = Boolean(categoryResult.nothing_rated);
@@ -81,7 +90,7 @@ function CategoryBlock({
       )}
 
       {!nothingRated && categoryResult.all_low_confidence && (
-        <p className="text-sm text-blue-900 bg-blue-50 rounded-md px-3 py-2 mt-4">
+        <p className="text-sm text-brand-deep bg-brand-tint rounded-md px-3 py-2 mt-4">
           Everything below is provisional: we hold only part of what you asked
           about for each of these.
         </p>
@@ -96,10 +105,10 @@ function CategoryBlock({
           </p>
           <button
             type="button"
-            onClick={onRetake}
-            className="mt-4 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
+            onClick={onEditAnswers}
+            className="mt-4 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-brand transition-colors"
           >
-            Change an answer
+            {editLabel}
           </button>
         </div>
       ) : (
@@ -122,9 +131,13 @@ function CategoryBlock({
           </h3>
           <div className="mt-2 divide-y divide-gray-200">
             {alternatives.map((alternative) => (
+              // New tab, for the same reason as the evidence links: the
+              // ranking only exists in this tab's React state.
               <Link
                 key={alternative.normalized_topic_name}
                 to={companyPagePath(alternative.topic)}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center justify-between gap-3 py-2 hover:bg-gray-50 transition-colors px-1 -mx-1 rounded"
               >
                 <span className="text-sm text-gray-900 truncate">
@@ -152,8 +165,10 @@ function CategoryBlock({
  */
 export default function QuizResults({
   result,
-  onRetake,
-  retakeLabel = 'Start over',
+  onEditAnswers,
+  editLabel = 'Change an answer',
+  onRestart,
+  restartLabel = 'Start over',
 }: QuizResultsProps) {
   return (
     <div className="space-y-6">
@@ -168,7 +183,8 @@ export default function QuizResults({
         <CategoryBlock
           key={categoryResult.category}
           categoryResult={categoryResult}
-          onRetake={onRetake}
+          onEditAnswers={onEditAnswers}
+          editLabel={editLabel}
         />
       ))}
 
@@ -188,10 +204,10 @@ export default function QuizResults({
       <div className="text-center">
         <button
           type="button"
-          onClick={onRetake}
+          onClick={onRestart}
           className="text-sm font-medium text-gray-700 hover:text-black underline underline-offset-2"
         >
-          {retakeLabel}
+          {restartLabel}
         </button>
       </div>
     </div>

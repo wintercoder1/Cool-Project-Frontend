@@ -100,9 +100,9 @@ export default function RecommendationCard({
           half of what the reader asked about — a gap in our data, not a
           finding about the company — and a warning colour would attach the
           doubt to the company instead of to us. The tint is far enough from
-          the solid blue-600 selection state to never read as one. */}
+          the solid `brand` selection state to never read as one. */}
       {recommendation.low_confidence && recommendation.confidence_note && (
-        <p className="text-xs text-blue-900 bg-blue-50 rounded-md px-3 py-2 mt-3">
+        <p className="text-xs text-brand-deep bg-brand-tint rounded-md px-3 py-2 mt-3">
           {recommendation.confidence_note}
         </p>
       )}
@@ -180,7 +180,16 @@ export default function RecommendationCard({
                       <div className="flex flex-wrap gap-3 mt-1.5">
                         {/* answerDetailPath appends ?id=, so this opens the
                             exact answer row the rating came from rather than
-                            whatever the topic-matching fallback finds. */}
+                            whatever the topic-matching fallback finds.
+
+                            New tab, matching how the rest of the app opens a
+                            detail page (MainPage, RecommendationsSection). It
+                            also protects the results: the run lives in React
+                            state and cannot be rebuilt from the URL, because
+                            the answers are deliberately kept out of history —
+                            so navigating away in this tab loses the ranking,
+                            and the browser's Back button cannot bring it
+                            back. */}
                         {item.answer_id != null && item.query_type && (
                           <Link
                             to={answerDetailPath(
@@ -188,6 +197,8 @@ export default function RecommendationCard({
                               recommendation.topic,
                               item.answer_id
                             )}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-xs font-medium text-gray-700 hover:text-black underline underline-offset-2"
                           >
                             Read the full answer

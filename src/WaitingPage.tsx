@@ -209,7 +209,7 @@ const ErrorModal = ({ isOpen, onClose, onGoBack, message }) => {
           <div className="flex justify-end">
             <Button
               onClick={onGoBack}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+              className="bg-blue-600 hover:bg-brand text-white px-4 py-2 rounded-md transition-colors"
             >
               Go back
             </Button>

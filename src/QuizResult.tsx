@@ -76,7 +76,7 @@ export default function QuizResult() {
           </div>
           <Link
             to="/quiz"
-            className="inline-block mt-4 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-block mt-4 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-brand transition-colors"
           >
             Take the quiz
           </Link>
@@ -96,8 +96,14 @@ export default function QuizResult() {
 
       <QuizResults
         result={result}
-        onRetake={() => navigate('/quiz')}
-        retakeLabel="Take the quiz yourself"
+        // A shared result carries someone else's answers, and the token is
+        // only decodable server-side, so there is nothing here to edit. Both
+        // actions start a fresh run, and the label says so rather than
+        // offering to change answers the viewer never gave.
+        onEditAnswers={() => navigate('/quiz')}
+        editLabel="Take the quiz yourself"
+        onRestart={() => navigate('/quiz')}
+        restartLabel="Take the quiz yourself"
       />
     </QuizLayout>
   );

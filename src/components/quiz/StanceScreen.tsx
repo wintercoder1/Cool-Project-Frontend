@@ -51,7 +51,7 @@ export default function StanceScreen({
                     onClick={() => onChange(question.key, option.value)}
                     className={`w-full text-left text-sm px-4 py-3 rounded-md border transition-colors ${
                       selected
-                        ? 'bg-blue-600 text-white border-blue-600 font-medium'
+                        ? 'bg-brand text-white border-brand font-medium'
                         : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                     }`}
                   >

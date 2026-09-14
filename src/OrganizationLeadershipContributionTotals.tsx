@@ -184,7 +184,7 @@ export default function OrganizationLeadershipContributionTotals() {
               {/* This feature is great but we will keep it out for now. */}
               {/* <button
                 onClick={handleExport}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-brand transition-colors"
               >
                 <Download size={20} />
                 Export CSV

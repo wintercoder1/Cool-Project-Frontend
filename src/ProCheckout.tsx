@@ -137,7 +137,7 @@ export default function ProCheckout() {
             <button
               onClick={handleCheckout}
               disabled={!paddleReady}
-              className="w-full mt-3 bg-black text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-3 bg-black text-white font-semibold py-3 rounded-lg hover:bg-brand transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {paddleReady ? 'Continue to payment →' : 'Loading…'}
             </button>

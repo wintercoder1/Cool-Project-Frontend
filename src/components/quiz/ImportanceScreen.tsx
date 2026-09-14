@@ -49,10 +49,9 @@ export default function ImportanceScreen({
                 // spending it on one meaning is what keeps it readable as a
                 // signal rather than decoration.
                 //
-                // blue-600 because the app already uses it for actions
-                // (WaitingPage, the leadership pages, every focus ring), and
-                // because it clears AA on white text at 5.17:1. blue-500 is
-                // 3.68:1 and would fail at this text size.
+                // The colour is the `brand` token (see tailwind.config.js),
+                // not a blue-* utility: Tailwind's blue ramp sits at hue 221+
+                // and reads violet once dark enough for white text.
                 return (
                   <button
                     key={option.value}
@@ -61,7 +60,7 @@ export default function ImportanceScreen({
                     onClick={() => onChange(issue.key, option.value)}
                     className={`text-xs font-medium px-3 py-2 rounded-md border transition-colors ${
                       selected
-                        ? 'bg-blue-600 text-white border-blue-600'
+                        ? 'bg-brand text-white border-brand'
                         : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                     }`}
                   >
