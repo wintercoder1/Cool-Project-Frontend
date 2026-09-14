@@ -17,7 +17,7 @@ export default function NotFound() {
 
         <Link
           to="/"
-          className="block w-full mt-6 bg-black text-white font-semibold py-3 rounded-lg hover:bg-gray-800 transition-colors"
+          className="block w-full mt-6 bg-black text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors"
         >
           Back to home
         </Link>

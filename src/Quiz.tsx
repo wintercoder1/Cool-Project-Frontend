@@ -202,7 +202,7 @@ export default function Quiz() {
           <button
             type="button"
             onClick={loadDefinition}
-            className="mt-4 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-gray-800 transition-colors"
+            className="mt-4 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Try again
           </button>
@@ -296,7 +296,7 @@ export default function Quiz() {
               type="button"
               onClick={() => setStep((current) => current + 1)}
               disabled={!canAdvance}
-              className="bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               Next
             </button>
@@ -305,7 +305,7 @@ export default function Quiz() {
               type="button"
               onClick={handleSubmit}
               disabled={!canAdvance || submitting}
-              className="bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-gray-800 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               {submitting ? 'Scoring…' : 'See my matches'}
             </button>

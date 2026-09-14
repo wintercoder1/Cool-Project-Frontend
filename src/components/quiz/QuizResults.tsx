@@ -97,7 +97,7 @@ function CategoryBlock({
           <button
             type="button"
             onClick={onRetake}
-            className="mt-4 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-gray-800 transition-colors"
+            className="mt-4 bg-black text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Change an answer
           </button>

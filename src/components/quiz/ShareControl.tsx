@@ -49,7 +49,7 @@ export default function ShareControl({ shareToken, shareWarning }: ShareControlP
         <button
           type="button"
           onClick={handleCopy}
-          className="text-xs font-medium text-white bg-black hover:bg-gray-800 transition-colors px-4 py-2 rounded-md flex-shrink-0"
+          className="text-xs font-medium text-white bg-black hover:bg-blue-700 transition-colors px-4 py-2 rounded-md flex-shrink-0"
         >
           {copied ? 'Copied' : 'Copy link'}
         </button>
