@@ -45,11 +45,12 @@ export default function About() {
             </p>
 
             <p>
-              {APP_NAME} also includes additional exploratory categories, such
-              as political leaning, environmental impact, DEI friendliness,
-              technology innovation, immigration support, and wokeness. These
-              are secondary analysis tools meant to add context, comparison,
-              and perspective.
+              {APP_NAME} also includes a values quiz that helps users compare
+              companies based on what matters most to them, along with
+              additional exploratory categories such as political leaning,
+              environmental impact, DEI friendliness, technology innovation,
+              immigration support, and wokeness. These are secondary analysis
+              tools meant to add context, comparison, and perspective.
             </p>
 
             <p>
