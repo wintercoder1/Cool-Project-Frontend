@@ -14,6 +14,23 @@ export default {
   		},
   		colors: {
 			'compass-logo-blue': '#3BB8E5',
+			// The site's accent. Black and white carry the design; this is the
+			// one accent hue, and it means "your choice" (a selected quiz
+			// answer) or "this button is live under your cursor".
+			//
+			// Hue 201, not Tailwind's blue-* family at 221-224. A saturated
+			// blue at that angle reads violet rather than blue once it is dark
+			// enough to carry white text, and darkening it makes that worse.
+			// 201 does not have the problem at any lightness.
+			//
+			// DEFAULT is sky-700, the lightest step on that hue that clears
+			// 4.5:1 against white text (5.93:1). sky-600 looks right and fails
+			// at 4.10:1 — do not reach for it.
+			brand: {
+				DEFAULT: '#0369a1',   // sky-700  · selections, primary-button hover
+				tint: '#f0f9ff',      // sky-50   · informational note background
+				deep: '#0c4a6e',      // sky-900  · informational note text
+			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
