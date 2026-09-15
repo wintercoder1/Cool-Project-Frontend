@@ -1,12 +1,18 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta name="google-adsense-account" content="ca-pub-2281569549846598">
+    <!-- Site-ownership verification for AdSense, publisher ca-pub-2088930087138715
+         — the same id as public/ads.txt. Safe to keep here: it is a
+         meta tag, it issues no request, and it must be present on every page
+         for verification to pass. The adsbygoogle.js <script> that used to sit
+         below it was moved into components/AdBanner.tsx, so it now loads only
+         on pages that actually render an ad — never on /quiz/*, whose URL
+         carries the reader's quiz answers. -->
+    <meta name="google-adsense-account" content="ca-pub-2088930087138715">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="src/assets/compass_logo.png" />
     <title>%VITE_APP_NAME%</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=%VITE_ADSENSE_CLIENT%" crossorigin="anonymous"></script>
   </head>
   <body>
     <div id="root"></div>

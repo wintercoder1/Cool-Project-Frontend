@@ -351,17 +351,32 @@ export const bandLabel = (
   return 'Not scored';
 };
 
-/** Tailwind classes per band. `null` (unscored) reads as neutral, not bad. */
+/**
+ * Tailwind classes per band. `null` (unscored) reads as neutral, not bad.
+ *
+ * Brand tints for the two bands that fit, grays for the two that do not — not
+ * a green-to-amber ramp. Two reasons beyond the palette. A traffic-light scale
+ * reads as a verdict on the company ("this one is bad"), when the band only
+ * ever describes fit against the priorities this particular reader entered.
+ * And colour is never the only channel here: the badge always carries its
+ * `band_text`, so "Strong match" and "Poor match" are legible to someone who
+ * cannot separate the hues at all.
+ *
+ * Weight descends within each hue (200 over 100, gray-200 over gray-100)
+ * rather than across the whole ramp — gray-200 is fractionally heavier against
+ * white than brand-100, so a single monotonic ramp is not available. Hue
+ * carries the fits/does-not split, which is the distinction that matters.
+ */
 export const bandClasses = (band: string | null | undefined): string => {
   switch (band) {
     case 'strong':
-      return 'bg-green-100 text-green-900';
+      return 'bg-brand-200 text-brand-900';
     case 'good':
-      return 'bg-emerald-50 text-emerald-900';
+      return 'bg-brand-100 text-brand-900';
     case 'mixed':
-      return 'bg-amber-100 text-amber-900';
-    case 'poor':
       return 'bg-gray-200 text-gray-700';
+    case 'poor':
+      return 'bg-gray-100 text-gray-600';
     default:
       return 'bg-gray-100 text-gray-600';
   }

@@ -102,7 +102,7 @@ export default function RecommendationCard({
           doubt to the company instead of to us. The tint is far enough from
           the solid `brand` selection state to never read as one. */}
       {recommendation.low_confidence && recommendation.confidence_note && (
-        <p className="text-xs text-brand-deep bg-brand-tint rounded-md px-3 py-2 mt-3">
+        <p className="text-xs text-brand-900 bg-brand-50 rounded-md px-3 py-2 mt-3">
           {recommendation.confidence_note}
         </p>
       )}

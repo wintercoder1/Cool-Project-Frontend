@@ -11,6 +11,7 @@ import SortControls from './components/SortControls.js';
 import CompanyList from './components/main/CompanyList';
 import PaginationControls from './components/PaginationControls.js';
 import FloatingActionButton from './components/main/FloatingActionButton';
+import AdBanner from './components/AdBanner';
 import { isDebugMode } from './lib/debugMode';
 
 // Zero-width and bidi control characters. Some stored topics begin with an
@@ -675,6 +676,7 @@ const MainPage = () => {
       )}
       {/* </div> */}
       <FloatingActionButton onClick={handleNewQueryClick} />
+      <AdBanner />
       <Footer />
     </div>
   );

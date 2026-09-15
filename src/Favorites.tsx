@@ -4,6 +4,7 @@ import { useAuth } from '@clerk/react';
 import LogoHeader from './components/LogoHeader';
 import AuthNavBar from './components/AuthNavBar';
 import Footer from './components/Footer';
+import AdBanner from './components/AdBanner';
 import networkManager from './network/NetworkManager';
 import SignInOptions from './components/SignInOptions';
 import { answerDetailPath, queryTypeToLabel } from './lib/queryTypes';
@@ -158,6 +159,7 @@ export default function Favorites() {
         </div>
       </div>
 
+      <AdBanner />
       <Footer />
     </div>
   );

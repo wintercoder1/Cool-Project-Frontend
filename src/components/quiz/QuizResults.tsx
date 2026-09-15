@@ -90,7 +90,7 @@ function CategoryBlock({
       )}
 
       {!nothingRated && categoryResult.all_low_confidence && (
-        <p className="text-sm text-brand-deep bg-brand-tint rounded-md px-3 py-2 mt-4">
+        <p className="text-sm text-brand-900 bg-brand-50 rounded-md px-3 py-2 mt-4">
           Everything below is provisional: we hold only part of what you asked
           about for each of these.
         </p>

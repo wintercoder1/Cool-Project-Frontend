@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import LogoHeader from './components/LogoHeader';
 import AuthNavBar from './components/AuthNavBar';
 import Footer from './components/Footer';
+import AdBanner from './components/AdBanner';
 import { APP_NAME } from './config';
 
 /**
@@ -82,6 +83,7 @@ export default function About() {
         </div>
       </div>
 
+      <AdBanner />
       <Footer />
     </div>
   );

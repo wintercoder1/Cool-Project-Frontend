@@ -53,13 +53,13 @@ export default function ScopeScreen({
                 }`}
               >
                 <span className="block">{option.label}</span>
-                {/* brand-tint on the selected card: at 12px this counts as
+                {/* brand-50 on the selected card: at 12px this counts as
                     normal-size text, so it needs 4.5:1 against the fill behind
-                    it. brand-tint on brand is 5.57:1 and still reads as
+                    it. brand-50 on brand is 5.57:1 and still reads as
                     secondary; a mid tint would look right and fail. */}
                 <span
                   className={`block text-xs mt-0.5 ${
-                    selected && option.available ? 'text-brand-tint' : 'text-gray-500'
+                    selected && option.available ? 'text-brand-50' : 'text-gray-500'
                   }`}
                 >
                   {option.available

@@ -27,9 +27,11 @@ export default {
 			// 4.5:1 against white text (5.93:1). sky-600 looks right and fails
 			// at 4.10:1 — do not reach for it.
 			brand: {
-				DEFAULT: '#0369a1',   // sky-700  · selections, primary-button hover
-				tint: '#f0f9ff',      // sky-50   · informational note background
-				deep: '#0c4a6e',      // sky-900  · informational note text
+				DEFAULT: '#0369a1',   // sky-700 · selections, primary-button hover, the FAB
+				50: '#f0f9ff',        // sky-50  · informational note background, "good" band
+				100: '#e0f2fe',       // sky-100 · band badges
+				200: '#bae6fd',       // sky-200 · the strongest band badge
+				900: '#0c4a6e',       // sky-900 · text on any of the tints above
 			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
