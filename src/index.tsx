@@ -23,6 +23,7 @@ import Signup from '@/Signup.tsx'
 import ProCheckout from '@/ProCheckout.tsx'
 import LeadershipDetail from '@/LeadershipDetail.tsx'
 import About from '@/About.tsx'
+import Privacy from '@/Privacy.tsx'
 import Quiz from '@/Quiz.tsx'
 import QuizResult from '@/QuizResult.tsx'
 import Favorites from '@/Favorites.tsx'
@@ -119,6 +120,10 @@ export default function MainRouter() {
 
         <Route path="/about"
                element={<About />} />
+
+        {/* Required by AdSense, and linked from the footer on every page. */}
+        <Route path="/privacy"
+               element={<Privacy />} />
 
         {/* Compass Match. Anonymous by design — the quiz endpoints take no
             auth, and nothing about a run is stored server-side, so there is

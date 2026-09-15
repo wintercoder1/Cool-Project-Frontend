@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { APP_NAME } from '../config';
 
 export default function Footer({ className = "" }) {
@@ -28,12 +29,20 @@ export default function Footer({ className = "" }) {
               <p className="mt-1">
                 Data sourced from public FEC filings and other regulatory sources.
               </p>
+              <p className="mt-2">
+                <Link
+                  to="/privacy"
+                  className="text-gray-500 hover:text-gray-900 underline underline-offset-2 transition-colors"
+                >
+                  Privacy Policy
+                </Link>
+              </p>
             </div>
 
             {/* Social Links / Contact Info */}
             <div className="flex space-x-6">
               <a 
-                href="mailto:admin@correlation-apss.net" 
+                href="mailto:covariant.apps@gmail.com" 
                 className="text-gray-500 hover:text-gray-900 transition-colors"
                 aria-label="Email"
               >
