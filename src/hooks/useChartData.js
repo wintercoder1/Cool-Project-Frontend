@@ -13,27 +13,28 @@ export const useChartData = (committee_id) => {
   const [leadershipError, setLeadershipError] = useState(null);
   const [displayedLeadershipCount] = useState(10);
 
-  // Fetch contribution data
-  useEffect(() => {
-    const fetchContributionsData = async () => {
-      if (!committee_id) return;
-      
-      setIsLoading(true);
-      setError(null);
-      
-      try {
-        const data = await networkManager.getContributionPercentages(committee_id);
-        setContributionsData(data);
-      } catch (err) {
-        console.error('Error fetching contributions data:', err);
-        setError('Failed to load contributions percentages breakdown data');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchContributionsData();
-  }, [committee_id]);
+  // TODO: party breakdown chart temporarily turned off.
+  // // Fetch contribution data
+  // useEffect(() => {
+  //   const fetchContributionsData = async () => {
+  //     if (!committee_id) return;
+  //
+  //     setIsLoading(true);
+  //     setError(null);
+  //
+  //     try {
+  //       const data = await networkManager.getContributionPercentages(committee_id);
+  //       setContributionsData(data);
+  //     } catch (err) {
+  //       console.error('Error fetching contributions data:', err);
+  //       setError('Failed to load contributions percentages breakdown data');
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //
+  //   fetchContributionsData();
+  // }, [committee_id]);
 
   // Fetch recipient data
   useEffect(() => {

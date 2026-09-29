@@ -1,4 +1,5 @@
-import ContributionsByPartyChart from '../charts/ContributionsByPartyChart';
+// TODO: party breakdown chart temporarily turned off.
+// import ContributionsByPartyChart from '../charts/ContributionsByPartyChart';
 import TopContributionRecipientsChart from '../charts/TopContributionRecipientsChart';
 // TODO: disabled until /getContributionsToCommitteeFromLeadershipOnly is recreated on the backend.
 // import LeadershipContributionsChart from '../charts/LeadershipContributionsChart';
@@ -6,9 +7,10 @@ import TopContributionRecipientsChart from '../charts/TopContributionRecipientsC
 const ChartsSection = ({ 
   isFinancialData,
   categoryData,
-  contributionsData,
-  isLoading,
-  error,
+  // TODO: party breakdown chart temporarily turned off.
+  // contributionsData,
+  // isLoading,
+  // error,
   recipientData,
   isLoadingRecipients,
   recipientError,
@@ -27,14 +29,16 @@ const ChartsSection = ({
 
   return (
     <>
+      {/* TODO: party breakdown chart temporarily turned off.
       <hr className="border-gray-200" />
 
-      <ContributionsByPartyChart 
+      <ContributionsByPartyChart
         contributionsData={contributionsData}
         isLoading={isLoading}
         error={error}
       />
-      
+      */}
+
       <hr className="border-gray-200" />
 
       <TopContributionRecipientsChart 
