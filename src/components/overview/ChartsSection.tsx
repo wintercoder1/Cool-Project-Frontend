@@ -1,6 +1,7 @@
 import ContributionsByPartyChart from '../charts/ContributionsByPartyChart';
 import TopContributionRecipientsChart from '../charts/TopContributionRecipientsChart';
-import LeadershipContributionsChart from '../charts/LeadershipContributionsChart';
+// TODO: disabled until /getContributionsToCommitteeFromLeadershipOnly is recreated on the backend.
+// import LeadershipContributionsChart from '../charts/LeadershipContributionsChart';
 
 const ChartsSection = ({ 
   isFinancialData,
@@ -14,10 +15,11 @@ const ChartsSection = ({
   topic,
   committee_id,
   committee_name,
-  leadershipData,
-  isLoadingLeadership,
-  leadershipError,
-  displayedLeadershipCount
+  // TODO: disabled until /getContributionsToCommitteeFromLeadershipOnly is recreated on the backend.
+  // leadershipData,
+  // isLoadingLeadership,
+  // leadershipError,
+  // displayedLeadershipCount
 }) => {
   if (!isFinancialData && categoryData !== 'Financial Contributions') {
     return null;
@@ -43,10 +45,11 @@ const ChartsSection = ({
         committee_id={committee_id}
         committee_name={committee_name}
       />
-    
+
+      {/* TODO: disabled until /getContributionsToCommitteeFromLeadershipOnly is recreated on the backend.
       <hr className="border-gray-200" />
-      
-      <LeadershipContributionsChart 
+
+      <LeadershipContributionsChart
         leadershipData={leadershipData}
         isLoadingLeadership={isLoadingLeadership}
         leadershipError={leadershipError}
@@ -54,6 +57,7 @@ const ChartsSection = ({
         committee_id={committee_id}
         displayedLeadershipCount={displayedLeadershipCount}
       />
+      */}
     </>
   );
 };

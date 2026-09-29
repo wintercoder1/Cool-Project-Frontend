@@ -57,27 +57,28 @@ export const useChartData = (committee_id) => {
     fetchRecipientData();
   }, [committee_id]);
 
-  // Fetch leadership data
-  useEffect(() => {
-    const fetchLeadershipData = async () => {
-      if (!committee_id) return;
-      
-      setIsLoadingLeadership(true);
-      setLeadershipError(null);
-      
-      try {
-        const data = await networkManager.getLeadershipContributions(committee_id);
-        setLeadershipData(data);
-      } catch (err) {
-        console.error('Error fetching leadership data:', err);
-        setLeadershipError('Failed to load leadership contributions data');
-      } finally {
-        setIsLoadingLeadership(false);
-      }
-    };
-
-    fetchLeadershipData();
-  }, [committee_id]);
+  // TODO: disabled until /getContributionsToCommitteeFromLeadershipOnly is recreated on the backend.
+  // // Fetch leadership data
+  // useEffect(() => {
+  //   const fetchLeadershipData = async () => {
+  //     if (!committee_id) return;
+  //
+  //     setIsLoadingLeadership(true);
+  //     setLeadershipError(null);
+  //
+  //     try {
+  //       const data = await networkManager.getLeadershipContributions(committee_id);
+  //       setLeadershipData(data);
+  //     } catch (err) {
+  //       console.error('Error fetching leadership data:', err);
+  //       setLeadershipError('Failed to load leadership contributions data');
+  //     } finally {
+  //       setIsLoadingLeadership(false);
+  //     }
+  //   };
+  //
+  //   fetchLeadershipData();
+  // }, [committee_id]);
 
   return {
     contributionsData,

@@ -196,13 +196,14 @@ class NetworkManager_TS {
     return this.makeRequest<ContributionRecipientsResponse>(url);
   }
 
-  /**
-   * Get leadership contributions
-   */
-  async getLeadershipContributions(committeeId: string): Promise<LeadershipContributionsResponse> {
-    const url = `${this.baseURL}/getContributionsToCommitteeFromLeadershipOnly/${committeeId}`;
-    return this.makeRequest<LeadershipContributionsResponse>(url);
-  }
+  // TODO: disabled until /getContributionsToCommitteeFromLeadershipOnly is recreated on the backend.
+  // /**
+  //  * Get leadership contributions
+  //  */
+  // async getLeadershipContributions(committeeId: string): Promise<LeadershipContributionsResponse> {
+  //   const url = `${this.baseURL}/getContributionsToCommitteeFromLeadershipOnly/${committeeId}`;
+  //   return this.makeRequest<LeadershipContributionsResponse>(url);
+  // }
 
   /**
    * Generic method to get data by category and topic (for WaitingPage)

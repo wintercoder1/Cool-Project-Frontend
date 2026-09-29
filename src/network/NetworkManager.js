@@ -330,13 +330,14 @@ class NetworkManager {
     return this.makeRequest(url);
   }
 
-  async getLeadershipContributions(committeeId) {
-    const url = `${this.baseURL}/getContributionsToCommitteeFromLeadershipOnly/${encodeURIComponent(
-      committeeId
-    )}`;
-
-    return this.makeRequest(url);
-  }
+  // TODO: disabled until /getContributionsToCommitteeFromLeadershipOnly is recreated on the backend.
+  // async getLeadershipContributions(committeeId) {
+  //   const url = `${this.baseURL}/getContributionsToCommitteeFromLeadershipOnly/${encodeURIComponent(
+  //     committeeId
+  //   )}`;
+  //
+  //   return this.makeRequest(url);
+  // }
 
   categoryToApiKey(category) {
     const categoryMap = {
